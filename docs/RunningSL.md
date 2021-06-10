@@ -2,26 +2,26 @@
 
 Swarm Learning has a few configuration parameters. See *[Running Swarm Learning](RunningSL.md#Running-Swarm-Learning)* for instructions on specifying these parameters.
 
-###### 1. The data directory
+## 1. The data directory
 
 This directory contains the training and validation data for the ML program. It can represent any valid directory on the host system to which the current user has read permissions. This directory is mounted on the Swarm Learning container as a read-only bind mount volume under the path ``/platform/swarmml/data``.
 
-###### 2. The model directory
+## 2. The model directory
 
 This directory contains the ML program that is executed inside the Swarm Learning container. It can also contain data preprocessing 
 logic and configuration files for the ML program to use. When the program executes, the output and logs are written to files in this directory. Just like the data directory, this too can represent any valid directory on the host system -- but the current user should  have read and write permissions on this directory. This directory is mounted on the Swarm Learning container in read-write mode under  the path ``/platform/swarmml/model``.
 
-###### 3. The ML program to execute
+## 3. The ML program to execute
 
 This is the name of the python ML program that should execute inside the Swarm Learning container. This program should be in the model directory.
 
-###### 4. IP addresses of the host systems
+## 4. IP addresses of the host systems
 
 By default, Swarm Learning uses the host network to connect and communicate with its peers. In this case, the IP addresses represent
 the IP addresses or FQDN of the host systems on which the containers are run. Swarm Learning can be configured to use a docker bridge
 network also -- in this case, the IP addresses represent the IP addresses or FQDN of the containers themselves.
 
-###### 5. Exposed port numbers
+## 5. Exposed port numbers
 
 Depending on the type of Swarm Learning components that are running on a host, some or all these ports should be opened to allow the Swarm Learning containers to communicate with each other:
 
@@ -40,11 +40,11 @@ Depending on the type of Swarm Learning components that are running on a host, s
 
     7.  A License Server API port on the host running the License Server. By default, port 5814 is used.
 
-###### 6. The GPU to use
+## 6. The GPU to use
 
 Swarm Learning can utilize NVIDIA GPUs, if the appropriate drivers and toolkits have been installed. To utilize a GPU, its index number should be passed as a parameter to the Swarm Learning container. GPU indexes start from zero.
 
-###### 7. SPIRE Server configuration
+## 7. SPIRE Server configuration
 
 The Swarm Network and Swarm Learning nodes use SPIFFE-based X.509 certificates for secure communication. These nodes can interact with any standard SPIRE Server to acquire their SPIFFE IDs and SVIDs. For convenience, a SPIRE Server is provided along with the other components in the Swarm Learning package. This Server accepts any standard SPIRE Server configuration parameter. It also creates two registration entries automatically -- one each for the Swarm Network and Swarm Learning nodes. Assuming the trust domain is swarm.learning, the Server automatically creates these entries:
 
@@ -64,7 +64,7 @@ The Swarm Network and Swarm Learning nodes use SPIFFE-based X.509 certificates f
 
 Note the custom selector, swarm. This selector refers to a custom workload attestor plugin that runs inside the Swarm Network and Swarm Learning containers. This plugin is responsible for attesting Swarm Learning workloads.
 
-###### 8. SPIRE Agent configuration
+## 8. SPIRE Agent configuration
 
 The Swarm Network and Swarm Learning nodes run a standard SPIRE Agent process and a custom workload attestor plugin. The agent should be configured to use this plugin by adding this entry to its configuration file:
 
@@ -492,4 +492,4 @@ This script accepts the following optional parameters:
 After the Swarm Learning platform has finished execution and has produced the final model, *the host systems should be cleaned up before they can be used to run the framework again*. All docker containers created by previous runs should be stopped and removed. Use the swarm-learning/bin/stop-swarm script to do this. Any log output produced by the containers should be saved before invoking the script as they will not be available after the script is executed.
 
 Output files that have been written to the model directory by previous runs might also require attention. These files are the user\'s
-prerogative and responsibility entirely -- the Swarm Learning package does not provide any means for handling these files.
+prerogative and responsibility entirely &mdash; the Swarm Learning package does not provide any means for handling these files.
