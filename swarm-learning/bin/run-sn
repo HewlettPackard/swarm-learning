@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+
+funcCallOrder=("Common" "APLS" "SpireAgent" "Component")
+image="${snImage}"
+spireAgentType="sn-agent"
+
+
+internalP2PPort=30303
+defaultAPIPort=30304
+internalFSPort=30305
+
+
+printComponentUsage()
+{
+    printf -- "--host-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which this\n"
+    printf -- "\tSwarm Network node will be created.\n"
+    printf -- "\tDefault: No default value. This parameter is mandatory.\n"
+    printf -- "\tIt must be specified by the user\n\n"
+
+    printf -- "--sentinel-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which the\n"
+    printf -- "\tSentinel Swarm Network node is running. If this parameter\n"
+    printf -- "\tis not specified, this Swarm Network node will make itself\n"
+    printf -- "\tthe sentinel.\n"
+    printf -- "\tDefault: No default value. This parameter is mandatory.\n"
+    printf -- "\tIt must be specified by the user\n\n"
+
+    printf -- "--sentinel-fs-port <port number>\n"
+    printf -- "\tHost port for the Sentinel Swarm Network node's File Server.\n"
+    printf -- "\tDefault: ${internalFSPort}\n\n"
+
+    printf -- "--sn-api-port <port number>\n"
+    printf -- "\tHost port for this Swarm Network node's API Server.\n"
+    printf -- "\tDefault: ${defaultAPIPort}, if the container is using\n"
+    printf -- "\thost network capability; none, for a bridge network\n\n"
+
+    printf -- "--sn-fs-port <port number>\n"
+    printf -- "\tHost port for this Swarm Network node's File Server.\n"
+    printf -- "\tDefault: ${internalFSPort}, if the container is using\n"
+    printf -- "\thost network capability; none, for a bridge network\n\n"
+
+    printf -- "--sn-p2p-port <port number>\n"
+    printf -- "\tHost port for this Swarm Network node's P2P communications.\n"
+    printf -- "\tDefault: ${internalP2PPort}, if the container is using\n"
+    printf -- "\thost network capability; none, for a bridge network\n\n"
+
+    printf -- "In addition to these, the script also accepts all standard\n"
+    printf -- "options for the spire-agent. These options are passed on to\n"
+    printf -- "the agent.\n\n"
+
+    return 0
+}
+
+
+processComponentOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        --@(host|sentinel)-ip) checkAndAssign "${opt}" "${optarg}";;
+        --sentinel-fs-port) checkAndAssign "${opt}" "${optarg}";;
+        --sn-@(api|fs|p2p)-port) checkAndAssign "${opt}" "${optarg}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+postprocessComponentOpts()
+{
+    [[ -z "${hostIp}" ]] && error "mandatory parameter --host-ip not specified"
+    [[ -z "${sentinelIp}" ]] && \
+        error "mandatory parameter --sentinel-ip not specified"
+
+    if [[ -n "${hostIp}" ]]
+    then
+        envvar+=(-e "THIS_NODE_IP=${hostIp}")
+
+        # As a convenience, we automatically publish all SN ports, when the user
+        # specifies host networking.
+        if isLocalhost "${hostIp}"
+        then
+            [[ -z "${snApiPort}" ]] && snApiPort=${defaultAPIPort}
+            [[ -z "${snFsPort}" ]] && snFsPort=${internalFSPort}
+            [[ -z "${snP2pPort}" ]] && snP2pPort=${internalP2PPort}
+        fi
+    fi
+
+    [[ -n "${sentinelIp}" ]] && envvar+=(-e "SENTINEL_NODE_IP=${sentinelIp}")
+    [[ -n "${sentinelFsPort}" ]] && \
+        envvar+=(-e "SENTINEL_FS_PORT=${sentinelFsPort}")
+
+    if [[ -n "${snApiPort}" ]]
+    then
+        envvar+=(-e "API_SERVER_PORT=${snApiPort}")
+        ports+=(-p "${snApiPort}:${snApiPort}")
+    fi
+
+    if [[ -n "${snFsPort}" ]]
+    then
+        envvar+=(-e "SN_FS_PORT=${snFsPort}")
+        ports+=(-p "${snFsPort}:${internalFSPort}")
+    fi
+
+    if [[ -n "${snP2pPort}" ]]
+    then
+        envvar+=(-e "ETH_PORT=${snP2pPort}")
+        ports+=(-p "${snP2pPort}:${internalP2PPort}")
+    fi
+
+    # unprocessedOpts should be specified before spireAgentArgs. unprocessedOpts
+    # includes agent subcommands like "run" and "healthcheck".
+    # TODO: find a way to pass "--help" to the agent. Since we process "--help",
+    # something like "run --help" would print our message, not the agent's.
+    componentArgs=("${unprocessedOpts[@]}" "${spireAgentArgs[@]}")
+
+    return 0
+}
+
+
+main "${@}"

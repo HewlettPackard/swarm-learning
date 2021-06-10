@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+binDir=$(realpath "${progDir}/../../../swarm-learning/bin")
+
+
+source "${binDir}/common"
+
+
+printUsage()
+{
+    retcode=0
+
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" && echo && retcode=1
+
+    echo "${progName}: usage: ${progName} PARAMETERS [ OPTIONS ]"
+    echo
+    echo -e "PARAMETERS:"
+    echo -e "\t--their-ip=<IP>          The IP address or FQDN of the system"
+    echo -e "\t                         running the federated SPIRE server"
+    echo
+    echo -e "OPTIONS:"
+    echo -e "\t--their-name=<NAME>      The name of the docker container"
+    echo -e "\t                         running the federated SPIRE server"
+    echo -e "\t                         Default: this script will attempt"
+    echo -e "\t                         to detect the name by querying docker"
+    echo -e "\t--our-name=<NAME>        The name of the docker container"
+    echo -e "\t                         running the local SPIRE server"
+    echo -e "\t                         Default: this script will attempt"
+    echo -e "\t                         to detect the name by querying docker"
+
+    exit ${retcode}
+}
+
+
+while [ ${#} -gt 0 ]
+do
+    opt="$(echo "${1}" | cut -d'=' -f1)"
+    optarg="$(echo "${1}" | cut -d'=' -f2-)"
+
+    case "${opt}" in
+        --their-ip) theirIP="${optarg}";;
+        --their-name) theirName="${optarg}";;
+        --our-name) ourName="${optarg}";;
+        -h|--help) printUsage;;
+    esac
+
+    shift
+done
+
+
+[[ -z "${theirIP}" ]] && printUsage "--their-ip: bad or missing IP"
+
+
+# Path to SPIRE Server within the container.
+spireServer="/spire/bin/spire-server"
+
+# docker exec command that connects to our SPIRE Server.
+ourSpire=$(genDockerExec "${spireImage}" "${ourName}" "" "Federated Server 1")
+
+# docker exec command that connects to federated SPIRE Server.
+theirSpire=$(genDockerExec  \
+    "${spireImage}" "${theirName}" "${theirIP}" "Federated Server 2")
+
+# docker cp command that copies bundle file into our server's container.
+# This takes a docker exec command of this form:
+#       docker exec <name>
+# and transforms it to:
+#       docker cp - <name>:/tmp/
+# The archive to copy into the container is piped in. It is extracted to /tmp.
+cpBundle=$(echo "${ourSpire}" | sed -e 's,\<exec\>,cp -,' -e 's,$,:/tmp/,')
+
+# tar, unfortunately, cannot read from stdin.
+theirBundle=$(mktemp --tmpdir their.bundle.XXXXXXX)
+bundleDir=$(dirname "${theirBundle}")
+bundleFile=$(basename "${theirBundle}")
+
+# Fetch federated bundle, tar it, copy archive into container and, untar inside.
+${theirSpire} "${spireServer}" bundle show -format spiffe > "${theirBundle}"
+tar cf - -C "${bundleDir}" "${bundleFile}" | ${cpBundle}
+rm -f "${theirBundle}"
+
+# Register federated bundle with our server.
+${ourSpire} "${spireServer}" bundle set \
+    -format spiffe -id spiffe://org-2.swarm.learning -path "/tmp/${bundleFile}"

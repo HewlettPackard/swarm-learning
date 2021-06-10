@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+script_name=$(basename "${0}")
+script_dir=$(realpath $(dirname "${0}"))
+swarm_bin_dir=$(realpath "${script_dir}/../../../swarm-learning/bin")
+examples_dir=$(realpath "${script_dir}/../..")
+
+source "${swarm_bin_dir}/common"
+
+# Prefix for workspace directory
+WS_DIR_PREFIX="ws-"
+
+# Help function
+help()
+{
+   echo ""
+   echo "Usage: $script_name -e EXAMPLE-NAME [-d PARENT-DIR]"
+   echo -e "\t-e Name of the example to run e.g. mnist-keras"
+   echo -e "\t-d Optional: Parent directory where workspace is present. e.g. dir/for/workspace. Default: current directory."
+   echo ""
+   exit 1
+}
+
+# Process command options
+while getopts "e:d:" opt
+do
+   case "$opt" in
+      e ) example="$OPTARG" ;;
+      d ) parent_dir="$OPTARG" ;;
+      ? ) help ;;
+   esac
+done
+
+# Checks
+if [ -z "$example" ] 
+then
+   echo "Some or all of the parameters are empty";
+   help
+fi
+if [ "$example" != "mnist-keras" ] && [ "$example" != "mnist-pytorch" ] && [ "$example" != "fraud-detection-keras" ]
+then
+   echo "Example $example is not part of quick start."
+   help
+fi
+[ -z "$parent_dir" ] && parent_dir="."
+
+# Finalize and assign values
+parent_dir=${parent_dir%/}
+network_name="$example-net"
+ws_dir="$parent_dir/$WS_DIR_PREFIX$example"
+
+echo "Parameters -"
+echo "$example" " $parent_dir" " $examples_dir"
+
+[ ! -d "$examples_dir/$example" ] && echo "Example $example does not exist." && exit 1
+
+echo "Stopping all containers ..."
+$swarm_bin_dir/stop-swarm
+
+echo "Removing docker network bridge $network_name ..."
+${sudo} docker network rm $network_name
+ret_val=${?}
+[ $ret_val -ne 0 ] && echo "Failed to delete docker network bridge."
+
+echo "Deleting workspace $ws_dir."
+rm -rf "$ws_dir"
+
+echo "Workspace for example $example is deleted."

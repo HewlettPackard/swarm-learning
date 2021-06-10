@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+
+funcCallOrder=("Common" "APLS" "SpireAgent" "Component")
+spireAgentType="sl-agent"
+
+
+internalFSPort=30305
+defaultAPIPort=30304
+
+containerDataDir="/platform/swarmml/data"
+containerModelDir="/platform/swarmml/model"
+
+
+printComponentUsage()
+{
+    printf -- "--host-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which this\n"
+    printf -- "\tSwarm Learning node will be created.\n"
+    printf -- "\tDefault: No default value. This parameter is mandatory.\n"
+    printf -- "\tIt must be specified by the user\n\n"
+
+    printf -- "--sn-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which the\n"
+    printf -- "\tSwarm Network node with which this Swarm Learning node must.\n"
+    printf -- "\tassociate, is running.\n"
+    printf -- "\tDefault: No default value. This parameter is mandatory.\n"
+    printf -- "\tIt must be specified by the user\n\n"
+
+    printf -- "--sn-api-port <port number>\n"
+    printf -- "\tHost port for the API Server of the associated Swarm Network node.\n"
+    printf -- "\tDefault: ${defaultAPIPort}\n\n"
+
+    printf -- "--sn-docker-name <container name>\n"
+    printf -- "\tDocker container name for the associated Swarm Network node.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sl-fs-port <port number>\n"
+    printf -- "\tHost port for this Swarm Learning node's File Server.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sl-platform { PYT | TF }\n"
+    printf -- "\tThe ML platform to use - PYT for PyTorch; or TF for Tensorflow.\n"
+    printf -- "\tDefault: TF\n\n"
+
+    printf -- "--data-dir <dir>\n"
+    printf -- "\tHost directory that should be used as the data directory by\n"
+    printf -- "\tthis Swarm Learning node.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--model-dir <dir>\n"
+    printf -- "\tHost directory that should be used as the model directory by\n"
+    printf -- "\tthis Swarm Learning node.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--model-program <python file>\n"
+    printf -- "\tPath to the model training program file. This file should be\n"
+    printf -- "\tlocated inside the model directory. The path argument should\n"
+    printf -- "\tbe relative to the model directory.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--gpu < { <gpu-list> | all } >\n"
+    printf -- "\tComma-separated list of GPU indexes to use.\n"
+    printf -- "\tSpecify \"all\" to use all available GPUs on the system.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "In addition to these, the script also accepts all standard\n"
+    printf -- "options for the spire-agent. These options are passed on to\n"
+    printf -- "the agent.\n\n"
+
+    return 0
+}
+
+
+processComponentOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        --@(data|model)-dir)
+            dirPath="$(realpath "${optarg}")"
+            [[ ! -d "${dirPath}" ]] && error "${opt}: ${optarg}: bad path"
+            checkAndAssign "${opt}" "${dirPath}"
+            ;;
+
+        --gpu) checkAndAssign "${opt}" "${optarg}";;
+        --host-ip) checkAndAssign "${opt}" "${optarg}";;
+        --ml-cmd) checkAndAssign "${opt}" "${optarg}";;
+        --model-program) checkAndAssign "${opt}" "${optarg}";;
+        --sl-@(fs-port|platform)) checkAndAssign "${opt}" "${optarg}";;
+        --sn-@(api-port|docker-name|ip)) checkAndAssign "${opt}" "${optarg}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+postprocessComponentOpts()
+{
+    [[ -z "${hostIp}" ]] && error "mandatory parameter --host-ip not specified"
+
+    if [[ -n "${hostIp}" ]]
+    then
+        envvar+=(-e "THIS_NODE_IP=${hostIp}")
+
+        # As a convenience, we automatically publish the FS port, when the user
+        # specifies a host IP.
+        if isLocalhost "${hostIp}"
+        then
+            [[ -z "${slFsPort}" ]] && slFsPort=${internalFSPort}
+        fi
+    fi
+
+    if [[ -n "${slPlatform}" ]]
+    then
+        case "${slPlatform,,}" in
+            pyt) image="${slPytImage}";;
+            tf) image="${slTFImage}";;
+            *) error "--sl-platform: ${slPlatform}: unsupported platform";;
+        esac
+    else
+        image="${slTFImage}"
+    fi
+
+    [[ -n "${gpu}" ]] && envvar+=(-e "NVIDIA_VISIBLE_DEVICES=${gpu}")
+    [[ -z "${gpu}" || "${slPlatform,,}" == "pyt" ]] && envvar+=(-e "NVIDIA_VISIBLE_DEVICES=")
+
+    if [[ -z "${snIp}" ]]
+    then
+        snExec=$(genDockerExec \
+            "${snImage}" "${snDockerName}" "" "Swarm Network node")
+        snIp="$(${snExec} hostname -i | tr -d '\r\n')"
+    fi
+
+    [[ -n "${snIp}" ]] && envvar+=(-e "SENTINEL_NODE_IP=${snIp}")
+    [[ -n "${snApiPort}" ]] && envvar+=(-e "API_SERVER_PORT=${snApiPort}")
+
+    if [[ -n "${slFsPort}" ]]
+    then
+        envvar+=(-e "ML_FS_PORT=${slFsPort}")
+        ports+=(-p "${slFsPort}:${internalFSPort}")
+    fi
+
+    [[ -n "${dataDir}" ]] && bindMounts+=(-v "${dataDir}:${containerDataDir}:ro")
+    [[ -n "${modelDir}" ]] && bindMounts+=(-v "${modelDir}:${containerModelDir}")
+
+    if [[ -n "${mlCmd}" ]]
+    then
+        envvar+=(-e "MLCMD=${mlCmd}")
+    elif [[ -n "${modelProgram}" ]]
+    then
+        if [[ -z "${modelDir}" ]]
+        then
+            path=$(realpath "${modelProgram}")
+            [[ ! -f "${path}" ]] && \
+                error "--model-program: ${modelProgram}: bad file"
+
+            bindMounts+=(-v "${path}:${containerModelDir}/$(basename ${path})")
+            envvar+=(-e "MLCMD=run ${containerModelDir}/$(basename ${path})")
+        elif [[ -f "${modelDir}/${modelProgram}" ]]
+        then
+            envvar+=(-e "MLCMD=run ${modelProgram}")
+        else
+            # We do not know whether a file can be mounted inside another mount
+            # path.
+            error "${path} not inside ${modelDir}"
+        fi
+    else
+        error "mandatory parameter --model-program not specified"
+    fi
+
+    # unprocessedOpts should be specified before spireAgentArgs. unprocessedOpts
+    # includes agent subcommands like "run" and "healthcheck".
+    # TODO: find a way to pass "--help" to the agent. Since we process "--help",
+    # something like "run --help" would print our message, not the agent's.
+    componentArgs=("${unprocessedOpts[@]}" "${spireAgentArgs[@]}")
+
+    return 0
+}
+
+
+main "${@}"

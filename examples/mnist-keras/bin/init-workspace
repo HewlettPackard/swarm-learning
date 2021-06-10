@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+script_name=$(basename "${0}")
+script_dir=$(realpath $(dirname "${0}"))
+swarm_bin_dir=$(realpath "${script_dir}/../../../swarm-learning/bin")
+examples_dir=$(realpath "${script_dir}/../..")
+
+source "${swarm_bin_dir}/common"
+
+# Prefix for workspace directory
+WS_DIR_PREFIX="ws-"
+
+# Help function
+help()
+{
+   echo ""
+   echo "Usage: $script_name -e EXAMPLE-NAME [-i LICENSE-SERVER-IP] [-d PARENT-DIR]"
+   echo -e "\t-e Name of the quick start example to run e.g. mnist-keras"
+   echo -e "\t-i Optional: IP or FQDN of license server e.g. 1.2.3.4. Default: This node IP"
+   echo -e "\t-d Optional: Parent directory where workspace to be created e.g. dir/for/workspace. Default: current directory"
+   echo ""
+   exit 1
+}
+
+# Process command options
+while getopts "e:i:d:" opt
+do
+   case "$opt" in
+      e ) example="$OPTARG" ;;
+      n ) nodes="$OPTARG" ;; # nodes variable is not exposed to user
+      i ) apls_ip="$OPTARG" ;;
+      d ) parent_dir="$OPTARG" ;;
+      ? ) help ;;
+   esac
+done
+
+# Checks
+if [ -z "$example" ] 
+then
+   echo "Some or all of the parameters are empty";
+   help
+fi
+if [ "$example" != "mnist-keras" ] && [ "$example" != "mnist-pytorch" ] && [ "$example" != "fraud-detection-keras" ]
+then
+   echo "Example $example is not part of quick start."
+   help
+fi
+[ -z "$nodes" ] && nodes=2
+[ -z "$parent_dir" ] && parent_dir="."
+[ -z "$apls_ip" ] && apls_ip=`hostname -I | awk '{print $1}'`
+
+# Finalize names
+parent_dir=${parent_dir%/}
+network_name="$example-net"
+ws_dir="$parent_dir/$WS_DIR_PREFIX$example"
+
+# Print
+echo "Parameters -"
+echo "$example" " $nodes" " $apls_ip" " $parent_dir" " $examples_dir"
+
+# Checks
+[ ! -d "$examples_dir/$example" ] && echo "Example $example does not exist." && exit 1
+[ ! -d "$parent_dir" ] && echo "Parent directory $parent_dir for workspace does not exist." && exit 1
+
+# Create workspace
+mkdir "$ws_dir"
+for index in $(seq 1 $nodes); do
+   node_dir="$ws_dir/node$index"
+   mkdir "$node_dir";
+   cp -r "$examples_dir/$example/app-data" "$node_dir/app-data"
+   cp -r "$examples_dir/$example/model" "$node_dir/model"
+   echo "$node_dir directory is created and updated."
+done
+echo "Data and model files are generated for each node inside the workspace $ws_dir."
+
+# Create network bridge
+echo "Creating docker network bridge $network_name."
+${sudo} docker network create -d bridge $network_name
+ret_val=${?}
+[ $ret_val -ne 0 ] && echo "Failed to create docker network bridge." && exit 1
+
+# Start spire server
+echo "Starting spire server"
+$swarm_bin_dir/run-spire-server -d --name node-spire --network $network_name
+ret_val=${?}
+[ $ret_val -ne 0 ] && echo "Spire server failed to start." && exit 1
+
+# Wait for few seconds before starting SN
+echo "Waiting for spire server to initialize"
+sleep 5
+
+# Start Swarm Network node
+echo "Starting Swarm Network node"
+$swarm_bin_dir/run-sn -d --name node-sn --network $network_name --host-ip node-sn --sentinel-ip node-sn --apls-ip $apls_ip -serverAddress node-spire -genJoinToken
+ret_val=${?}
+[ $ret_val -ne 0 ] && echo "Swarm Network node failed to start." && exit 1
+
+# Done
+echo "Workspace is created. Initialization done. Example $example is ready to run."

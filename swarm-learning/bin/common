@@ -1,0 +1,607 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+# Enable extended pattern matching in case statements.
+shopt -s extglob
+
+# Enable case-insensitive matching in case statements.
+shopt -s nocasematch
+
+
+ourPID=$$
+trap "exit 1" SIGUSR1 SIGUSR2
+
+
+# Swarm product version.
+swarmVer="0.3.0"
+
+swarmDockerHubAndUser="hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning"
+
+aplsImage="${swarmDockerHubAndUser}/apls:${swarmVer}"
+slTFImage="${swarmDockerHubAndUser}/sl-tf:${swarmVer}"
+slPytImage="${swarmDockerHubAndUser}/sl-pyt:${swarmVer}"
+snImage="${swarmDockerHubAndUser}/sn:${swarmVer}"
+spireImage="${swarmDockerHubAndUser}/spire-server:${swarmVer}"
+swciImage="${swarmDockerHubAndUser}/swci:${swarmVer}"
+
+# We need elevated privileges to run docker commands, if the current user is not
+# a member of the docker group. Hopefully, the user has configured password-less
+# sudo.
+id -Gn 2> /dev/null | grep "\(\<docker\>\)\|\(\<root\>\)" > /dev/null 2>&1
+[[ ${?} -ne 0 ]] && sudo="sudo"
+
+
+# Order of process and usage functions to call.
+funcCallOrder=()
+
+
+error()
+{
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" >&2
+    kill -s SIGUSR1 ${ourPID}
+}
+
+
+printCommonUsage()
+{
+    printf -- "--hostname <name>\n"
+    printf -- "\tThe host name assigned to the docker container.\n"
+    printf -- "\tDefault: --name, if it is specified; none otherwise\n\n"
+
+    printf -- "--name <name>\n"
+    printf -- "\tThe name assigned to the docker container.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--network <network name>\n"
+    printf -- "\tThe network that the container should belong to.\n"
+    printf -- "\tDefault: docker's default bridge network\n\n"
+
+    printf -- "--sudo\n"
+    printf -- "\tPrefix docker commands with \"sudo\".\n"
+    printf -- "\tDefault: false, if the current user belongs to the docker\n"
+    printf -- "\tgroup; true otherwise\n\n"
+
+    printf -- "-d, --detach\n"
+    printf -- "\tRun the container in the background.\n"
+    printf -- "\tDefault: A pseudo-terminal is allocated if the launcher has\n"
+    printf -- "\tan associated terminal; otherwise, the container is run in\n"
+    printf -- "\tthe background\n\n"
+
+    printf -- "-i, --interactive\n"
+    printf -- "\tKeep STDIN open even if not attached to a terminal.\n"
+    printf -- "\tDefault: STDIN is kept open if a pseudo-terminal is allocated\n"
+    printf -- "\tto the container; otherwise, it is closed.\n\n"
+
+    printf -- "-t, --tty\n"
+    printf -- "\tAllocate a pseudo-terminal for the container.\n"
+    printf -- "\tDefault: A pseudo-terminal is allocated if the launcher has\n"
+    printf -- "\tan associated termninal; otherwise, the container is run in\n"
+    printf -- "\tthe background\n\n"
+
+    printf -- "-e, --env var=val\n"
+    printf -- "\tSet an environment variable inside the container\n\n"
+
+    printf -- "--net, --network <network>\n"
+    printf -- "\tConnect the container to a network\n\n"
+
+    printf -- "-l, --label key=val\n"
+    printf -- "\tSet meta data on a container\n\n"
+
+    printf -- "-p, --publish host-port:container-port\n"
+    printf -- "\tPublish a container's port to the host\n\n"
+
+    printf -- "-u, --user { name | uid } [ : { group | gid } ]\n"
+    printf -- "\tUser and group ID to use inside the container\n\n"
+
+    printf -- "-v, --volume host-path:container-path\n"
+    printf -- "\tBind mount a volume\n\n"
+
+    printf -- "-w, --workdir container-path\n"
+    printf -- "\tWorking directory inside the container\n\n"
+    
+    printf -- "--rm\n"
+    printf -- "\tRequest Docker to automatically remove the container when it exits\n\n"    
+
+    printf -- "-h, --help\n"
+    printf -- "\tThis message.\n\n"
+
+    return 0
+}
+
+
+printAPLSUsage()
+{
+    printf -- "--apls-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address on which APLS is serving license requests.\n"
+    printf -- "\tDefault: $(hostname -I | cut -d' ' -f1)\n\n"
+
+    printf -- "--apls-port <port number>\n"
+    printf -- "\tThe port number on which APLS is serving license requests.\n"
+    printf -- "\tDefault: 5814\n\n"
+
+    return 0
+}
+
+
+printSpireAgentUsage()
+{
+    printf -- "-config <config file>\n"
+    printf -- "\tThe path to the configuration file for the SPIRE agent.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "-genJoinToken\n"
+    printf -- "\tGenerate a join token that the SPIRE agent can use to\n"
+    printf -- "\tauthenticate itself to the SPIRE server.\n"
+    printf -- "\tDefault: false, a join token is not generated.\n\n"
+
+    printf -- "-serverAddress <IP address or DNS name>\n"
+    printf -- "\tThe IP address on which the SPIRE server is serving API requests.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--spire-docker-name <container name>\n"
+    printf -- "\tThe name of the SPIRE server docker container instance.\n"
+    printf -- "\tDefault: None\n\n"
+
+    return 0
+}
+
+
+usage()
+{
+    # Print the message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}"
+
+    printf -- "${progName}: usage: ${progName} [ OPTIONS ]\n"
+    printf -- "Options:\n"
+
+    for funcName in "${funcCallOrder[@]}"
+    do
+        declare -F "print${funcName}Usage" > /dev/null && print${funcName}Usage
+    done
+
+    return 0
+}
+
+
+isLocalhost()
+{
+    # TODO: check whether there is a "universal" alternative for hostname -I. -I
+    # does not work on some Linux flavours, like Alpine. They accept only -i. -i
+    # on Ubuntu returns 127.0.1.1.
+    ourIP=$(hostname -I | cut -d' ' -f1)
+    ourFQDN=$(hostname -f)
+    ourHostname=$(hostname)
+
+    [[ "${1}" == "${ourIP}"        \
+    || "${1}" == "${ourFQDN}"      \
+    || "${1}" == "${ourHostname}" ]]
+}
+
+
+# Given an IP address and an image label, try and find a running container with
+# those attributes and, return a "docker exec" command that can connect to it.
+# Params:
+#   1. Image label.
+#   2. Optional image name. There could be several running container instances
+#      on a system for the image. We must connect to the right one - we rely on
+#      the user telling us which one to pick. This parameter can be omitted (by
+#      passing in an empty string) when the caller knows there is only a single
+#      running instance of the image.
+#   3. Optional IP address. This can be either an IP or a DNS name. Further, it
+#      can be the IP or name of the host system or that of the container itself
+#      (when the container is connected to a dedicated network bridge, we expect
+#      this parameter to represent the IP of the container and not that of the
+#      host system.) When this parameter is omitted, we assume the container is
+#      running on the local host. The container can also run on a remote system.
+#      In this case, this parameter is required and should represent the IP of
+#      the remote host. Further, the user should have configured a password-less
+#      SSH login to the remote system (including a login for the root user, when
+#      sudo is required to run docker) for this to work.
+#   4. A descriptive name for the image - to include in error messages.
+genDockerExec()
+{
+    # Command to get the "right" running instance of the image. We do not prefix
+    # ${sudo} here because its position depends on whether we are running on the
+    # local system on a remote one - for remote systems, the "sudo" should come
+    # before the "ssh" and not "docker": sudo ssh docker ps ...
+    dockerPSCmd="docker ps --format {{.Names}}"
+    [[ -n "${2}" ]] &&                          \
+        dockerPSCmd+=" --filter=name=${2}" ||   \
+        dockerPSCmd+=" --filter=ancestor=${1}"
+
+    # Determine whether we are dealing with a local or remote docker.
+    containerName="$(${sudo} ${dockerPSCmd})"
+
+    if [ -n "${containerName}" ]
+    then
+        # The specified server address might be an internal one - especially if
+        # the containers are running on a dedicated bridge network.
+        # TODO: handle the case where there are multiple values.
+
+        # The tr command is required. hostname, for reasons completely unknown,
+        # adds a carriage return to the output. This makes a comprehensive mess
+        # of everything and so, should be removed before it can do any mischief.
+        # The '\r' is sufficient. We have added the '\n' as a safety measure.
+        containerIP="$(${sudo}                                              \
+            docker exec -it ${containerName} hostname -i | tr -d '\r\n')"
+        containerFQDN="$(${sudo}                                            \
+            docker exec -it ${containerName} hostname -f | tr -d '\r\n')"
+        containerHostname="$(${sudo}                                        \
+            docker exec -it ${containerName} hostname | tr -d '\r\n')"
+    fi
+
+    if [[ -n "${3}" ]]
+    then
+        # The user has passed in an address. If we found a local container, see
+        # whether the values match.
+        if ! isLocalhost "${3}"                && \
+           [[ "${3}" != "${containerIP}"       && \
+              "${3}" != "${containerFQDN}"     && \
+              "${3}" != "${containerHostname}" ]]
+        then
+            ssh="ssh ${3}"
+            containerName=$(${sudo} ${ssh} ${dockerPSCmd})
+            [[ -z "${containerName}" ]] && error "cannot contact ${4}"
+        fi
+    elif [[ -z "${containerName}" ]]
+    then
+        error "cannot contact ${4}"
+    fi
+
+    # [ sudo ] [ ssh <remote-host> ] docker exec <container-name>.
+    echo "${sudo} ${ssh} docker exec ${containerName}"
+
+    return 0
+}
+
+
+# Params:
+#   1. Property name.
+getFromAgentConfigFile()
+{
+    [[ -n "${configFile}" ]] && \
+        grep "${1}" "${configFile}" | tr -d ' "' | cut -d'=' -f2 | cut -d':' -f2
+}
+
+
+genSpireServerExec()
+{
+    # Server address could be either on the command line, in the config file or,
+    # not specified at all. For the last case and local SPIREs, we automatically
+    # add the parameter to the agent's command line.
+    [[ -z "${serverAddress}" ]] && \
+        serverAddress=$(getFromAgentConfigFile "server_address")
+
+    spireServerExec=$(genDockerExec "${spireImage}" \
+        "${spireDockerName}" "${serverAddress}" "SPIRE Server")
+
+    return 0
+}
+
+
+generateJoinToken()
+{
+    # TODO: these paths are subject to change. Read them from a config file or
+    # something like that, instead of maintaining and changing the paths in half
+    # a dozen places.
+    spireServer="/spire/bin/spire-server"
+
+    trustDomain=$(${spireServerExec} "${spireServer}" bundle show |     \
+        openssl x509 -in - -text | grep "URI:spiffe" | cut -d':' -f2-   \
+    )
+
+    spiffeID="${trustDomain}/swarm/${1}"
+    token=$(${spireServerExec}                                  \
+        "${spireServer}" token generate -spiffeID ${spiffeID} | \
+        cut -d' ' -f2-                                          \
+    )
+
+    [[ -z "${token}" ]] && error "cannot generate join token"
+
+    spireAgentArgs+=("-joinToken" "${token}")
+
+    return 0
+}
+
+
+# Params:
+#   1. The command line switch.
+#   2. The value to assign.
+checkAndAssign()
+{
+    if [[ -z "${2}" || "${2:0:1}" == "-" ]]
+    then
+        error "${1}: missing argument"
+    fi
+
+    # https://unix.stackexchange.com/questions/196239.
+    varName=$(echo "${1}" | sed -r 's/^-+//g;s/-+(.)/\U\1/g')
+    eval ${varName}='${2}'
+
+    return 0
+}
+
+
+processCommonOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        -e|--env)
+            # We do not use checkAndAssign here because optarg can start with a
+            # leading dash.
+            envvar+=(-e "${optarg}");;
+
+        -h|--help) usage && exit 0;;
+        --?(host)name) checkAndAssign "${opt}" "${optarg}";;
+
+        --net|--network)
+            checkAndAssign "${opt}" "${optarg}"
+            network="--network=${optarg}"
+            ;;
+
+        -l|--label)
+            checkAndAssign "${opt}" "${optarg}"
+            labels+=(-l "${optarg}")
+            ;;
+
+        -p|--publish)
+            checkAndAssign "${opt}" "${optarg}"
+            ports+=(-p "${optarg}")
+            ;;
+
+        --sudo) sudo="sudo"; nShift=1;;
+        
+        -d|--detach|-i|--interactive|-it|-t|--tty)
+            tty="${tty} ${opt}"; nShift=1;;
+            
+        --rm) rm="--rm"; nShift=1;;            
+
+        -u|--user)
+            checkAndAssign "${opt}" "${optarg}"
+            user="--user=${optarg}"
+            ;;
+
+        -v|--volume)
+            checkAndAssign "${opt}" "${optarg}"
+            vol="$(realpath $(echo "${optarg}" | cut -d':' -f1))"
+            mount="$(echo "${optarg}" | cut -d':' -f2)"
+            [[ ! -e "${vol}" || -z "${mount}" ]] && \
+                error "${opt}: ${optarg}: bad mount"
+            bindMounts+=(-v "${vol}:${mount}")
+            ;;
+
+        -w|--workdir)
+            checkAndAssign "${opt}" "${optarg}"
+            workdir="--workdir=${optarg}"
+            ;;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return ${?}
+}
+
+
+postprocessCommonOpts()
+{
+    [[ -n "${name}" && -z "${hostname}" ]] && hostname="${name}"
+    [[ -n "${hostname}" ]] && hostname="--hostname=${hostname}"
+    [[ -n "${name}" ]] && name="--name=${name}"
+
+    # Decide whether we want to allocate a terminal for our runner. We cannot do
+    # so when we are running in, say, nohup mode and so, do not have a terminal
+    # to send the output to.
+    [[ -z "${tty}" ]] && { tty -s && tty="-it" || tty="-d" ; }
+
+    return 0
+}
+
+
+processAPLSOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        --apls-@(docker-name|ip|port))
+            checkAndAssign "${opt}" "${optarg}";;
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return ${?}
+}
+
+
+postprocessAPLSOpts()
+{
+    if [[ -z "${aplsIp}" ]]
+    then
+        aplsExec=$(genDockerExec \
+            "${aplsImage}" "${aplsDockerName}" "" "Autopass License Server")
+        aplsIp="$(${aplsExec} hostname -i | tr -d '\r\n')"
+    fi
+
+    [[ -n "${aplsIp}" ]] && \
+        envvar+=(-e "SWARM_LICENSE_AUTOPASSJ_SERVER_PRIMARY_IP=${aplsIp}")
+
+    [[ -n "${aplsPort}" ]] && \
+        envvar+=(-e "SWARM_LICENSE_AUTOPASSJ_SERVER_PRIMARY_PORT=${aplsPort}")
+
+    return 0
+}
+
+
+preprocessSpireAgentOpts()
+{
+    spireAgentArgs=()
+    return 0
+}
+
+
+processSpireAgentOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        -config)
+            checkAndAssign "${opt}" "${optarg}"
+            configFile="$(realpath "${config}")"
+            [[ ! -f "${configFile}" ]] && error "${config}: bad file"
+            bindMounts+=(-v "${configFile}:${configFile}:ro")
+            spireAgentArgs+=("${opt}" "${configFile}")
+            ;;
+
+        -genJoinToken|--gen-join-token) genJoinToken="y"; nShift=1;;
+
+        -serverAddress)
+            checkAndAssign "${opt}" "${optarg}"
+            spireAgentArgs+=("${opt}" "${optarg}")
+            ;;
+
+        --spire-docker-name) checkAndAssign "${opt}" "${optarg}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return ${?}
+}
+
+
+postprocessSpireAgentOpts()
+{
+    if [[ -n "${genJoinToken}" ]]
+    then
+        genSpireServerExec
+
+        generateJoinToken "${spireAgentType}"
+
+        # Get the server's IP from the container and add it to the the agent's
+        # command line, if it has not been specified. We would have errored out
+        # by now, if it were not a local one.
+        if [[ -z "${serverAddress}" ]]
+        then
+            serverAddress="$(${spireServerExec} hostname -i | tr -d '\r\n')"
+            spireAgentArgs+=("-serverAddress" "${serverAddress}")
+        fi
+    fi
+
+    return 0
+}
+
+
+processOpts()
+{
+    processOptFunc="process${1}Opt"
+    preprocessOptFunc="preprocess${1}Opts"
+    postprocessOptFunc="postprocess${1}Opts"
+    shift
+
+    # After reading through https://stackoverflow.com/questions/85880, we could
+    # not decide whether "type" is better than "declare". So we adopted a very
+    # scientific approach - we tossed a coin.
+    declare -F "${preprocessOptFunc}" > /dev/null && ${preprocessOptFunc}
+
+    declare -F "${processOptFunc}" > /dev/null
+    if [ ${?} -eq 0 ]
+    then
+        unprocessedOpts=()
+
+        while [ ${#} -gt 0 ]
+        do
+            if [[ "${1}" =~ (-[^=]+)(=(.*)) ]]
+            then
+                opt="${BASH_REMATCH[1]}"
+                optarg="${BASH_REMATCH[3]}"
+                nShift=1
+            else
+                opt="${1}"
+                optarg="${2}"
+                nShift=2
+            fi
+
+            ${processOptFunc} "${1}" "${opt}" "${optarg}"
+
+            shift ${nShift}
+        done
+    fi
+
+    declare -F "${postprocessOptFunc}" > /dev/null && ${postprocessOptFunc}
+
+    return 0
+}
+
+
+dockerRun()
+{
+    ${sudo} docker run                                  \
+        ${rm}                                           \
+        ${tty}                                          \
+        ${hostname}                                     \
+        ${name}                                         \
+        "${bindMounts[@]}"                              \
+        "${envvar[@]}"                                  \
+        "${labels[@]}"                                  \
+        ${network}                                      \
+        "${ports[@]}"                                   \
+        ${user}                                         \
+        ${workdir}                                      \
+        "${@}"
+
+    return ${?}
+}
+
+
+main()
+{
+    # Command line parameters that we do not recognize. The caller should check
+    # the value of this variable after we return and, process it suitably.
+    unprocessedOpts=("${@}")
+
+    # Bind mounted volumes for the container.
+    bindMounts=()
+
+    # Environment variables for the container.
+    envvar=()
+
+    # Metadata labels for the container.
+    labels=()
+
+    # Exposed ports.
+    ports=()
+
+    # Arguments to pass to the container entry point.
+    componentArgs=()
+
+    for funcName in "${funcCallOrder[@]}"
+    do
+        processOpts "${funcName}" "${unprocessedOpts[@]}"
+    done
+
+    [[ -z "${image}" ]] && error "internal error: no image specified"
+
+    dockerRun "${image}" "${componentArgs[@]}"
+
+    return 0
+}

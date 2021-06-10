@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+confDir=$(realpath "${progDir}/../conf")
+socketsDir=$(realpath "${progDir}/../sockets")
+binDir=$(realpath "${progDir}/../../../swarm-learning/bin")
+
+
+source "${binDir}/common"
+
+
+printUsage()
+{
+    retcode=0
+
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" && echo && retcode=1
+
+    echo "${progName}: usage: ${progName} PARAMETERS [ OPTIONS ]"
+    echo
+    echo -e "PARAMETERS:"
+    echo -e "\t--root-ip=<IP>           The IP address or FQDN of the system"
+    echo -e "\t                         running the root SPIRE server"
+    echo
+    echo -e "OPTIONS:"
+    echo -e "\t--our-name=<NAME>        The name of the docker container"
+    echo -e "\t                         running the local SPIRE agent"
+    echo -e "\t                         Default: root-spire-agent-2"
+    echo -e "\t--root-name=<NAME>       The name of the docker container"
+    echo -e "\t                         running the root SPIRE server"
+    echo -e "\t                         Default: this script will attempt"
+    echo -e "\t                         to detect the name by querying docker"
+
+    exit ${retcode}
+}
+
+miscArgs=()
+
+while [ ${#} -gt 0 ]
+do
+    opt="$(echo "${1}" | cut -d'=' -f1)"
+    optarg="$(echo "${1}" | cut -d'=' -f2-)"
+
+    case "${opt}" in
+        --root-ip) rootIP="${optarg}";;
+        --root-name) rootName="${optarg}";;
+        --our-name) ourName="${optarg}";;
+        -h|--help) printUsage;;
+        *) miscArgs+=("${1}");;
+    esac
+
+    shift
+done
+
+
+[[ -z "${rootIP}" ]] && printUsage "--root-ip: bad or missing IP"
+[[ -z "${ourName}" ]] && ourName="root-spire-agent-2"
+
+spireServerImage="gcr.io/spiffe-io/spire-server:0.12.0"
+rootSpire=$(genDockerExec                                                   \
+    "${spireServerImage}" "${rootName}" "${rootIP}" "Root SPIRE Server"     \
+)
+
+joinToken=$(${rootSpire}                                                    \
+    /opt/spire/bin/spire-server token generate                              \
+        -spiffeID spiffe://swarm.learning/root-spire-agent-2                \
+  | cut -d' ' -f2-                                                          \
+)
+
+${rootSpire}                                                                \
+    /opt/spire/bin/spire-server                                             \
+        entry create                                                        \
+        -downstream                                                         \
+        -dns Swarm-Learning-Nested-Spire-Server-2                           \
+        -selector docker:label:spire-node:nested-spire-server-2             \
+        -parentID spiffe://swarm.learning/root-spire-agent-2                \
+        -spiffeID spiffe://swarm.learning/nested-spire-server-2
+
+docker run                                                                  \
+    -d                                                                      \
+    --name=${ourName}                                                       \
+    --hostname=${ourName}                                                   \
+    --label spire-node=root-spire-agent-2                                   \
+    --pid=host                                                              \
+    -v /var/run:/var/run                                                    \
+    -v ${confDir}/root-spire-agent-2.conf:/opt/spire/conf/agent/agent.conf  \
+    -v ${socketsDir}:/tmp/sockets                                           \
+    --entrypoint=/opt/spire/bin/spire-agent                                 \
+    "${miscArgs[@]}"                                                        \
+    gcr.io/spiffe-io/spire-agent:0.12.0                                     \
+        run                                                                 \
+        -serverAddress ${rootIP}                                            \
+        -config /opt/spire/conf/agent/agent.conf                            \
+        -joinToken ${joinToken}

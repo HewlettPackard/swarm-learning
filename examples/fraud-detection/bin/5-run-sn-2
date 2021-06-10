@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+confDir=$(realpath "${progDir}/../conf")
+binDir=$(realpath "${progDir}/../../../swarm-learning/bin")
+
+
+source "${binDir}/common"
+
+
+printUsage()
+{
+    retcode=0
+
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" && echo && retcode=1
+
+    echo "${progName}: usage: ${progName} PARAMETERS [ OPTIONS ]"
+    echo
+    echo -e "PARAMETERS:"
+    echo -e "\t--apls-ip=<IP>           The IP address or FQDN of the system"
+    echo -e "\t                         running the License Server"
+    echo -e "\t--sentinel-ip=<IP>       The IP address or FQDN of the system"
+    echo -e "\t                         running the Sentinel Node"
+    echo -e "\t-serverAddress=<IP>      The IP address or FQDN of the system"
+    echo -e "\t                         running Federated SPIRE Server 2"
+    echo
+    echo -e "OPTIONS:"
+    echo -e "\t--host-ip=<IP>           The IP address or FQDN of the system on"
+    echo -e "\t                         which the Swarm Network Node should run"
+    echo -e "\t                         Default: localhost"
+    echo -e "\t--sn-name=<NAME>         The name of the docker container"
+    echo -e "\t                         running the Swarm Network Node"
+    echo -e "\t                         Default: sn-2"
+    echo -e "\t--sn-api-port=<PORT>     The port used by the Swarm Network Node"
+    echo -e "\t                         for its API Server"
+    echo -e "\t                         Default: 11000"
+
+    exit ${retcode}
+}
+
+miscArgs=()
+
+while [ ${#} -gt 0 ]
+do
+    opt="$(echo "${1}" | cut -d'=' -f1)"
+    optarg="$(echo "${1}" | cut -d'=' -f2-)"
+
+    case "${opt}" in
+        --apls-ip) aplsIP="${optarg}";;
+        --sentinel-ip) sentinelIP="${optarg}";;
+        -serverAddress) svrAddr="${optarg}";;
+        --host-ip) hostIP="${optarg}";;
+        --sn-name) snName="${optarg}";;
+        --sn-api-port) snAPIPort="${optarg}";;
+        -h|--help) printUsage;;
+        *) miscArgs+=("${1}");;
+    esac
+
+    shift
+done
+
+
+[[ -z "${aplsIP}" ]] && printUsage "--apls-ip: bad or missing IP"
+[[ -z "${sentinelIP}" ]] && printUsage "--sentinel-ip: bad or missing IP"
+[[ -z "${svrAddr}" ]] && printUsage "-serverAddress: bad or missing IP"
+
+
+[[ -z "${snName}" ]] && snName="sn-2"
+[[ -z "${snAPIPort}" ]] && snAPIPort=11000
+[[ -z "${hostIP}" ]] && hostIP=$(hostname -I | cut -d' ' -f1)
+
+if isLocalhost "${hostIP}"
+then
+    runSN="${binDir}/run-sn"
+else
+    runSN="ssh ${hostIP} ${binDir}/run-sn"
+fi
+
+
+${runSN}                                                \
+    -d                                                  \
+    --name=${snName}                                    \
+    --host-ip=${hostIP}                                 \
+    --sentinel-ip=${sentinelIP}                         \
+    --sn-api-port=${snAPIPort}                          \
+    --apls-ip ${aplsIP}                                 \
+    -serverAddress ${svrAddr}                           \
+    -config "${confDir}/federated-spire-agent-2.conf"   \
+    "${miscArgs[@]}"                                    \
+    -genJoinToken

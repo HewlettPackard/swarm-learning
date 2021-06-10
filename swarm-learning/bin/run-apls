@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+## run-apls - Run the Autopass License Server.
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+
+funcCallOrder=("Common" "Component")
+image="${aplsImage}"
+
+
+aplsInternalPort="5814"
+
+
+printComponentUsage()
+{
+    printf -- "--apls-port <port number>\n"
+    printf -- "\tThe host port to which the APLS UI port is published.\n"
+    printf -- "\tDefault: 5814\n\n"
+
+    return 0
+}
+
+
+processComponentOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        --apls-port) checkAndAssign "${opt}" "${optarg}";;
+        *) componentArgs+=("${origParam}"); nShift=1;;
+    esac
+
+    return ${?}
+}
+
+
+postprocessComponentOpts()
+{
+    # APLS uses the same port for both serving license requests from clients and
+    # managing licenses. So, we always publish this port. This allows browsers
+    # to connect to the management UI using port forwarding. With this scheme,
+    # the management UI URL is https://localhost:5814, by default.
+    [[ -z "${aplsPort}" ]] && aplsPort="${aplsInternalPort}"
+    [[ -n "${aplsPort}" ]] && ports+=(-p "${aplsPort}:${aplsInternalPort}")
+
+    return 0
+}
+
+
+main "${@}"

@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+###############################################################
+# Script to start SWCI container
+###############################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+funcCallOrder=("Common" "SpireAgent" "Component")
+image="${swciImage}"
+spireAgentType="swci-agent"
+# SWCI is an interactive program
+# even when startup scripts are present
+# Users can override them, if needed
+rm="--rm"
+tty="-it"
+
+containerUsrDir="/platform/swci/usr"
+
+printComponentUsage()
+{
+    printf -- "--usr-dir <dir>\n"
+    printf -- "\tHost directory that should be used as the user directory by\n"
+    printf -- "\tthis SWCI node.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--init-script-name <swci-init file>\n"
+    printf -- "\tname of swci-init file. This file should be\n"
+    printf -- "\tlocated inside the user directory. At the top-level itself \n"
+    printf -- "\tDefault: swci-init\n\n"
+
+    printf -- "In addition to these, the script also accepts all standard\n"
+    printf -- "options for the spire-agent. These options are passed on to\n"
+    printf -- "the agent.\n\n"
+
+    return 0
+}
+
+processComponentOpt()
+{
+    origParam="${1}"
+    opt="${2}"
+    optarg="${3}"
+
+    case "${opt}" in
+        --usr-dir)
+            checkAndAssign "${opt}" "${optarg}"
+            dirPath="$(realpath "${optarg}")"
+            [[ ! -d "${dirPath}" ]] && error "${opt}: ${optarg}: bad path"
+            ;;
+        --init-script-name) checkAndAssign "${opt}" "${optarg}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+postprocessComponentOpts()
+{
+    # all parameters to the swci are optional as of today
+    [[ -n "${usrDir}" ]] && bindMounts+=(-v "${usrDir}:${containerUsrDir}:rw")
+    
+    if [[ -n "${initScriptName}" ]]
+    then 
+        # check if the file exists 
+        path="${usrDir}/${initScriptName}"
+        
+        [[ ! -f "${path}" ]] && \
+            error "--init-script-name: ${initScriptName}: bad file"        
+            
+        envvar+=(-e "STARTUP_SCRIPT=${initScriptName}")
+    fi 
+
+    # unprocessedOpts should be specified before spireAgentArgs. unprocessedOpts
+    # includes agent subcommands like "run" and "healthcheck".
+    # TODO: find a way to pass "--help" to the agent. Since we process "--help",
+    # something like "run --help" would print our message, not the agent's.
+    componentArgs=("${unprocessedOpts[@]}" "${spireAgentArgs[@]}")
+
+    return 0
+}
+
+
+main "${@}"

@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+confDir=$(realpath "${progDir}/../conf")
+dataDir=$(realpath "${progDir}/../app-data")
+modelDir=$(realpath "${progDir}/../model")
+binDir=$(realpath "${progDir}/../../../swarm-learning/bin")
+
+
+source "${binDir}/common"
+
+
+printUsage()
+{
+    retcode=0
+
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" && echo && retcode=1
+
+    echo "${progName}: usage: ${progName} PARAMETERS [ OPTIONS ]"
+    echo
+    echo -e "PARAMETERS:"
+    echo -e "\t--apls-ip=<IP>           The IP address or FQDN of the system"
+    echo -e "\t                         running the License Server"
+    echo -e "\t--sn-ip=<IP>             The IP address or FQDN of the system"
+    echo -e "\t                         running the Swarm Network Node"
+    echo -e "\t-serverAddress=<IP>      The IP address or FQDN of the system"
+    echo -e "\t                         running Nested SPIRE Server 2"
+    echo
+    echo -e "OPTIONS:"
+    echo -e "\t--host-ip=<IP>           The IP address or FQDN of the system on"
+    echo -e "\t                         which the Swarm Learning Node should run"
+    echo -e "\t                         Default: localhost"
+    echo -e "\t--sl-name=<NAME>         The name of the docker container"
+    echo -e "\t                         running the Swarm Learning Node"
+    echo -e "\t                         Default: sl-4"
+
+    exit ${retcode}
+}
+
+miscArgs=()
+
+while [ ${#} -gt 0 ]
+do
+    opt="$(echo "${1}" | cut -d'=' -f1)"
+    optarg="$(echo "${1}" | cut -d'=' -f2-)"
+
+    case "${opt}" in
+        --apls-ip) aplsIP="${optarg}";;
+        --sn-ip) snIP="${optarg}";;
+        -serverAddress) svrAddr="${optarg}";;
+        --host-ip) hostIP="${optarg}";;
+        --sl-name) slName="${optarg}";;
+        *) miscArgs+=("${1}");;
+        -h|--help) printUsage;;
+    esac
+
+    shift
+done
+
+
+[[ -z "${aplsIP}" ]] && printUsage "--apls-ip: bad or missing IP"
+[[ -z "${snIP}" ]] && printUsage "--sn-ip: bad or missing IP"
+[[ -z "${svrAddr}" ]] && printUsage "-serverAddress: bad or missing IP"
+
+
+[[ -z "${slName}" ]] && slName="sl-4"
+[[ -z "${hostIP}" ]] && hostIP=$(hostname -I | cut -d' ' -f1)
+
+if isLocalhost "${hostIP}"
+then
+    runSL="${binDir}/run-sl"
+else
+    runSL="ssh ${hostIP} ${binDir}/run-sl"
+fi
+
+
+${runSL}                                                \
+    -d                                                  \
+    --name=${slName}                                    \
+    --host-ip=${hostIP}                                 \
+    --sn-ip=${snIP}                                     \
+    --apls-ip ${aplsIP}                                 \
+    -serverAddress ${svrAddr}                           \
+    -genJoinToken                                       \
+    --data-dir=${dataDir}                               \
+    --model-dir=${modelDir}                             \
+    "${miscArgs[@]}"                                    \
+    --model-program=cifar-10.py

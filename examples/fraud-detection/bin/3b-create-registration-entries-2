@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+binDir=$(realpath "${progDir}/../../../swarm-learning/bin")
+
+
+source "${binDir}/common"
+
+
+printUsage()
+{
+    retcode=0
+
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" && echo && retcode=1
+
+    echo "${progName}: usage: ${progName} [ OPTIONS ]"
+    echo
+    echo -e "OPTIONS:"
+    echo -e "\t--our-name=<NAME>       The name of the docker container"
+    echo -e "\t                        running the local SPIRE server"
+    echo -e "\t                        Default: this script will attempt"
+    echo -e "\t                        to detect the name by querying docker"
+
+    exit ${retcode}
+}
+
+
+while [ ${#} -gt 0 ]
+do
+    opt="$(echo "${1}" | cut -d'=' -f1)"
+    optarg="$(echo "${1}" | cut -d'=' -f2-)"
+
+    case "${opt}" in
+        --our-name) ourName="${optarg}";;
+        -h|--help) printUsage;;
+    esac
+
+    shift
+done
+
+
+spireServer="/spire/bin/spire-server"
+ourSpire=$(genDockerExec "${spireImage}" "${ourName}" "" "Federated Server 2")
+
+
+${ourSpire} "${spireServer}" entry create                       \
+    -parentID spiffe://org-2.swarm.learning/swarm/sn-agent      \
+    -spiffeID spiffe://org-2.swarm.learning/swarm/sn            \
+    -selector swarm:node-type:sn                                \
+    -federatesWith spiffe://org-1.swarm.learning                \
+    -dns swarm-network-node
+
+${ourSpire} "${spireServer}" entry create                       \
+    -parentID spiffe://org-2.swarm.learning/swarm/sl-agent      \
+    -spiffeID spiffe://org-2.swarm.learning/swarm/sl            \
+    -selector swarm:node-type:sl                                \
+    -federatesWith spiffe://org-1.swarm.learning                \
+    -dns swarm-learning-node

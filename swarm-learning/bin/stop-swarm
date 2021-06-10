@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+
+############################################################################
+## Copyright 2021 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+############################################################################
+
+
+# Set Swarm product version.
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+
+# Sets the image variables and sudo. We do not call any of the functions here.
+source "${progDir}/common"
+
+
+usage()
+{
+    echo
+    echo "${progName}: usage: ${progName} [OPTIONS]"
+    echo
+    echo "Stop Swarm Learning platform components"
+    echo
+    echo "Options:"
+    echo
+    echo "--all           stop all components - APLS, SPIRE Server, SL, SN and SWCI"
+    echo "--apls          stop Autopass License Server"
+    echo "--sl            stop both Tensorflow-based and PyTorch-based SL nodes"
+    echo "--sl-pyt        stop PyTorch-based SL nodes"
+    echo "--sl-tf         stop Tensorflow-based SL nodes"
+    echo "--sn            stop SN nodes"
+    echo "--spire-server  stop SPIRE server"
+    echo "--swci          stop SWCI nodes"
+    echo "--keep          keep stopped containers - they are removed by default"
+    echo "--sudo          invoke docker with sudo permissions"
+    echo
+    exit 1
+}
+
+
+# Params:
+#   1 - Image tag - used to find the relevant containers.
+#   2 - Image type - used in error messages.
+stopContainers()
+{
+    echo "Stopping all running ${2} containers"
+    containers=$(${sudo} docker ps -q --filter ancestor="${1}")
+    if [ -n "${containers}" ]
+    then
+        ${sudo} docker stop ${containers}
+    else
+        echo "No running ${2} containers found"
+    fi
+
+    if [ -z "${keep}" ]
+    then
+        echo "Removing all ${2} containers"
+        containers=$(${sudo} docker ps -aq --filter ancestor="${1}")
+        if [ -n "${containers}" ]
+        then
+            ${sudo} docker container rm ${containers}
+        else
+            echo "No ${2} containers found"
+        fi
+    fi
+}
+
+
+for opt in "${@}"
+do
+    case ${opt} in
+        --all)
+            apls="y"
+            slPyt="y"
+            slTF="y"
+            sn="y"
+            spireServer="y"
+            swci="y"
+            ;;
+
+        --apls) apls="y";;
+        --sl) slPyt="y"; slTF="y";;
+        --sl-pyt) slPyt="y";;
+        --sl-tf) slTF="y";;
+        --sn) sn="y";;
+        --spire-server) spireServer="y";;
+        --swci) swci="y";;
+
+        --keep) keep="y";;
+        --sudo) sudo="sudo";;
+        --help) usage;;
+
+        *)
+            echo "Invalid flag: ${opt}"
+            usage
+            ;;
+    esac
+
+    shift
+done
+
+
+if [[ -z "${apls}"              \
+   && -z "${slPyt}"             \
+   && -z "${slTF}"              \
+   && -z "${sn}"                \
+   && -z "${spireServer}"       \
+   && -z "${swci}"              \
+   ]]
+then
+    slPyt="y"
+    slTF="y"
+    sn="y"
+    spireServer="y"
+    swci="y"
+fi
+
+
+[[ -n "${slPyt}" ]] && stopContainers "${slPytImage}" "Swarm Learning (PyTorch)"
+[[ -n "${slTF}" ]] && stopContainers "${slTFImage}" "Swarm Learning (Tensorflow)"
+[[ -n "${sn}" ]] && stopContainers "${snImage}" "Swarm Network"
+[[ -n "${swci}" ]] && stopContainers "${swciImage}" "Swarm Command Interface"
+[[ -n "${spireServer}" ]] && stopContainers "${spireImage}" "SPIRE Server"
+[[ -n "${apls}" ]] && stopContainers "${aplsImage}" "APLS"
