@@ -30,7 +30,9 @@ First open a terminal, change directory to ‘swarm-learning-docs/examples’ an
 
     ./mnist-pytorch/bin/init-workspace -e $EXAMPLE -i $APLS_IP -d $WORKSPACE_DIR
    
-    Once command completes, two separate folders for each training node will be created under the workspace directory. Data and model files will be distributed among them. Like below [mnist-pytorch-workspace](../figs/mnist-pytorch-workspace.png)
+    Once command completes, two separate folders for each training node will be created under the workspace directory. Data and model files will be distributed among them.
+    
+    ![mnist-pytorch-workspace](../figs/mnist-pytorch-workspace.png)
     
  
 2.	Run decentralized training with different nodes
