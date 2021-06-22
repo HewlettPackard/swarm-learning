@@ -32,7 +32,9 @@ First open a terminal, change directory to ``swarm-learning-docs/examples`` and 
 
     ./fraud-detection-keras/bin/init-workspace -e $EXAMPLE -i $APLS_IP -d $WORKSPACE_DIR
    
-    Once command completes, two separate folders for each training node will be created under the workspace directory. Data and model files will be distributed among them. Workspace directory would be < TREE o/p >
+    Once command completes, two separate folders for each training node will be created under the workspace directory. Data and model files will be distributed among them.
+    
+     ![fraud-detection-workspace](../figs/fraud-detection-workspace.png)
     
  
 2.	Run decentralized training with different nodes
