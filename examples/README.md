@@ -18,7 +18,8 @@ These examples are designed to run in about 8 to 10 machines and demonstrate the
     
     2. CIFAR-10: It runs decentralized training on CIFAR-10 dataset for image classification using TensorFlow.
     
-    3. Credit card fraud detection: It runs decentralized training on structured Credit Card Fraud dataset for fraud detection using TensorFlow.
+    3. Credit card fraud detection: It runs decentralized training on structured Credit Card Fraud dataset for fraud detection
+       using TensorFlow.
 
 See the README file for each example for brief instructions on running them. For a more detailed reference on the Swarm Learning platform and package, see [Readme](https://github.hpe.com/adc/swarm-learning-docs/blob/extgit/README.md)
 
