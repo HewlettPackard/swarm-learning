@@ -30,7 +30,9 @@ First open a terminal, change directory to ‘swarm-learning-docs/examples’ an
 
     ./mnist-keras/bin/init-workspace -e $EXAMPLE -i $APLS_IP -d $WORKSPACE_DIR
    
-    Once command completes, two separate folders for each training node will be created under the workspace directory. Data and model files will be distributed among them. Workspace directory would be:  < PIC >
+    Once command completes, two separate folders for each training node will be created under the workspace directory. Data and model files will be distributed among them.
+    
+    ![mnist-keras-workspace](../figs/mnist-keras-workspace.png)
     
   
 
