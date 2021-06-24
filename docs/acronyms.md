@@ -1,37 +1,37 @@
 ## Abbreviations and Acronyms
 
-SN		Swarm Network
+SN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Swarm Network
 
-SL		Swarm Learning
+SL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Swarm Learning
 
-ML		Machine Learning
+ML &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Machine Learning
 
-SPIFFE		Secure Production Identity Framework for Everyone	
+SPIFFE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Secure Production Identity Framework for Everyone	
 
-SPIRE		SPIFFE Runtime Environment
+SPIRE	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SPIFFE Runtime Environment
 
-SVID		SPIFFE Verifiable Identity
+SVID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SPIFFE Verifiable Identity
 
-SWCI		Swarm Learning Command Interface
+SWCI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Swarm Learning Command Interface
 
-APLS		Autopass License Server
+APLS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Autopass License Server
 
-FQDN		Fully Qualified Domain Name
+FQDN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fully Qualified Domain Name
 
-API		Application Programming Interface
+API &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Application Programming Interface
 
-FS		File Server
+FS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File Server
 
-GPU		Graphics Processing Unit
+GPU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Graphics Processing Unit
 
-MNIST		Modified National Institute of Standards and Technology Database
+MNIST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modified National Institute of Standards and Technology Database
 
-CIFAR		Canadian Institute For Advanced Research
+CIFAR &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Canadian Institute For Advanced Research
 
-TF		Tensorflow
+TF &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tensorflow
 
-PYT		PyTorch
+PYT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PyTorch
 
-MSC		MY HPE SOFTWARE CENTER
+MSC &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MY HPE SOFTWARE CENTER
 
-DTR		Docker Trusted Registry
+DTR &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Docker Trusted Registry
