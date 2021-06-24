@@ -35,7 +35,10 @@ You can transform any Keras or PyTorch based ML program that has been written us
   - [Papers](docs/papers-and-articles.md)
   - [Videos](docs/videos.md)
   - [URLs](docs/URL.md)
-  
+
+## Acronyms and Abbreviation
+  Refer to [Acronyms and Abbreviation](docs/acronyms.md) for more information.
+
 ## Getting in touch 
   Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.
 
