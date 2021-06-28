@@ -12,7 +12,7 @@
 | SL                   | Swarm Learning                                                   |
 | SN                   | Swarm Network                                                    |
 | SPIFFE               | Secure Production Identity Framework for Everyone                |
-| SPIRE	               | SPIFFE Runtime Environment                                       |
+| SPIRE                | SPIFFE Runtime Environment                                       |
 | SVID                 | SPIFFE Verifiable Identity                                       |
 | SWCI                 | Swarm Learning Command Interface                                 |
 | TF                   | Tensorflow                                                       |
