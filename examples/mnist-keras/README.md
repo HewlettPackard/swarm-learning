@@ -4,8 +4,7 @@ This example runs decentralized training on MNIST *[1](README.md#References)* da
 
 The code for this example has been taken from *[2](README.md#References)* and modified to run on a Swarm Learning platform. The data files are in the ``swarm-learning-docs/examples/mnist-keras/app-data/`` directory. The model program, after conversion to Swarm Learning, is in ``swarm-learning-docs/examples/mnist-keras/model/`` and is called ``mnist_tf.py``. 
 
-Scripts to run the example are in the ``swarm-learning-docs/examples/mnist-keras/bin/`` directory:
-
+Scripts to run the example are in the ``swarm-learning/examples/mnist-keras/bin/`` and ``swarm-learning/swarm-learning/bin/`` directories:
 - init-workspace: It creates workspace for the given example by distributing data and models in different directories It also initializes single node Swarm Network and starts spire server
 - run-sl: It starts Swarm Learning node that runs training
 - del-workspace: It deletes the created workspace and also stops all containers
@@ -15,6 +14,8 @@ Following environment variables are required to set in each terminal:
 -	EXAMPLE: Name of the quick start example.
 -	WORKSPACE_DIR: Path where workspace to be created. Separate model and data directories will be created for each training node inside the example workspace. Default is current directory.
 -	TRAINING_NODE: Unique name of each training node prefixed with ‘node’ e.g. ‘node1’ etc.
+
+Before running the example, verify license server is running and valid license is installed.
 
 ## Steps to run:
 1.	Create workspace and initialize Swarm Learning 
