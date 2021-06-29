@@ -6,11 +6,11 @@ The code for this example has been taken from *[2](README.md#References)* and mo
 
 Scripts to run the example are in the ``swarm-learning-docs/examples/mnist-keras/bin/`` directory:
 
-  •	init-workspace: It creates workspace for the given example by distributing data and models in different directories It also initializes single node Swarm Network and starts spire server
+  •	init-workspace: It creates workspace for the given example by distributing data and models in different directories. It also initializes single node Swarm Network and starts spire server.
   
-  •	run-sl: It starts Swarm Learning node that runs training
+  •	run-sl: It starts Swarm Learning node that runs training.
   
-  •	del-workspace: It deletes the created workspace and also stops all containers
+  •	del-workspace: It deletes the created workspace and also stops all containers.
   
 Following environment variables are required to set in each terminal:
 -	APLS_IP: IP address of the host where license server is running. 
@@ -19,7 +19,7 @@ Following environment variables are required to set in each terminal:
 -	TRAINING_NODE: Unique name of each training node prefixed with ‘node’ e.g. ‘node1’ etc.
 
 ## Steps to run:
-1.	Create workspace and initialize Swarm Learning 
+### 1. Create workspace and initialize Swarm Learning
 First open a terminal, change directory to ‘swarm-learning-docs/examples’ and set the following environment variables. Then run ‘init-workspace’ script to create workspace for ‘mnist-keras’ example and initialize Swarm Learning environment by running Swarm Network and Spire server containers.
 
     APLS_IP=<License Server IP>
@@ -37,7 +37,7 @@ First open a terminal, change directory to ‘swarm-learning-docs/examples’ an
   
 
  
-2.	Run decentralized training with different nodes
+### 2. Run decentralized training with different nodes
 By default two peer nodes will be created.  So open two new terminals each representing individual training node. 
 
 -	Node1: Training on Terminal 1
@@ -68,7 +68,7 @@ Change directory to ‘swarm-learning-docs/examples’ and set environment varia
    
     This training process will continue till training completes MAX_EPOCHS. Once training ends, the final Swarm Learning model will be saved inside the model folder for each node in workspace. 
   
-3.	Delete workspace and remove Swarm Learning containers
+## 3. Delete workspace and remove Swarm Learning containers
 Go back to the initial terminal where ‘init-workspace’ script was run, or open a new terminal, change directory to ‘swarm-learning-docs/examples’ and set environment variables as specified in step 1. Run ‘del-workspace’ script that will delete the workspace and remove all the containers started for this example. The script should be run as sudo.
 
     sudo ./mnist-keras/bin/del-workspace -e $EXAMPLE -d $WORKSPACE_DIR
