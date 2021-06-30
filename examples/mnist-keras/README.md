@@ -67,7 +67,7 @@ This training process will continue till training completes ``MAX_EPOCHS``. Once
 #### 3.	Delete workspace and remove Swarm Learning containers
 Either go back to the initial terminal where ``init-workspace`` script was run or open a new terminal, change directory to ``swarm-learning/examples`` and set environment variables as specified in step 1. Run ``del-workspace`` script that will delete the workspace and remove all the containers started for this example. The script should be run as sudo.
 
-    ``sudo ./mnist-keras/bin/del-workspace -e $EXAMPLE -d $WORKSPACE_DIR``
+   ``sudo ./mnist-keras/bin/del-workspace -e $EXAMPLE -d $WORKSPACE_DIR``
 
 **Note:** User can simply reset the Swarm Learning framework to run the training again without executing step 3.
 For reset, either go back to the initial terminal where ``init-workspace`` script was run or open a new terminal, change directory to ``swarm-learning/examples`` and set environment variables as specified in step 1. Run the following commands that remove the old training containers and reset and prepare the framework for retraining -
