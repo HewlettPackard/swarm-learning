@@ -71,7 +71,7 @@ Go back to the initial terminal where ``init-workspace`` script was run, or open
 
   >**NOTE**: User can simply reset the Swarm Learning framework to run the training again and again without executing step 3. Once framework is reset, user can just rerun the training using step 2.
   >
-  >For reset, either go back to the initial terminal where ``init-workspace`` script was run or open a new terminal, change directory to ``swarm-learning/examples`` and set environment variables as specified in step 1. Run the following commands that remove the old training containers and reset and prepare the framework for retraining -
+  >For reset, either go back to the initial terminal where ``init-workspace`` script was run or open a new terminal, change directory to ``swarm-learning/examples`` and set environment variables as specified in step 1. Run the following commands that remove the old SL training containers and reset and prepare the framework for retraining -
   >
   >``../swarm-learning/bin/stop-swarm --sl``
   >
