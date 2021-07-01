@@ -71,14 +71,13 @@ Go back to the initial terminal where ``init-workspace`` script was run, or open
 
    ``sudo ./fraud-detection-keras/bin/del-workspace -e $EXAMPLE -d $WORKSPACE_DIR``
 
-**Note:** User can simply reset the Swarm Learning framework to run the training again without executing step 3.
-For reset, either go back to the initial terminal where ``init-workspace`` script was run or open a new terminal, change directory to ``swarm-learning/examples`` and set environment variables as specified in step 1. Run the following commands that remove the old training containers and reset and prepare the framework for retraining -
-
-``../swarm-learning/bin/stop-swarm --sl``
-
-``../swarm-learning/bin/run-swci --sudo --name node-swci --network $EXAMPLE-net -serverAddress node-spire -genJoinToken --usr-dir $PWD/$EXAMPLE/bin --init-script-name reset.cmd``
-
-After reset, go to step 2 and rerun the training again.
+  >**NOTE**: User can simply reset the Swarm Learning framework to run the training again and again without executing step 3. Once framework is reset, user can just rerun the training using step 2.
+  >
+  >For reset, either go back to the initial terminal where ``init-workspace`` script was run or open a new terminal, change directory to ``swarm-learning/examples`` and set environment variables as specified in step 1. Run the following commands that remove the old training containers and reset and prepare the framework for retraining -
+  >
+  >``../swarm-learning/bin/stop-swarm --sl``
+  >
+  >``../swarm-learning/bin/run-swci --sudo --name node-swci --network $EXAMPLE-net -serverAddress node-spire -genJoinToken --usr-dir $PWD/$EXAMPLE/bin --init-script-name reset.cmd``
 
 ## References
 [1]  M. L. G. - ULB, "Credit Card Fraud Detection," [Online]. Available: [https://www.kaggle.com/mlg-ulb/creditcardfraud](https://www.kaggle.com/mlg-ulb/creditcardfraud)
