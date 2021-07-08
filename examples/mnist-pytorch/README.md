@@ -2,7 +2,7 @@
 
 This example runs decentralized training on MNIST *[[1]](README.md#References)* dataset for digit classification using PyTorch based Swarm Learning framework.
 
-The code for this example has been taken from *[[2]](README.md#References)* and modified to run on a Swarm Learning platform. The data files are in the ``swarm-learning-docs/examples/mnist-pytorch/app-data/`` directory. The model program, after conversion to Swarm Learning, is in ``swarm-learning-docs/examples/mnist-pytorch/model/`` and is called ``mnist_pyt.py``. 
+The code for this example has been taken from *[[2]](README.md#References)* and modified to run on a Swarm Learning platform. The data files are in the ``swarm-learning/examples/mnist-pytorch/app-data/`` directory. The model program, after conversion to Swarm Learning, is in ``swarm-learning/examples/mnist-pytorch/model/`` and is called ``mnist_pyt.py``. 
 
 Scripts to run the example are in the ``swarm-learning/examples/mnist-pytorch/bin/`` and ``swarm-learning/swarm-learning/bin/`` directories:
 - init-workspace: It creates workspace for the given example by distributing data and models in different directories. It also initializes single node Swarm Network and starts spire server.
@@ -15,7 +15,7 @@ Following environment variables are required to set in each terminal:
 -	WORKSPACE_DIR: Path where workspace to be created. Separate model and data directories will be created for each training node inside the example workspace. Default is current directory.
 -	TRAINING_NODE: Unique name of each training node prefixed with ‘node’ e.g. ‘node1’ etc.
 
-Before running the example, verify license server is running and valid license is installed.
+Before running the example, verify license server is running and valid license is installed. Refer [Installing licenses and starting license server](https://github.com/RadhakrishnaJ/swarm-learning/blob/master/docs/setup.md#installing-licenses-and-starting-license-server).
 
 ## Steps to run:
 #### 1.	Create workspace and initialize Swarm Learning 
