@@ -3,7 +3,7 @@
 Several examples of using Swarm Learning are provided with the package. 
 
 ## Prerequisite for all examples
-Start license server and install valid license before running any of the examples. 
+Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](https://github.com/RadhakrishnaJ/swarm-learning/blob/master/docs/setup.md#installing-licenses-and-starting-license-server).
 
 ## Quick start examples:
 These quick start examples are designed to run in a single machine and complete in limited time. These examples are aimed for the user who wants to download Swarm Learning images, quickly setup and run to get a feel of it. The steps and scripts for quick start examples are written to run one Swarm Network node and two Swarm Learning nodes on a single machine to simulate decentralized environment. The quick start examples are:  
@@ -19,7 +19,7 @@ These examples are designed to run in about 8 to 10 machines and demonstrate the
    3. fraud-detection: It runs decentralized training on structured Credit Card Fraud dataset for credit card fraud 
        detection using TensorFlow.
 
-See the README file for each example for brief instructions on running them. For a more detailed reference on the Swarm Learning platform and package, see [Readme](https://github.hpe.com/adc/swarm-learning-docs/blob/extgit/README.md)
+See the README file for each example for brief instructions on running them. For a more detailed reference on the Swarm Learning platform and package, see [Readme](https://github.com/RadhakrishnaJ/swarm-learning#readme)
 
 ## System setup for the multi-node examples
 1. The instructions in these examples assume that Swarm Learning will run on 8 to 10 systems.
