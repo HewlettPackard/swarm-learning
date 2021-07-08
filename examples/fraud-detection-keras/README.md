@@ -4,7 +4,7 @@ This example runs decentralized training on structured Credit Card Fraud dataset
 
 This example uses a subset of the data from *[[1]](README.md#References)*. This subset is balanced and has been created as a 50:50 data set with equal distribution of fraud and non-fraud cases.
 
-The data files are in the ``swarm-learning-docs/examples/fraud-detection-keras/app-data/`` directory. The model program, after conversion to Swarm Learning, is in ``swarm-learning-docs/examples/fraud-detection-keras/model/`` and is called ``fraud-detection.py``. 
+The data files are in the ``swarm-learning/examples/fraud-detection-keras/app-data/`` directory. The model program, after conversion to Swarm Learning, is in ``swarm-learning/examples/fraud-detection-keras/model/`` and is called ``fraud-detection.py``. 
 
 Scripts to run the example are in the ``swarm-learning/examples/fraud-detection-keras/bin/`` and ``swarm-learning/swarm-learning/bin/`` directories:
 - init-workspace: It creates workspace for the given example by distributing data and models in different directories. It also initializes single node Swarm Network and starts SPIRE Server.
@@ -17,7 +17,7 @@ Following environment variables are required to set in each terminal:
 -	WORKSPACE_DIR: Path where workspace to be created. Separate model and data directories will be created for each training node inside the example workspace. Default is current directory.
 -	TRAINING_NODE: Unique name of each training node prefixed with ‘node’ e.g. ‘node1’ etc.
 
-Before running the example, verify license server is running and valid license is installed.
+Before running the example, verify license server is running and valid license is installed. Refer [Installing licenses and starting license server](https://github.com/RadhakrishnaJ/swarm-learning/blob/master/docs/setup.md#installing-licenses-and-starting-license-server).
 
 ## Steps to run:
 #### 1.	Create workspace and initialize Swarm Learning 
