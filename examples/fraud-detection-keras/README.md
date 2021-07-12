@@ -17,7 +17,7 @@ Following environment variables are required to set in each terminal:
 -	WORKSPACE_DIR: Path where workspace to be created. Separate model and data directories will be created for each training node inside the example workspace. Default is current directory.
 -	TRAINING_NODE: Unique name of each training node prefixed with ‘node’ e.g. ‘node1’ etc.
 
-Before running the example, verify license server is running and valid license is installed. Refer [Installing licenses and starting license server](https://github.com/RadhakrishnaJ/swarm-learning/blob/master/docs/setup.md#installing-licenses-and-starting-license-server).
+Before running the example, verify license server is running and valid license is installed. Refer [Installing licenses and starting license server](../../docs/setup.md#installing-licenses-and-starting-license-server).
 
 ## Steps to run:
 #### 1.	Create workspace and initialize Swarm Learning 
