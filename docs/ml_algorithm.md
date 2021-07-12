@@ -60,7 +60,7 @@ To convert a ML program into a Swarm Learning ML program:
     turned off by default.
 
 -   val_batch_size specifies the size of each validation batch for
-    measuring mean loss. This is used when use_adaptive_sync is tuned
+    measuring mean loss. This is used when use_adaptive_sync is turned
     ON.
 
 -   val_data specifies the validation dataset for measuring mean loss.
