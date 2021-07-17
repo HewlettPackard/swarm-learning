@@ -82,7 +82,7 @@ Licenses for running the Swarm Learning package should be installed on the Licen
 
 The default username is, ``"admin"``, and the password, ``"password"``.
 
-Use the management interface to install licenses and manage them. See chapter "HPE AutoPass License Server License Management" in [AutoPass License Server User Guide](HPE%20AutoPass%20License%20Server%20User%20Guide.pdf).
+Use the management interface to install licenses and manage them. See chapter "HPE AutoPass License Server License Management" in [AutoPass License Server User Guide](HPE%20AutoPass%20License%20Server%20User%20Guide.pdf) for details of the web GUI and how to install license.
 
 > NOTE: Whenever the container running the License Server (apls) is stopped or the host system running the License Sever reboots, the  License Server needs to be started and the licenses have to be reinstalled again. 
 > HPE recommends not to stop the License Server container once it is started.                                                           
