@@ -1,4 +1,4 @@
 ## Troubleshooting ##
 
-Troubleshooting provides solutions to commonly observed issues during Swaem set up and execution.
+Troubleshooting provides solutions to commonly observed issues during Swarm set up and execution.
 
