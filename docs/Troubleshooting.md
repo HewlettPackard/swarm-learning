@@ -25,17 +25,17 @@ Run docker ps | grep apls  -> If apls container is not running, then license ser
 ###### Check APLS status:  
 Browse to autopass license server management console: https://192.168.1.102:5814/autopass
 
-For this explanation IP 192.168.1.102 is used – replace this IP address with your host system IP address ( Do NOT use localhost / 127.0.0.1)  
-5814 is the default port used for APLS. 
-This site can’t be reached: 192.168.1.102 refused to connect.
-It means Autopass server is not reachable means APLS is not running. Start run-apls script as mentioned above. 
-  
-SSH command to use post forwarding if web access is not available in licenser server host. 
-$ ssh -L 5814: 192.168.1.102 :5814 <username>@192.168.1.102 )
+> NOTE: For this explanation IP 192.168.1.102 is used – replace this IP address with your license host system IP address (Do NOT use localhost / 127.0.0.1)  
+> 5814 is the default port used for APLS. 
 
-In the login screen, login using admin/ password. 
+If response is, this site can’t be reached: 192.168.1.102 refused to connect. It means Autopass server is not reachable means APLS is not running. Start run-apls script as mentioned above. 
+
+Otherwise, In the login screen login using admin/ password. 
   
-  
+> NOTE: SSH command to use port forwarding if web access is not available in licenser server host. 
+> $ ssh -L 5814: 192.168.1.102 :5814 username@192.168.1.102 )
+
+   
 ##### 2. Setting up Swarm License
 
 ###### Download the License: 
@@ -52,4 +52,5 @@ Select all feature IDs and install.
 Refer License installed picture here.
 
    ![License_server_after_installing_license](./images/APLS_after_installing_license.png)
- If above showing on your License Management means your setup is good to run SL.
+ 
+   If above screen showing on your License Management means your setup is good to run SL.
