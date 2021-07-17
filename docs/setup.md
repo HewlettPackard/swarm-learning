@@ -9,7 +9,7 @@ The evaluation license for running the Swarm Learning components are available a
 ## Pulling docker images
 
 Swarm Learning docker images are available on HPE docker registry - ``hub.myenterpriselicense.hpe.com.`` Docker registry access is password
-protected. User needs to login to docker registry using HPE Passport email id and password 'hpe_eval'. All Swarm Learning images are signed by HPE with the name as 'hpe-ai-swarm-learning'. Users can inspect and pull these images after enabling docker content trust by setting the environment variable as 'DOCKER_CONTENT_TRUST=1'. See [resources](URL.md#21-httpsdocsdockercomenginesecuritytrust) for details.
+protected. User needs to login to docker registry using HPE Passport email id and password 'hpe_eval'. All Swarm Learning images are signed by HPE with the name as 'hpe-ai-swarm-learning'. Users can inspect and pull these images after enabling docker content trust by setting the environment variable as 'DOCKER_CONTENT_TRUST=1'. See [Content trust in Docker](URL.md#21-content-trust-in-docker-httpsdocsdockercomenginesecuritytrust) for details.
 
 The following Swarm Learning images are available on HPE docker registry:
 
