@@ -4,7 +4,7 @@ Troubleshooting provides solutions to commonly observed issues during Swarm set 
 
 
 ### 1. Error code : 6002
-####    Error message: Unable to connect to server. Server might be wrongly configured or down #### 
+####    Error message: Unable to connect to server. Server might be wrongly configured or down. #### 
 ####    Custom message: Error in communicating with server https://HOST_SYSTEM_IP:5814 (default port) #### 
 
 #### Problem Description 
@@ -16,9 +16,9 @@ Error code: 6002, as shown in below screenshot happens when running SL Node with
 #### Resolution
 Fix for above issue involves two things.
 1.	Running AutoPass License Server (APLS) 
-2.	Installing Swarm License
+2.	Setting up Swarm License
 
-##### 1. Running APLS server
+##### 1. Running AutoPass License Server (APLS)
 Run docker ps | grep apls  -> If apls container is not running, then license server is not running, and you need to start it 
 <your install directory>/ swarm-learning/bin/run-apls 
 
