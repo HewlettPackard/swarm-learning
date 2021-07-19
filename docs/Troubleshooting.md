@@ -8,7 +8,7 @@ Troubleshooting provides solutions to commonly observed issues during Swarm set 
 ####    Custom message: Error in communicating with server https://HOST_SYSTEM_IP:5814 (default port) #### 
 
 #### Problem Description 
-Error code: 6002, as shown in below screenshot happens when running SL Node without starting APLS server and License setup. 
+Error code: 6002, as shown in below screenshot happens when SL is not able to connect to the APLS server. 
 
    ![Error_6002](./images/Error_6002_running_SL_node_without_Server_and_License.png)
    
@@ -23,17 +23,20 @@ Run docker ps | grep apls  -> If apls container is not running, then license ser
 <your install directory>/ swarm-learning/bin/run-apls 
 
 ###### Check APLS status:  
-Browse to autopass license server management console: https://192.168.1.102:5814/autopass
+Follow the steps mentioned below to verify APLS status. 
 
 > NOTE: For this explanation IP 192.168.1.102 is used – replace this IP address with your license host system IP address (Do NOT use localhost / 127.0.0.1)  
 > 5814 is the default port used for APLS. 
+   
+Browse to autopass license server management console: https://192.168.1.102:5814/autopass.
+> NOTE: If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
+> Else, if the host machine is accessible from your laptop/desktop, then you can access by using https://192.168.1.102:5814/autopass from your laptop/desktop browser.
+> Else you can setup SSH port forwarding first and then access https://192.168.1.102:5814/autopass from your laptop/desktop browser. 
+> Command to SSH port forwarding  - $ ssh -L 5814: 192.168.1.102 :5814 username@192.168.1.102 
 
 If response is, this site can’t be reached: 192.168.1.102 refused to connect. It means Autopass server is not reachable means APLS is not running. Start run-apls script as mentioned above. 
 
 Otherwise, In the login screen login using admin/ password. 
-  
-> NOTE: SSH command to use port forwarding if web access is not available in licenser server host. 
-> $ ssh -L 5814: 192.168.1.102 :5814 username@192.168.1.102 )
 
    
 ##### 2. Setting up Swarm License
