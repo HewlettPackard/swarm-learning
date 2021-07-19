@@ -130,7 +130,7 @@ We support the following basic packages required for ML - numpy, scipy, matplotl
 
 ## Can one add new python packages in Swarm Learning?
 
-Yes. For any additional packages support to machine learning process, user has to do following.
+Yes. For any additional support packages to machine learning process, user has to do following.
 
 1. Write a dockerfile to create a local SL image
     - By extending FROM the default SL image (sl-tf or sl-pyt).
