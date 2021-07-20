@@ -88,7 +88,7 @@ The ML program can produce additional log output. To do so, it should be modifie
 
 ## Do you need sudo/root privileges to run Swarm Learning?
 
-sudo is not required to launch the container, if docker is configured to run as a [non-root user](URL.md#16-httpsdocsdockercomengineinstalllinux-postinstallmanage-docker-as-a-non-root-user).
+sudo is not required to launch the container, if docker is configured to run as a non-root user. Refer [Manage Docker as a non-root user](URL.md#16-manage-docker-as-a-non-root-user-httpsdocsdockercomengineinstalllinux-postinstallmanage-docker-as-a-non-root-user)
 
 If docker is not configured to run as a non-root user, the scripts will automatically prefix docker commands with sudo. If the user does not have sudo privileges, an error will result.
 
