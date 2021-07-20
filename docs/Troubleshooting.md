@@ -19,8 +19,8 @@ Fix for above issue involves two things.
 2.	Setting up Swarm License
 
 ##### 1. Running AutoPass License Server (APLS)
-Run docker ps | grep apls  -> If apls container is not running, then license server is not running, and you need to start it 
-<your install directory>/ swarm-learning/bin/run-apls 
+Run docker ps | grep apls  -> If apls container is not running, then license server is not running, and you need to start it using  
+'your install directory/swarm-learning/bin/run-apls' 
 
 ###### Check APLS status:  
 Follow the steps mentioned below to verify APLS status. 
@@ -30,25 +30,35 @@ Follow the steps mentioned below to verify APLS status.
    
 Browse to autopass license server management console: https://192.168.1.102:5814/autopass.
 > NOTE: If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
+> 
 > Else, if the host machine is accessible from your laptop/desktop, then you can access by using https://192.168.1.102:5814/autopass from your laptop/desktop browser.
-> Else you can setup SSH port forwarding first and then access https://192.168.1.102:5814/autopass from your laptop/desktop browser. 
-> Command to SSH port forwarding  - $ ssh -L 5814: 192.168.1.102 :5814 username@192.168.1.102 
+> 
+> Else you should setup SSH port forwarding first and then access https://localhost:5814/autopass from your laptop/desktop browser. 
+> 
+> Run this shell command from your laptop/desktop to do SSH port forwarding  
+> - $ ssh -L 5814:192.168.1.102:5814 username@192.168.1.102 
 
-If response is, this site can’t be reached: 192.168.1.102 refused to connect. It means Autopass server is not reachable means APLS is not running. Start run-apls script as mentioned above. 
+If the browser response is, "this site can’t be reached" / "refused to connect" - It means APLS is not running correctly. Restart run-apls script as mentioned above. 
 
-Otherwise, In the login screen login using admin/ password. 
+Otherwise, In the APLS login screen, login using "admin/password". 
 
    
 ##### 2. Setting up Swarm License
 
 ###### Download the License: 
-If you don’t have Swarm License downloaded already, then get the License (.DAT file). Create login credentials to access [My HPE Software Center (MSC)](https://myenterpriselicense.hpe.com/cwp-ui/evaluation/HPE-SWARM/0.3.0/null) if you don’t have yet. The email address used to access MSC is called as HPE passport account.  The evaluation license for running the Swarm Learning components are available at [My HPE Software Center (MSC)](https://myenterpriselicense.hpe.com/cwp-ui/evaluation/HPE-SWARM/0.3.0/null). Use your HPE Passport account to access MSC and download evaluation license.
+If you don’t have Swarm License downloaded already, then get the License (.DAT file). 
+
+Create login credentials to access [My HPE Software Center (MSC)](https://myenterpriselicense.hpe.com/cwp-ui/evaluation/HPE-SWARM/0.3.0/null) if you don’t have yet. The email address used to access MSC is called as HPE passport account. 
+
+Use your HPE Passport account to access above MSC link and download evaluation license file.
 
 ###### Setup License: 
-Go to https://192.168.1.102:5814/autopass
+Go to APLS management console. As described in step 1. 
 
-Go to License Management – Install License
-Select License Dat file.
+Go to License Management –> Install License
+
+Select License file (.DAT).
+
 Select all feature IDs and install. 
 
 ###### Confirm License setup is successful: 
@@ -56,4 +66,4 @@ Refer License installed picture here.
 
    ![License_server_after_installing_license](./images/APLS_after_installing_license.png)
  
-   If above screen showing on your License Management means your setup is good to run SL.
+   If you are seeing the above screenshot in your APLS Management console, it means your setup is good to run Swarm Learning. 
