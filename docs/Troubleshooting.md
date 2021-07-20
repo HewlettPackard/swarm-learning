@@ -66,4 +66,4 @@ Refer License installed picture here.
 
    ![License_server_after_installing_license](./images/APLS_after_installing_license.png)
  
-   If you are seeing the above screenshot in your APLS Management console, it means your setup is good to run Swarm Learning. 
+   If you are seeing the above screenshot in your APLS Management console, it means your license setup is complete. 
