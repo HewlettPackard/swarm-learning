@@ -4,8 +4,8 @@ Troubleshooting provides solutions to commonly observed issues during Swarm set 
 
 
 ### 1. Error code : 6002
-####    Error message: Unable to connect to server. Server might be wrongly configured or down. #### 
-####    Custom message: Error in communicating with server https://HOST_SYSTEM_IP:5814 (default port) #### 
+####    ``Error message: Unable to connect to server. Server might be wrongly configured or down.`` #### 
+####    ``Custom message: Error in communicating with server https://HOST_SYSTEM_IP:5814 (default port)`` #### 
 
 #### Problem Description 
 Error code: 6002, as shown in below screenshot happens when SL is not able to connect to the APLS server. 
@@ -19,16 +19,16 @@ Fix for above issue involves two things.
 2.	Setting up Swarm License
 
 ##### 1. Running AutoPass License Server (APLS)
-Run docker ps | grep apls  -> If apls container is not running, then license server is not running, and you need to start it using  
-'your install directory/swarm-learning/bin/run-apls' 
+Run ``docker ps | grep apls``  -> If apls container is not running, then license server is not running, and you need to start it using  
+``swarm-learning-install-dir/swarm-learning/bin/run-apls`` 
 
 ###### Check APLS status:  
 Follow the steps mentioned below to verify APLS status. 
 
-> NOTE: For this explanation IP 192.168.1.102 is used – replace this IP address with your license host system IP address (Do NOT use localhost / 127.0.0.1)  
+> NOTE: For this explanation IP 192.168.1.102 is used – replace this IP address with the host system IP address on which the license server container is running (Do NOT use localhost / 127.0.0.1)  
 > 5814 is the default port used for APLS. 
    
-Browse to autopass license server management console: https://192.168.1.102:5814/autopass.
+Use a web browser to connect to APLS management console: https://192.168.1.102:5814/autopass.
 > NOTE: If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
 > 
 > Else, if the host machine is accessible from your laptop/desktop, then you can access by using https://192.168.1.102:5814/autopass from your laptop/desktop browser.
