@@ -128,7 +128,7 @@ Swarm Learning works with all connectionist machine learning models such as NN, 
 
 We support the following basic packages required for ML - numpy, scipy, matplotlib, opencv-python, pandas, pillow, sklearn.
 
-## Can one add new python packages in Swarm Learning?
+## Can one add new Python packages in Swarm Learning?
 
 Yes. For any additional support packages to machine learning process, user has to do following.
 
