@@ -89,20 +89,20 @@ Follow the steps mentioned below to browse APLS management console.
 > 5814 is the default port used for APLS. 
    
 Use a web browser to connect to APLS management console: https://192.168.1.102:5814/autopass.
-> NOTE: Below instructions as is may or may not work in your local setup, you have try relevant steps to browse APLS management console. 
-> 
-> If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
-> 
-> Else, if the host machine is accessible from your laptop/desktop, then you can access by using https://192.168.1.102:5814/autopass from your laptop/desktop browser.
-> 
-> Else you should setup SSH port forwarding first and then access https://localhost:5814/autopass from your laptop/desktop browser. 
-> 
-> Running below shell command is one of the way to do SSH port forwarding from your laptop/desktop.
+> NOTE: Below instructions as is may or may not work in your local setup, you have to try relevant steps to browse APLS management console. 
+
+- If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
+ 
+- Else, if the host machine is accessible from your laptop/desktop, then you can access by using https://192.168.1.102:5814/autopass from your laptop/desktop browser.
+
+- Else you should setup SSH port forwarding first and then access https://localhost:5814/autopass from your laptop/desktop browser. 
+
+> NOTE : Running below shell command is one of the way to do SSH port forwarding from your laptop/desktop.
 > - $ ssh -L 5814:192.168.1.102:5814 username@192.168.1.102 
 
 If the browser response is, "this site can’t be reached" / "refused to connect" - It means APLS is not running correctly. Restart run-apls script as mentioned above. 
 
-Otherwise, In the APLS login screen, login using ``admin/password``. 
+For APLS management console login, the default username is "admin", and the password is "password".
 
    
 #### Setting up Swarm License
@@ -116,15 +116,16 @@ Use your HPE Passport account to access above MSC link and download evaluation l
 
 ###### Setup License: 
 
-Use the management interface to install licenses and manage them. See chapter "HPE AutoPass License Server License Management" in [AutoPass License Server User Guide](HPE%20AutoPass%20License%20Server%20User%20Guide.pdf) for details of the web GUI and how to install license.
+Use the management interface to install licenses and manage them. 
 
-Go to APLS management console. As described in step 1. 
+- See chapter "HPE AutoPass License Server License Management" in [AutoPass License Server User Guide](HPE%20AutoPass%20License%20Server%20User%20Guide.pdf) for details of the web GUI and how to install license.
 
-Go to License Management –> Install License
+###### (or) Following are quick steps: 
 
-Select License file (.DAT).
-
-Select all feature IDs and install. 
+- Go to APLS management console. As described in step 1. 
+- Go to License Management –> Install License
+- Select License file (.DAT).
+- Select all feature IDs and install. 
 
 ###### Confirm License setup is successful: 
 Refer License installed picture here.
@@ -136,7 +137,8 @@ Refer License installed picture here.
 
 > NOTE: Whenever the container running the License Server (APLS) is stopped or the host system running the License Sever reboots, the  License Server needs to be started and the licenses have to be reinstalled again. 
 
-##### HPE recommends not to stop the License Server container once it is started.    
+### HPE recommends not to stop the License Server container once it is started.    
+
 
 
 ## Uninstalling the Swarm Learning package
