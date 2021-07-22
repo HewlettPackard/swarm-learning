@@ -80,12 +80,13 @@ The steps to be followed to download Swarm Learning docker images on the Linux e
 
 Licenses for running the Swarm Learning package should be installed on the License Server. After completing the product installation, start the License Server container using the ``swarm-learning/bin/run-apls`` script. The parameters for this script are described in the Running Swarm Learning section. Then, connect to the License Server's management interface using a web browser. This site can be reached using the link, ``-address-or-FQDN-of-host-running-License-Server-container>:5814/autopass``.
 
-The default username is, ``"admin"``, and the password, ``"password"``.
+The default username is, ``admin``, and the password, ``password``.
 
 Use the management interface to install licenses and manage them. See chapter "HPE AutoPass License Server License Management" in [AutoPass License Server User Guide](HPE%20AutoPass%20License%20Server%20User%20Guide.pdf) for details of the web GUI and how to install license.
 
-> NOTE: Whenever the container running the License Server (apls) is stopped or the host system running the License Sever reboots, the  License Server needs to be started and the licenses have to be reinstalled again. 
-> HPE recommends not to stop the License Server container once it is started.                                                           
+> NOTE: Whenever the container running the License Server (APLS) is stopped or the host system running the License Sever reboots, the  License Server needs to be started and the licenses have to be reinstalled again. 
+
+##### HPE recommends not to stop the License Server container once it is started.                                                           
 
 ## Uninstalling the Swarm Learning package
 
