@@ -15,10 +15,6 @@ Error code: 6002, as shown in below screenshot happens when SL is not able to co
    
 #### Resolution
 Fix for above issue requires to make sure following two things.
-1.	Running AutoPass License Server (APLS) 
-2.	Setting up Swarm License
-
-For detailed instructions - refer [Installing licenses and starting license server](setup.md#installing-licenses-and-starting-license-server)
 
 ##### 1. Running AutoPass License Server (APLS)
 Run ``docker ps | grep apls``  -> If apls container is not running, then license server is not running, and you need to start it using  
@@ -27,7 +23,9 @@ Run ``docker ps | grep apls``  -> If apls container is not running, then license
 Browse to APLS management console.
 If the browser response is, "this site can’t be reached" / "refused to connect" - It means APLS is not running correctly. Restart run-apls script as mentioned above. 
 
-   
 ##### 2. Setting up Swarm License
 Download the Swarm License.
 Install the license using APLS management console. 
+
+
+For detailed instructions - refer [Installing licenses and starting license server](setup.md#installing-licenses-and-starting-license-server)
