@@ -89,7 +89,9 @@ Follow the steps mentioned below to browse APLS management console.
 > 5814 is the default port used for APLS. 
    
 Use a web browser to connect to APLS management console: https://192.168.1.102:5814/autopass.
-> NOTE: If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
+> NOTE: Below instructions as is may or may not work in your local setup, you have try relevant steps to browse APLS management console. 
+> 
+> If you can run a browser on the host machine where you ran the "run-apls" script, You can now connect to the License server using https://192.168.1.102:5814/autopass from a browser. 
 > 
 > Else, if the host machine is accessible from your laptop/desktop, then you can access by using https://192.168.1.102:5814/autopass from your laptop/desktop browser.
 > 
