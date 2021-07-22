@@ -27,10 +27,7 @@ Run ``docker ps | grep apls``  -> If apls container is not running, then license
 Browse to APLS management console.
 If the browser response is, "this site can’t be reached" / "refused to connect" - It means APLS is not running correctly. Restart run-apls script as mentioned above. 
 
-Otherwise, In the APLS login screen, login using "admin/password". 
-
    
 ##### 2. Setting up Swarm License
 Download the Swarm License.
 Install the license using APLS management console. 
-
