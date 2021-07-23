@@ -23,7 +23,8 @@ Before running the example, verify license server is running and valid license i
 #### 1.	Create workspace and initialize Swarm Learning 
 First open a terminal, change directory to ``swarm-learning/examples`` and set the following environment variables. Then run ``init-workspace`` script to create workspace for ``fraud-detection-keras`` example and initialize Swarm Learning environment by running Swarm Network and Spire Server containers.
 
-   ``APLS_IP=<License Host Server IP (Do NOT use localhost / 127.0.0.1)>``
+   ``APLS_IP=<License Host Server IP>`` 
+   #### (Do NOT use localhost / 127.0.0.1)
    
    ``EXAMPLE=fraud-detection-keras``
 
@@ -41,7 +42,7 @@ By default two peer nodes will be created.  So open two new terminals, each repr
 -	**Node1: Training on Terminal 1 -**
 Change directory to ``swarm-learning/examples`` and set environment variables as specified below. Then run Swarm Learning container to start training as shown below. Specify ``--gpu <ID>`` in ``run-sl`` command if system has GPUs. Otherwise training will run on CPU.
    
-    ``APLS_IP=<License Host Server IP (Do NOT use localhost / 127.0.0.1)>``
+    ``APLS_IP=<License Host Server IP>``
    
     ``EXAMPLE=fraud-detection-keras``
 
@@ -54,7 +55,7 @@ Change directory to ``swarm-learning/examples`` and set environment variables as
 -	**Node2: Training on Terminal 2 -**
 Change directory to ``swarm-learning/examples`` and set environment variables as specified below. Then run Swarm Learning container to start training as shown below. Specify ``--gpu <ID>`` in ``run-sl`` command if system has GPUs. Otherwise training will run on CPU.
    
-    ``APLS_IP=<License Host Server IP (Do NOT use localhost / 127.0.0.1)>``
+    ``APLS_IP=<License Host Server IP>``
    
     ``EXAMPLE=fraud-detection-keras``
 
