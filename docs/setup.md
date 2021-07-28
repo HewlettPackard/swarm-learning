@@ -78,11 +78,11 @@ The steps to be followed to download Swarm Learning docker images on the Linux e
 
 ## Installing licenses and starting license server
 
-#### Running AutoPass License Server (APLS)
+#### 1. Running AutoPass License Server (APLS)
  Start the APLS container using
 ``swarm-learning-install-dir/swarm-learning/bin/run-apls`` 
 
-###### Browse APLS Management console:  
+###### Access APLS Management console:  
 Follow the steps mentioned below to browse APLS management console. 
 
 > NOTE: For this explanation IP 192.168.1.102 is used – replace this IP address with the host system IP address on which the license server container is running. 
@@ -105,7 +105,7 @@ If the browser response is, "this site can’t be reached" / "refused to connect
 For APLS management console login, the default username is "admin", and the password is "password".
 
    
-#### Setting up Swarm License
+#### 2. Setting up Swarm License
 
 ###### Download the License: 
 If you don’t have Swarm License downloaded already, then get the License (.DAT file). 
