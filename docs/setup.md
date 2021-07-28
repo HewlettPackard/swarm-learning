@@ -101,7 +101,7 @@ The default username is "admin", and the password is "password".
 #### 2. Installing Swarm License
 
 ##### - Download the License: 
-If you don’t have Swarm License downloaded already, then get the License file as described above. 
+If you don’t have Swarm License downloaded already, then get the License file as described [above](setup.md#how-to-setup-swarm-learning). 
 
 ##### - Install License: 
 
