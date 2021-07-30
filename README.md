@@ -24,6 +24,7 @@ You can transform any Keras or PyTorch based ML program that has been written us
   - [Download and setup](docs/setup.md) docker images and evaluation licenses
   - Execute [MNIST example](examples/mnist-keras) 
   - [Frequently Asked Questions](docs/FAQ.md)
+  - [Troubleshooting](docs/Troubleshooting.md)
 
 ## Documentation
   - [How Swarm Learning Components interact](docs/Component_interactions.md)

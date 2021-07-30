@@ -88,7 +88,7 @@ The ML program can produce additional log output. To do so, it should be modifie
 
 ## Do you need sudo/root privileges to run Swarm Learning?
 
-sudo is not required to launch the container, if docker is configured to run as a [non-root user](URL.md#16-httpsdocsdockercomengineinstalllinux-postinstallmanage-docker-as-a-non-root-user).
+sudo is not required to launch the container, if docker is configured to run as a non-root user. Refer [Manage Docker as a non-root user](URL.md#16-manage-docker-as-a-non-root-user-httpsdocsdockercomengineinstalllinux-postinstallmanage-docker-as-a-non-root-user)
 
 If docker is not configured to run as a non-root user, the scripts will automatically prefix docker commands with sudo. If the user does not have sudo privileges, an error will result.
 
@@ -128,10 +128,18 @@ Swarm Learning works with all connectionist machine learning models such as NN, 
 
 We support the following basic packages required for ML - numpy, scipy, matplotlib, opencv-python, pandas, pillow, sklearn.
 
-## Can one add new python packages in Swarm Learning?
+## Can one add new Python packages in Swarm Learning?
 
-Yes. If user needs additional packages, he can spawn a shell in the Swarm Learning (SL) container and add the required packages. He can also
-do a docker commit to persist this across restarts.
+Yes. For any additional support packages to machine learning process, user has to do following.
+
+1. Write a dockerfile to create a local SL image
+    - By extending FROM the default SL image (sl-tf or sl-pyt).
+    - Add required additional packages
+2. Build the local SL image from above dockerfile.
+3. If local SL image name differs from default SL image, then update ‘common’ script (inside swarm-learning/bin) and make sure following lines uses local SL image. 
+    - slTFImage="${swarmDockerHubAndUser}/sl-tf:${swarmVer}" (or)
+    - slPytImage="${swarmDockerHubAndUser}/sl-pyt:${swarmVer}"
+4. As usual run the container using run-sl command.
 
 ## What happens if a node runs slowly or drops out of the network?
 
