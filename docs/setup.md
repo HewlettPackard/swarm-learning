@@ -4,7 +4,7 @@ The Swarm Learning package contains docker container images for each Swarm Learn
 
 Create login credentials to access [My HPE Software Center (MSC)](https://myenterpriselicense.hpe.com/cwp-ui/evaluation/HPE-SWARM/0.3.0/null). The email address used to access MSC is called as HPE passport account. 
 
-The evaluation license for running the Swarm Learning components are available at [My HPE Software Center (MSC)](https://myenterpriselicense.hpe.com/cwp-ui/evaluation/HPE-SWARM/0.3.0/null). Use your HPE Passport account to access MSC and download evaluation license file(HPE-SWARM_90_9999_34336032.dat).
+The evaluation license for running the Swarm Learning components are available at [My HPE Software Center (MSC)](https://myenterpriselicense.hpe.com/cwp-ui/evaluation/HPE-SWARM/0.3.0/null). Use your HPE Passport account to access MSC and download evaluation license file.
 
 ## Pulling docker images
 
@@ -113,8 +113,8 @@ Use the management interface to install licenses and manage them.
 
 - Open APLS management console. 
 - Go to License Management –> Install License
-- Select License file (HPE-SWARM_90_9999_34336032.dat).
-- Select all feature IDs and install. 
+- Select License file.
+- Select all feature IDs and install.
 
 ## ``Do not stop the License Server once the licenses are installed``
 
