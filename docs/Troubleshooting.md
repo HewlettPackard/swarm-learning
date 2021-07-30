@@ -21,7 +21,6 @@ Run ``docker ps`` and check whether APLS is running. If apls container is not ru
 ``swarm-learning-install-dir/swarm-learning/bin/run-apls`` 
 
 Access APLS management console.
-If the browser response is, "this site can’t be reached" / "refused to connect". 
 If the browser cannot connect, verify the network proxy settings, firewall policies, etc. that are in effect. If required, work with your network administrator to resolve them.
 
 ##### 2. Setting up Swarm License
