@@ -42,30 +42,51 @@ To convert a ML program into a Swarm Learning ML program:
    4.  Instantiate an object of the SwarmCallback class
 
       swarm_callback = SwarmCallback(
-            min_peers = <peer count>,
-            sync_interval = <interval>,
-            use_adaptive_sync = <bool>,
-            val_batch_size = <batch size>,
-            val_data = <either a (x_val, y_val) tuple or a generator>
+                 sync_interval = <interval>,
+                 min_peers = <peer count>,
+                 use_adaptive_sync = False <bool>,
+                 val_batch_size = <batch size>,
+                 val_data = <either a (x_val, y_val) tuple or a generator>,
+                 max_peers = 0 <>,
+                 checkin_model_on_train_end=swu.CheckinModel.snapshot.name,
+                 node_weightage=1,
+                 ml_platform=swu.SMLPlatforms.KERAS.name,  # This expects 'TF' or 'KERAS' as a string.
+                 node_clique=swu.DEFAULT_CLIQUE,
+                 model_name='swarm_model',
+                 tx_retry_timeout_seconds=0.5,
+                 max_rv_delay_allowed=3,
+                 parameter_exponential_decay_exponent=1,
+                 full_quorum_wait_seconds=5,
+                 mean_losses_window_size=10,
+                 nodeId=None, # user supplied Node ID 
+
             )
 
--   min_peers specifies the minimum number of network peers required to
-    synchronize the insights.
 
 -   sync_interval specifies the number of batches after which a
     synchronization is performed.
-
+-   min_peers specifies the minimum number of network peers required to
+    synchronize the insights.
 -   use_adaptive_sync specifies whether the *adaptive sync interval*
     feature should be used for tuning the sync interval. This feature is
     turned off by default.
-
 -   val_batch_size specifies the size of each validation batch for
     measuring mean loss. This is used when use_adaptive_sync is turned
     ON.
-
 -   val_data specifies the validation dataset for measuring mean loss.
     It can be either a (x_val, y_val) tuple or a generator. This is used
     when use_adaptive_sync is turned ON.
+-   max_peers specifies 
+-   checkin_model_on_train_end indicates which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active']
+-   node_weightage specifies a number between 0-100 to indicate the relative importance of this node compared to others
+-   ml_platform: 'TF' or 'KERAS' ML Platform
+-   node_clique: The dot separated clique of this node in the network.
+-   model_name: A context-setter for the model being trained. Presently being used for naming the sync files
+-   tx_retry_timeout_seconds: Time to wait before retrying an Ethereum POST transaction
+-   max_rv_delay_allowed: Max rv rounds a node can be behind by to allow weights check-in during merge
+-   parameter_exponential_decay_exponent: The λ value in weight-decay factor e^-(λ*rv_delay) for slow nodes
+-   full_quorum_wait_seconds: Time to wait for full quorum when quorum size > min_peers. Post this Swarm proceeds with available members if min_peers count achieved.
+-   mean_losses_window_size: Count of previous merged val losses to maintain to compare against current loss for next sync interval calculation
 
  The parameters for this call are keyword-only parameters and
  therefore, must be named when the function is invoked. Except for
