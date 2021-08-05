@@ -58,8 +58,7 @@ To convert a ML program into a Swarm Learning ML program:
                  parameter_exponential_decay_exponent=1,
                  full_quorum_wait_seconds=5,
                  mean_losses_window_size=10,
-                 nodeId=None, # user supplied Node ID 
-
+                 nodeId=None # user supplied Node ID 
             )
 
 
@@ -76,17 +75,18 @@ To convert a ML program into a Swarm Learning ML program:
 -   val_data specifies the validation dataset for measuring mean loss.
     It can be either a (x_val, y_val) tuple or a generator. This is used
     when use_adaptive_sync is turned ON.
--   max_peers specifies 
--   checkin_model_on_train_end indicates which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active']
+-   max_peers specifies maximum number of peers used to cap-off participation during sync round. 
+-   checkin_model_on_train_end specifies which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active'] ???? strings or values? 
 -   node_weightage specifies a number between 0-100 to indicate the relative importance of this node compared to others
--   ml_platform: 'TF' or 'KERAS' ML Platform
--   node_clique: The dot separated clique of this node in the network.
--   model_name: A context-setter for the model being trained. Presently being used for naming the sync files
--   tx_retry_timeout_seconds: Time to wait before retrying an Ethereum POST transaction
--   max_rv_delay_allowed: Max rv rounds a node can be behind by to allow weights check-in during merge
--   parameter_exponential_decay_exponent: The λ value in weight-decay factor e^-(λ*rv_delay) for slow nodes
--   full_quorum_wait_seconds: Time to wait for full quorum when quorum size > min_peers. Post this Swarm proceeds with available members if min_peers count achieved.
--   mean_losses_window_size: Count of previous merged val losses to maintain to compare against current loss for next sync interval calculation
+-   ml_platform specifies ML platform. Allowed values 'TF' or 'KERAS' ML Platform , PYT or PYTORCH????
+-   node_clique specifies he dot separated clique of this node in the network. ?????
+-   model_name specifies a context-setter for the model being trained. Presently being used for naming the sync files. 
+-   tx_retry_timeout_seconds specifies time to wait before retrying an Ethereum POST transaction. 
+-   max_rv_delay_allowed specifies maximum merge sync rounds a node can be behind by to allow weights check-in during merge.
+-   parameter_exponential_decay_exponent specifies the λ value in weight-decay factor e^-(λ*rv_delay) for slow nodes. How to explain this??? 
+-   full_quorum_wait_seconds Time to wait for full quorum when quorum size > min_peers. Post this Swarm proceeds with available members if min_peers count achieved.
+-   mean_losses_window_size specifies count of previous merged val losses to maintain to compare against current loss for next sync interval calculation. 
+-   nodeId specifies user supplied node id. 
 
  The parameters for this call are keyword-only parameters and
  therefore, must be named when the function is invoked. Except for
