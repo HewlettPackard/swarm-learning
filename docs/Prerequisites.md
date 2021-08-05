@@ -36,6 +36,10 @@ cluster. The requirements for each system are:
 
     -   Swarm Learning is qualified with Ubuntu 20.04.
 
+-   Architecture
+
+    -   AMD64.
+
 -   Container hosting platform &mdash; either Docker or Kubernetes
 
     -   Docker
