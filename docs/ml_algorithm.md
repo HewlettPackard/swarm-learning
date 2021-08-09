@@ -61,6 +61,7 @@ To convert a ML program into a Swarm Learning ML program:
                  nodeId=None # user supplied Node ID 
             )
 
+>NOTE: Some of the parameters have default values as mentioned in above SwarmCallback. User needs to provide values as applicable to use case in work. 
 
 -   sync_interval specifies the number of batches after which a
     synchronization is performed.
@@ -76,12 +77,12 @@ To convert a ML program into a Swarm Learning ML program:
     It can be either a (x_val, y_val) tuple or a generator. This is used
     when use_adaptive_sync is turned ON.
 -   max_peers specifies maximum number of peers used to cap-off participation during sync round. 
--   checkin_model_on_train_end specifies which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active'] ???? strings or values? 
+-   checkin_model_on_train_end specifies which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active'] . ???? strings or values? Needs explanation. 
 -   node_weightage specifies a number between 0-100 to indicate the relative importance of this node compared to others
--   ml_platform specifies ML platform. Allowed values 'TF' or 'KERAS' ML Platform , PYT or PYTORCH????
--   node_clique specifies he dot separated clique of this node in the network. ?????
+-   ml_platform specifies ML platform. Allowed values :['TF','KERAS','PYTORCH']
+-   node_clique specifies the dot separated clique of this node in the network. ?????
 -   model_name specifies a context-setter for the model being trained. Presently being used for naming the sync files. 
--   tx_retry_timeout_seconds specifies time to wait before retrying an Ethereum POST transaction. 
+-   tx_retry_timeout_seconds specifies time to wait before retrying an Ethereum POST transaction. Ethereum or block chain to generalize, how to explain this?????
 -   max_rv_delay_allowed specifies maximum merge sync rounds a node can be behind by to allow weights check-in during merge.
 -   parameter_exponential_decay_exponent specifies the λ value in weight-decay factor e^-(λ*rv_delay) for slow nodes. How to explain this??? 
 -   full_quorum_wait_seconds Time to wait for full quorum when quorum size > min_peers. Post this Swarm proceeds with available members if min_peers count achieved.
@@ -89,9 +90,7 @@ To convert a ML program into a Swarm Learning ML program:
 -   nodeId specifies user supplied node id. 
 
  The parameters for this call are keyword-only parameters and
- therefore, must be named when the function is invoked. Except for
- use_adaptive_sync, none of the other parameters have default values.
- They must be specified.
+ therefore, must be named when the function is invoked. 
 
 5.  Use the SwarmCallback object for training the model.
 
