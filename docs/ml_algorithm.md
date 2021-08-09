@@ -42,23 +42,15 @@ To convert a ML program into a Swarm Learning ML program:
    4.  Instantiate an object of the SwarmCallback class
 
       swarm_callback = SwarmCallback(
-                 sync_interval = <interval>,
-                 min_peers = <peer count>,
-                 use_adaptive_sync = False <bool>,
-                 val_batch_size = <batch size>,
+                 sync_interval = <batch interval as integer>,
+                 min_peers = <minimum peers count as an integer>,
+                 use_adaptive_sync = False <boolean>,
+                 val_batch_size = <validation batch size as an integer>,
                  val_data = <either a (x_val, y_val) tuple or a generator>,
-                 max_peers = 0 <>,
-                 checkin_model_on_train_end=swu.CheckinModel.snapshot.name,
-                 node_weightage=1,
-                 ml_platform=swu.SMLPlatforms.KERAS.name,  # This expects 'TF' or 'KERAS' as a string.
-                 node_clique=swu.DEFAULT_CLIQUE,
-                 model_name='swarm_model',
-                 tx_retry_timeout_seconds=0.5,
-                 max_rv_delay_allowed=3,
-                 parameter_exponential_decay_exponent=1,
-                 full_quorum_wait_seconds=5,
-                 mean_losses_window_size=10,
-                 nodeId=None # user supplied Node ID 
+                 checkin_model_on_train_end = 'snapshot' <how to checkin model once its local training is over>,
+                 node_weightage = 1 <node weightage as an interger between 0 to 100>,
+                 ml_platform= <ML platform -'TF'/'KERAS'/'PYTORCH' as a string>, 
+                 model_name='swarm_model' <model name as a string>
             )
 
 >NOTE: Some of the parameters have default values as mentioned in above SwarmCallback. User needs to provide values as applicable to use case in work. 
@@ -76,18 +68,17 @@ To convert a ML program into a Swarm Learning ML program:
 -   val_data specifies the validation dataset for measuring mean loss.
     It can be either a (x_val, y_val) tuple or a generator. This is used
     when use_adaptive_sync is turned ON.
--   max_peers specifies maximum number of peers used to cap-off participation during sync round. 
--   checkin_model_on_train_end specifies which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active'] . ???? strings or values? Needs explanation. 
+-   checkin_model_on_train_end specifies which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active'].
+    
+    Specifies how the current model contributes to swarm network learning once the current model training is completed with all epochs. 
+It can be anyone of following three types.
+    - inactive – Model does not contribute any weights to further merge process. Models’ node weightage set to 0, so that it will be part of Swarm network learning to considered for minimum peers count but not for weight adjustments. It does not check-in any weights to merge process and it also does not consume any weights after merge process.
+    - snapshot – Model snapshots its last batch weights as final weights, that means model freezes with last batch training. Model does check-in snapshotted weights to merge process and does not update its weights after merge completion. 
+    - active – Model participates in swarm learning process as same as it was doing before its training completed but without local training. Model provides last merged weights as check-in weights and consumes weights after merge process to update its local weights. 
 -   node_weightage specifies a number between 0-100 to indicate the relative importance of this node compared to others
 -   ml_platform specifies ML platform. Allowed values :['TF','KERAS','PYTORCH']
--   node_clique specifies the dot separated clique of this node in the network. ?????
 -   model_name specifies a context-setter for the model being trained. Presently being used for naming the sync files. 
--   tx_retry_timeout_seconds specifies time to wait before retrying an Ethereum POST transaction. Ethereum or block chain to generalize, how to explain this?????
--   max_rv_delay_allowed specifies maximum merge sync rounds a node can be behind by to allow weights check-in during merge.
--   parameter_exponential_decay_exponent specifies the λ value in weight-decay factor e^-(λ*rv_delay) for slow nodes. How to explain this??? 
--   full_quorum_wait_seconds Time to wait for full quorum when quorum size > min_peers. Post this Swarm proceeds with available members if min_peers count achieved.
--   mean_losses_window_size specifies count of previous merged val losses to maintain to compare against current loss for next sync interval calculation. 
--   nodeId specifies user supplied node id. 
+
 
  The parameters for this call are keyword-only parameters and
  therefore, must be named when the function is invoked. 
