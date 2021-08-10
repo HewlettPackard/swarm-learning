@@ -68,13 +68,11 @@ To convert a ML program into a Swarm Learning ML program:
 -   val_data specifies the validation dataset for measuring mean loss.
     It can be either a (x_val, y_val) tuple or a generator. This is used
     when use_adaptive_sync is turned ON.
--   checkin_model_on_train_end specifies which model to check-in once local model training ends at a node. Allowed values: ['inactive', 'snapshot', 'active'].
-    
-    Specifies how the current model contributes to swarm network learning once the current model training is completed with all epochs. 
-It can be anyone of following three types.
-    - inactive – Model does not contribute any weights to further merge process. Models’ node weightage set to 0, so that it will be part of Swarm network learning to considered for minimum peers count but not for weight adjustments. It does not check-in any weights to merge process and it also does not consume any weights after merge process.
-    - snapshot – Model snapshots its last batch weights as final weights, that means model freezes with last batch training. Model does check-in snapshotted weights to merge process and does not update its weights after merge completion. 
-    - active – Model participates in swarm learning process as same as it was doing before its training completed but without local training. Model provides last merged weights as check-in weights and consumes weights after merge process to update its local weights. 
+-   checkin_model_on_train_end specifies checkin behaviour of a SL node once it has achieved stopping criterion and is waiting for all other peers to complete their training. Allowed values: ['inactive', 'snapshot', 'active'].
+    - inactive – Node does not contribute its weights in the merge process but participates as non-contributing peer in the merge process.
+    - snapshot – Node always checks in the weights that it had when it reached the stopping criterion, it will not accept merged weights hence no update to its local model. 
+    - active – Node accepts merged weights and applies them to its local model. Node checks in the updated weights back to merge process of Swarm network.
+    >NOTE: In all the above 3 cases Model will not be trained with local data.
 -   node_weightage specifies a number between 0-100 to indicate the relative importance of this node compared to others
 -   ml_platform specifies ML platform. Allowed values :['TF','KERAS','PYTORCH']
 -   model_name specifies a context-setter for the model being trained. Presently being used for naming the sync files. 
