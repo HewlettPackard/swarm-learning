@@ -69,7 +69,7 @@ To convert a ML program into a Swarm Learning ML program:
 
     Allowed values: ['inactive', 'snapshot', 'active'].
     - inactive – Node does not contribute its weights in the merge process but participates as non-contributing peer in the merge process.
-    - snapshot – Node always checks in the weights that it had when it reached the stopping criterion, it will not accept merged weights. 
+    - snapshot – Node always contributes the weights that it had when it reached the stopping criterion, it will not accept merged weights. 
     - active – Node behaves as if it is in active training. 
 -   'node_weightage' specifies a number between 0-100 to indicate the *relative* importance of this node compared to other nodes.
 -   'ml_platform' specifies ML platform. Allowed values :['TF','KERAS','PYTORCH']
