@@ -42,35 +42,42 @@ To convert a ML program into a Swarm Learning ML program:
    4.  Instantiate an object of the SwarmCallback class
 
       swarm_callback = SwarmCallback(
-            min_peers = <peer count>,
-            sync_interval = <interval>,
-            use_adaptive_sync = <bool>,
-            val_batch_size = <batch size>,
-            val_data = <either a (x_val, y_val) tuple or a generator>
+                 sync_interval = <batch interval as integer>,
+                 min_peers = <minimum peers count as an integer>,
+                 use_adaptive_sync = False <boolean>,
+                 val_data = <either a (x_val, y_val) tuple or a generator>,
+                 val_batch_size = <batch size of val_data as an integer>,
+                 checkin_model_on_train_end = 'snapshot' <how to checkin model once its local training is over>,
+                 node_weightage = 1 <node weightage as an interger between 0 to 100>,
+                 ml_platform= <ML platform -'TF'/'KERAS'/'PYTORCH' as a string>, 
+                 model_name='swarm_model' <model name as a string>
             )
 
--   min_peers specifies the minimum number of network peers required to
-    synchronize the insights.
+>NOTE: Some of the parameters have default values as mentioned in above SwarmCallback. User needs to provide values as applicable to use case in work. 
 
--   sync_interval specifies the number of batches after which a
+-   'sync_interval' specifies the number of batches after which a
     synchronization is performed.
-
--   use_adaptive_sync specifies whether the *adaptive sync interval*
-    feature should be used for tuning the sync interval. This feature is
+-   'min_peers' specifies the minimum number of network peers required to
+    synchronize the insights.
+-   'use_adaptive_sync' specifies whether the *adaptive sync interval*
+    feature should be used for automatically generating the the sync interval. This feature is
     turned off by default.
-
--   val_batch_size specifies the size of each validation batch for
-    measuring mean loss. This is used when use_adaptive_sync is turned
-    ON.
-
--   val_data specifies the validation dataset for measuring mean loss.
-    It can be either a (x_val, y_val) tuple or a generator. This is used
+-   'val_data' specifies the dataset for generating metrics for adaptive sync logic. It can be either a (x_val, y_val) tuple or a generator. This is used
     when use_adaptive_sync is turned ON.
+-   'val_batch_size' specifies the batch size for 'val_data' dataset. This is used when use_adaptive_sync is turned ON.
+-   'checkin_model_on_train_end' specifies the merge behaviour of a SL node *after* it has achieved stopping criterion and it is waiting for all other peers to complete their training. During this period this ***SL node will not train model with local data***. This parameter decides the nature of the weights that this SL node will contribute to the merge process. 
+
+    Allowed values: ['inactive', 'snapshot', 'active'].
+    - inactive – Node does not contribute its weights in the merge process but participates as non-contributing peer in the merge process.
+    - snapshot – Node always contributes the weights that it had when it reached the stopping criterion, it will not accept merged weights. 
+    - active – Node behaves as if it is in active training, but it will not train merged model with local data as mentioned above. 
+-   'node_weightage' specifies a number between 0-100 to indicate the *relative* importance of this node compared to other nodes.
+-   'ml_platform' specifies ML platform. Allowed values :['TF','KERAS','PYTORCH']
+-   'model_name' used internally as a tag to identify the training session.   
+
 
  The parameters for this call are keyword-only parameters and
- therefore, must be named when the function is invoked. Except for
- use_adaptive_sync, none of the other parameters have default values.
- They must be specified.
+ therefore, must be named when the function is invoked. 
 
 5.  Use the SwarmCallback object for training the model.
 

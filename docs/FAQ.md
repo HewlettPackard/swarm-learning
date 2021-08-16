@@ -26,6 +26,15 @@ the blockchain. For this reason, the Sentinel node should be the very first Swar
 framework. Once the blockchain network has been initialized, there is no difference between the functioning of the Sentinel node and that of the
 other Swarm Network nodes.
 
+## How do you know if Swarm Network node started successfully?
+
+Look for following message after executing `run-sn` command to confirm successful starting of Swarm Network node. It might take a few minutes before this message appears. 
+
+`swarm.blCnt : INFO : Starting SWARM-API-SERVER on port :30304 (30304 is the default port).`
+
+This message does not show up if APLS or SPIRE server is not configured correctly.
+
+
 ## How do you run Swarm Learning on CPU?
 
 When you start the Swarm Learning nodes by running ``swarm-learning/bin/run-sl``, to use only the CPU for these nodes, ***do not*** specify the --gpu
