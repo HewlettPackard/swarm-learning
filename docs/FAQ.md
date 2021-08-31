@@ -20,9 +20,7 @@ The server is responsible for issuing the identities. There is typically one ins
 
 ## What is the Sentinel node?
 
-The Sentinel node is a special Swarm Network node. It is responsible for initializing the blockchain network and deploying the smart contracts on
-the blockchain. For this reason, the Sentinel node should be the very first Swarm Network node that is started in the Swarm Learning
-framework. Once the blockchain network has been initialized, there is no difference between the functioning of the Sentinel node and that of the
+The Sentinel node is a special Swarm Network node. It is the first Swarm Network node which is responsible for initializing the blockchain network and deploying the smart contracts on the blockchain. Once the blockchain network has been initialized, there is no difference between the functioning of the Sentinel node and that of the
 other Swarm Network nodes.
 
 ## How do you know if Swarm Network node started successfully?
@@ -37,12 +35,11 @@ This message does not show up if APLS or SPIRE server is not configured correctl
 ## How do you run Swarm Learning on CPU?
 
 When you start the Swarm Learning nodes by running ``swarm-learning/bin/run-sl``, to use only the CPU for these nodes, ***do not*** specify the --gpu
-parameter while invoking the script. The other swarm learning components like Swarm Network, License server, and SPIRE server always run on the
-CPU. Use ``swarm-learning/bin/run-sl --help`` to get details.
+parameter while invoking the script. The other swarm learning components like Swarm Network, Swarm Learning Command Interface, License server, and SPIRE server always run on the CPU. Use ``swarm-learning/bin/run-sl --help`` to get details.
 
 ## How do you run Swarm Learning on GPU?
 
-Only the Swarm Learning nodes can run on GPUs. The license server, SPIRE server, and Swarm Network nodes utilize only the CPUs.
+Only the Swarm Learning nodes can run on GPUs. The license server, SPIRE server, Swarm Learning Command Interface and Swarm Network nodes utilize only the CPUs.
 
 Start the Swarm Learning nodes by running ``swarm-learning/bin/run-sl``. To make these nodes utilize the GPUs on the host system, specify the --gpu
 parameter, with the set of GPUs to use as a value, while invoking the script. The set of GPUs to use can be specified by either a
