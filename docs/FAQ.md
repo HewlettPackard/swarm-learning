@@ -5,8 +5,7 @@ Swarm Learning is a decentralized, privacy-preserving Machine Learning framework
 
 ## What are the components of Swarm Learning?
 
-Swarm Learning has 4 types of components, connected to form a network. They are Swarm Learning nodes, Swarm Network nodes, SPIRE Server nodes,
-and License Server nodes. Refer the Swarm Learning cookbook for more details.
+Swarm Learning has 5 types of components, connected to form a network. They are Swarm Learning nodes, Swarm Network nodes, Swarm Learning Command Interface nodes, SPIRE Server nodes, and License Server nodes. Refer the Swarm Learning cookbook for more details.
 
 ## What is the License server node?
 
