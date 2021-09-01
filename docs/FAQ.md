@@ -77,6 +77,8 @@ Each License Server node requires one network port for incoming connections from
 
 1.  A *License Server API server port,* which is meant for running a REST-based API server. By default, port 5814 is used.
 
+None of the Swarm Learning Command Interface nodes exposes any port. They communicate through the services provided by the Swarm Network, SPIRE Server, and License Server nodes.
+
 The port numbers can be customized by using the corresponding ``swarm-learning/bin/run-sn``, ``swarm-learning/bin/run-sl``, ``swarm-learning/bin/run-spire-server``,
 and ``swarm-learning/bin/run-apls`` scripts that are supplied with the Swarm Learning package. Use the --help option on the above scripts to get
 exact details.
