@@ -255,7 +255,21 @@ genDockerExec()
               "${3}" != "${containerFQDN}"     && \
               "${3}" != "${containerHostname}" ]]
         then
-            ssh="ssh ${3}"
+            # ssh="ssh ${3}"
+            if [[ -n "${5}" ]]
+            then
+                port=":${5}"
+            else
+                port=
+            fi
+
+            if [[ -n "${6}" ]]
+            then
+                user="${6}@"
+            else
+                user=
+            fi
+            ssh="ssh ssh://${user}${3}${port}"
             containerName=$(${sudo} ${ssh} ${dockerPSCmd})
             [[ -z "${containerName}" ]] && error "cannot contact ${4}"
         fi
@@ -289,7 +303,7 @@ genSpireServerExec()
         serverAddress=$(getFromAgentConfigFile "server_address")
 
     spireServerExec=$(genDockerExec "${spireImage}" \
-        "${spireDockerName}" "${serverAddress}" "SPIRE Server")
+        "${spireDockerName}" "${serverAddress}" "SPIRE Server" "${sshPort}" "${sshUser}")
 
     return 0
 }
@@ -393,7 +407,15 @@ processCommonOpt()
             checkAndAssign "${opt}" "${optarg}"
             workdir="--workdir=${optarg}"
             ;;
-
+        
+        --ssh-user)
+            checkAndAssign "${opt}" "${optarg}"
+            ;;
+            
+        --ssh-port)
+            checkAndAssign "${opt}" "${optarg}"
+            ;;
+            
         *) unprocessedOpts+=("${origParam}"); nShift=1;;
     esac
 
@@ -437,7 +459,7 @@ postprocessAPLSOpts()
     if [[ -z "${aplsIp}" ]]
     then
         aplsExec=$(genDockerExec \
-            "${aplsImage}" "${aplsDockerName}" "" "Autopass License Server")
+            "${aplsImage}" "${aplsDockerName}" "" "Autopass License Server" "${sshPort}" "${sshUser}")
         aplsIp="$(${aplsExec} hostname -i | tr -d '\r\n')"
     fi
 
