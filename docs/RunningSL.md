@@ -261,6 +261,18 @@ Use the ``swarm-learning/bin/run-sn`` script to start Sentinel and Swarm Network
     
     Default: None
 
+-   ``--ssh-port <ssh port number>``
+
+    This parameter is optional. When it is not specified, connection to SPIRE Server happens via default port. This parameter is required when the SPIRE Server uses 
+    non-default ssh port. Swarm Network nodes uses this port to ssh connect SPIRE Server.
+    
+    Default: 22
+
+-   ``--ssh-user <ssh user name>``
+
+    This parameter is also optional. When it is specified, connection to SPIRE Server happens via specified user.
+    Swarm Network nodes uses this user to ssh connect SPIRE Server. 
+
 -   ``--spire-docker-name <docker container name>``
 
     The name of the docker container running the SPIRE Server. This is used to generate a join token, when ``-genJoinToken`` or ``--gen join-`` token  is specified.
@@ -360,6 +372,18 @@ b.  all -- all GPUs on the system are used.
     The IP address or DNS name of the SPIRE server.
 
     Default: None
+    
+-   ``--ssh-port <ssh port number>``
+
+    This parameter is optional. When it is not specified, connection to SPIRE Server happens via default port. This parameter is required when the SPIRE Server uses 
+    non-default ssh port. Swarm Learning nodes uses this port to ssh connect SPIRE Server.
+    
+    Default Port: 22
+
+-   ``--ssh-user <ssh user name>``
+
+    This parameter is also optional. When it is specified, connection to SPIRE Server happens via specified user.
+    Swarm Learning nodes uses this user to ssh connect SPIRE Server. 
 
 -   ``--spire-docker-name <docker container name>``
 
