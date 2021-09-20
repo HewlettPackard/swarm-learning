@@ -116,7 +116,15 @@ printCommonUsage()
     printf -- "\tWorking directory inside the container\n\n"
     
     printf -- "--rm\n"
-    printf -- "\tRequest Docker to automatically remove the container when it exits\n\n"    
+    printf -- "\tRequest Docker to automatically remove the container when it exits\n\n"
+    
+    printf -- "--ssh-port\n"
+    printf -- "\tPort on which connection establishes to ssh listener\n"
+    printf -- "\tDefault: 22, if ssh listener doesn't use any custom port\n\n"
+    
+    printf -- "--ssh-user\n"
+    printf -- "\tConnects to ssh listener using specified user\n"
+    printf -- "\tDefault: current user, if not specified\n\n"
 
     printf -- "-h, --help\n"
     printf -- "\tThis message.\n\n"
@@ -214,10 +222,11 @@ isLocalhost()
 #      SSH login to the remote system (including a login for the root user, when
 #      sudo is required to run docker) for this to work.
 #   4. A descriptive name for the image - to include in error messages.
-#   5. Optional ssh port. If not specified the connection will be 
+#   5. Optional ssh port. If not specified, the connection will be 
 #      established using the default port 22.
 #   6. Optional ssh user. On specifying the user name, the ssh connection will 
-#      happen as the mentioned user. 
+#      happen as the mentioned user. If not specified, the connection will be 
+#      established using current user.
 
 genDockerExec()
 {
@@ -415,8 +424,7 @@ processCommonOpt()
             checkAndAssign "${opt}" "${optarg}"
             workdir="--workdir=${optarg}"
             ;;
-        # Added --ssh-user and --ssh-port parameters to
-        # ssh connect non default ports.
+
         --ssh-user)
             checkAndAssign "${opt}" "${optarg}"
             ;;
