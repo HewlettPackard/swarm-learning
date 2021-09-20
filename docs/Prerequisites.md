@@ -78,5 +78,5 @@ cluster. The requirements for each system are:
 -   Multi system cluster Requirements:
 
     -   Passwordless SSH setup across systems
-        
+
     -   **Synchronized time** across all systems
