@@ -213,11 +213,12 @@ isLocalhost()
 #      the remote host. Further, the user should have configured a password-less
 #      SSH login to the remote system (including a login for the root user, when
 #      sudo is required to run docker) for this to work.
-#   4. Optional ssh port and ssh user. If not specified the connection will be 
-#      established using the default port 22. On specifying the port and/or user
-#      name, the ssh command will be built using these params and the connection 
-#      happens through the specified port as the mentioned user. 
-#   5. A descriptive name for the image - to include in error messages.
+#   4. A descriptive name for the image - to include in error messages.
+#   5. Optional ssh port. If not specified the connection will be 
+#      established using the default port 22.
+#   6. Optional ssh user. On specifying the user name, the ssh connection will 
+#      happen as the mentioned user. 
+
 genDockerExec()
 {
     # Command to get the "right" running instance of the image. We do not prefix
