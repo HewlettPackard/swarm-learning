@@ -78,8 +78,5 @@ cluster. The requirements for each system are:
 -   Multi system cluster Requirements:
 
     -   Password-less SSH setup across systems
-    
-        >   *NOTE*: If needed, a non-default port SSH connection is possible through ssh port and ssh user options. 
-            This will be useful when connecting to SPIRE Server from Swarm Network nodes or Swarm Learning nodes. 
         
     -   **Synchronized time** across all systems
