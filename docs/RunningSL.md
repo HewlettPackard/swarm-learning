@@ -104,9 +104,9 @@ The scripts in the ``swarm-learning/bin`` directory can be used for starting the
 
 -   ``--name <name>``
 
-   The name assigned to the component\'s docker container.
+    The name assigned to the component\'s docker container.
 
-   Default: None
+    Default: None
 
 -   ``--network <network name>``
 
@@ -355,9 +355,9 @@ Use the ``swarm-learning/bin/run-sl`` script to start a Swarm Learning node. Not
 
     This parameter specifies the GPUs to use. A Swarm Learning node can use multiple GPUs. The set of GPUs to use can be specified in one of two ways:
 
-a.  A comma-separated list of GPU indexes -- GPU indexes start from zero.
+        a.  A comma-separated list of GPU indexes -- GPU indexes start from zero.
 
-b.  all -- all GPUs on the system are used.
+        b.  all -- all GPUs on the system are used.
 
     This parameter is optional. When it is not specified, the Swarm Learning nodes will run on the CPU only and will not use any GPU.
 
