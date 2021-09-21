@@ -119,12 +119,12 @@ printCommonUsage()
     printf -- "\tRequest Docker to automatically remove the container when it exits\n\n"
     
     printf -- "--ssh-port\n"
-    printf -- "\tPort on which connection establishes to ssh listener\n"
-    printf -- "\tDefault: 22, if ssh listener doesn't use any custom port\n\n"
+    printf -- "\tThe port on which the SSH server is listening.\n"
+    printf -- "\tDefault: 22\n\n"
     
     printf -- "--ssh-user\n"
-    printf -- "\tConnects to ssh listener using specified user\n"
-    printf -- "\tDefault: current user, if not specified\n\n"
+    printf -- "\tThe user name to use when establishing a SSH connection.\n"
+    printf -- "\tDefault: current user\n\n"
 
     printf -- "-h, --help\n"
     printf -- "\tThis message.\n\n"
