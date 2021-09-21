@@ -29,3 +29,13 @@ Install the license using APLS management console.
 
 
 For detailed instructions - refer [Installing licenses and starting license server](setup.md#installing-licenses-and-starting-license-server)
+
+<br>
+
+### 2. ssh: connect to host \<IP or FQDN\> port 22: Connection refused.
+
+#### Problem Description
+Startup scripts fail to establish SSH connection to hosts in a multi-system cluster environment. The SSH servers have been configured to listen on a custom port and not on the default port of 22.
+
+#### Resolution
+Use the ``--ssh-port`` option to pass the custom port number to the startup scripts. For details, refer [Running Swarm Learning](RunningSL.md#running-swarm-learning) 
