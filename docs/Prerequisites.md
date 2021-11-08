@@ -10,7 +10,9 @@ cluster. The requirements for each system are:
 
     -   This is a suggestive specification for a Swarm Learning
         platform. The actual implementation can be a VM or a bare-metal
-        machine. The exact hardware required is a function of the ML
+        machine. If using VM ensure AVX instruction set is enabled, 
+        it is required for tensorFlow to work. 
+        The exact hardware required is a function of the ML
         algorithm\'s complexity.
 
         -   4 cores
@@ -51,6 +53,8 @@ cluster. The requirements for each system are:
 
         -   Configure network proxy settings for docker. See 17 under [Resource](URL.md) for
             instructions.
+            
+        -   Configure Docker to use IPV4. 
 
     -   Kubernetes
 
