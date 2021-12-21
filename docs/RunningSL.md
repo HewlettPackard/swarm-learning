@@ -357,7 +357,7 @@ Use the ``swarm-learning/bin/run-sl`` script to start a Swarm Learning node. Not
     
     a.  A comma-separated list of GPU indexes -- GPU indexes start from zero.
     
-    b.  all -- all GPUs on the system are used.
+    b.  `all` -- all GPUs on the system are used.
     
     This parameter is optional. When it is not specified, the Swarm Learning nodes will run on the CPU only and will not use any GPU.
     
