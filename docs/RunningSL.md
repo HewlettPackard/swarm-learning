@@ -105,9 +105,9 @@ The scripts in the ``swarm-learning/bin`` directory can be used for starting the
 
 -   ``--name <name>``
 
-   The name assigned to the component\'s docker container.
+    The name assigned to the component\'s docker container.
 
-   Default: None
+    Default: None
 
 -   ``--network <network name>``
 
@@ -173,6 +173,17 @@ The scripts in the ``swarm-learning/bin`` directory can be used for starting the
 -   ``--rm``
 
     Request Docker to automatically remove the container when it exits
+    
+-   ``--ssh-port <ssh port number>``
+
+    This parameter specifies the port number on which the SSH server is listening. It is optional.It should be specified in a multi-system cluster environment when the 
+    SSH servers are not listening on the default SSH port.
+    
+    Default: 22
+
+-   ``--ssh-user <ssh user name>``
+
+    This parameter specifies the user name to use when establishing an SSH connection. It is optional. When it is not specified, the current user's login name is used.
 
 -   ``-h, --help``
     
@@ -254,7 +265,7 @@ Use the ``swarm-learning/bin/run-sn`` script to start Sentinel and Swarm Network
 
     Generate a join token that the SPIRE Agent can use to authenticate itself to the SPIRE Server.
     
-    >**NOTE**: The systems should have been configured with password-less SSH for this to work.
+    >**NOTE: The systems should have been configured with passwordless SSH for this to work.**
 
 -   ``-serverAddress <IP address or DNS name>``
 
@@ -357,7 +368,7 @@ Use the ``swarm-learning/bin/run-sl`` script to start a Swarm Learning node. Not
 
     Generate a join token that the SPIRE Agent can use to authenticate itself to the SPIRE Server.
 
->   **NOTE: The systems should have been configured with password-less SSH for this to work.**
+    >   **NOTE: The systems should have been configured with passwordless SSH for this to work.**
 
 -   ``-serverAddress <IP address or DNS name>``
 

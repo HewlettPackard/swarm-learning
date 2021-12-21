@@ -22,7 +22,7 @@ These examples are designed to run in about 8 to 10 machines and demonstrate the
 See the README file for each example for brief instructions on running them. For a more detailed reference on the Swarm Learning platform and package, see [Readme](../README.md)
 
 ## System setup for the multi-node examples
-1. The instructions in these examples assume that Swarm Learning will run on 8 to 10 systems.
+1. The instructions in these examples assume that Swarm Learning will run on 8 to 10 systems. Ensure the [Prerequisites](../docs/Prerequisites.md#prerequisites) are met before the setup.
     - These 10 systems have IP addresses 172.1.1.1, 172.2.2.2, 172.3.3.3, 172.4.4.4, 172.5.5.5, 172.6.6.6, 172.7.7.7, 172.8.8.8, 172.9.9.9 and 172.10.10.10.
     - 172.1.1.1 will run the Sentinel node.
     - 172.4.4.4 will run a Swarm Network node.

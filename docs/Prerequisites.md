@@ -81,6 +81,6 @@ cluster. The requirements for each system are:
 
 -   Multi system cluster Requirements:
 
-    -   Password-less SSH setup across systems
+    -   Passwordless SSH setup across systems
 
     -   **Synchronized time** across all systems
