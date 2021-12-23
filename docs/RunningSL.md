@@ -43,6 +43,7 @@ Depending on the type of Swarm Learning components that are running on a host, s
 ## 6. The GPU to use
 
 Swarm Learning can utilize NVIDIA GPUs, if the appropriate drivers and toolkits have been installed. To utilize a GPU, its index number should be passed as a parameter to the Swarm Learning container. GPU indexes start from zero.
+> NOTE: Eval version of Swarm Learning with ML platform set to PyTorch(PYT) does not support GPU usage.
 
 ## 7. SPIRE Server configuration
 
@@ -81,7 +82,7 @@ By default, the agent uses join tokens to connect to the server. This can be cha
 | :warning: WARNING                                                                                                    |
 |:---------------------------------------------------------------------------------------------------------------------|
 |  1. Ensure your network proxy settings are configured correctly and the containers are able to talk to each other.   |
-|  2. If you specify `--gpu`, ensure the GPUs are available.
+|  2. If you specify `--gpu`, ensure the GPUs are available. 
 |  3. `Effective user` inside the docker container should be root. The run scripts below currently ensures this by default.
 
 This is the order to start and run Swarm Learning. As mentioned earlier, the License Server should have been started and the licenses installed.
@@ -353,12 +354,15 @@ Use the ``swarm-learning/bin/run-sl`` script to start a Swarm Learning node. Not
 -   ``--gpu=<set of GPUs to use>``
 
     This parameter specifies the GPUs to use. A Swarm Learning node can use multiple GPUs. The set of GPUs to use can be specified in one of two ways:
-
+    
     a.  A comma-separated list of GPU indexes -- GPU indexes start from zero.
-
+    
     b.  `all` -- all GPUs on the system are used.
-
+    
     This parameter is optional. When it is not specified, the Swarm Learning nodes will run on the CPU only and will not use any GPU.
+    
+    >   NOTE: Eval version of Swarm Learning with ML platform set to PyTorch(PYT) does not support GPU usage.
+
 
 -   ``-genJoinToken, --gen-join-token``
 

@@ -46,6 +46,8 @@ comma-separated list of GPU indexes or, the keyword all. Specifying all makes th
 
 Use ``swarm-learning/bin/run-sl --help`` to get details.
 
+> NOTE: Eval version of Swarm Learning with ML platform set to PyTorch(PYT) does not support GPU usage.
+
 ## Can you have heterogeneous nodes, with some running on CPU and others on GPU?
 
 Yes, the framework is designed to work seamlessly on heterogeneous hardware. For each Swarm Learning node, you can specify whether it
