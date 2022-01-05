@@ -286,7 +286,7 @@ genDockerExec()
             else
                 user=
             fi
-            ssh="ssh ssh://${user}${3}${port}"
+            ssh="ssh ${user}${3}${port}"
             containerName=$(${sudo} ${ssh} ${dockerPSCmd})
             [[ -z "${containerName}" ]] && error "cannot contact ${4}"
         fi
