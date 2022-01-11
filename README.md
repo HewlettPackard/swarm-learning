@@ -42,6 +42,10 @@ You can transform any Keras or PyTorch based ML program that has been written us
 
 ## Getting in touch 
   Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.
+  
+  Join below Slack channel to communicate with us. 
+  
+  [hpe-ai-swarm-learning](https://hpe-external.slack.com/archives/C02PWRJPWVD)
 
 ## Contributing
   Refer to [Contributing](CONTRIBUTING.md) for more information.
