@@ -47,8 +47,11 @@ You can transform any Keras or PyTorch based ML program that has been written us
   
   Join below Slack channel to communicate with us. 
   
-  ![slack](/docs/images/slack.png)
   [hpe-ai-swarm-learning](https://hpe-external.slack.com/archives/C02PWRJPWVD)
+  
+  ![slack](/docs/images/slack.png)
+
+
 
 ## Contributing
   Refer to [Contributing](CONTRIBUTING.md) for more information.
