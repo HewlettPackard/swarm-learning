@@ -56,7 +56,7 @@ The ML node is responsible to train and iteratively update the model. For each M
 ## Getting Started
   - [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
   - Clone this repository 
-  - [Download and setup](/docs/Install/HPE_Swarm_Learning_installation.md) Swarm wheels package, Swarm Docker images, and Swarm evaluation licenses 
+  - [Download and setup](/docs/Install/HPE_Swarm_Learning_installation.md) [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md), Swarm Docker images, and Swarm evaluation licenses 
   - Execute [MNIST example](/docs/User/MNIST.md) 
   - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   - [Troubleshooting](/docs/User/Troubleshooting.md)
@@ -64,6 +64,8 @@ The ML node is responsible to train and iteratively update the model. For each M
 ## Documentation
 
   - [How Swarm Learning Components interact](/docs/User/Swarm_Learning_component_interactions.md)
+  - [Swarm Learning Concepts](/docs/User/Swarm_Learning_concepts.md)
+  - [Working of a Swarm Learning node](/docs/User/Working_of_a_Swarm_Learning_node.md)
   - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
   - [Configuring and Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
