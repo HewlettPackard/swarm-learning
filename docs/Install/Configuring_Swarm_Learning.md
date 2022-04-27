@@ -2,3 +2,7 @@
 
 This chapter provides information about various configurations involved in the Swarm Learning.
 
+    -   [IP address of host systems](IP_address_of_host_systems.md)
+    -   [Exposed port numbers](Exposed_port_numbers.md)
+    -   [Environment variables](Environment_variables.md)
+
