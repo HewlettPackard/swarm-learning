@@ -92,9 +92,9 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 
 Also see:
 
-    -   [Starting Sentinel node](Starting_Sentinel_node.md)
-    -   [Starting Swarm Learning node](Starting_Swarm_Learning_node.md)
-    -   [Starting SWCI nodes](Starting_SWCI_nodes.md)
-    -   [Starting SWOP nodes](Starting_SWOP_nodes.md)
-    -   [Stopping Swarm Learning node](Stopping_Swarm_Learning_node.md)
-    -   [Uninstalling the Swarm Learning package](Uninstalling_the_Swarm_Learning_package.md)
+   -   [Starting Sentinel node](Starting_Sentinel_node.md)
+   -   [Starting Swarm Learning node](Starting_Swarm_Learning_node.md)
+   -   [Starting SWCI nodes](Starting_SWCI_nodes.md)
+   -   [Starting SWOP nodes](Starting_SWOP_nodes.md)
+   -   [Stopping Swarm Learning node](Stopping_Swarm_Learning_node.md)
+   -   [Uninstalling the Swarm Learning package](Uninstalling_the_Swarm_Learning_package.md)
