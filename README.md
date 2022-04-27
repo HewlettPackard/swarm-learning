@@ -34,7 +34,7 @@ NOTE:The participating nodes must be able to access each other's ports.
 
 For more information on port details that must be opened, see [Exposed Ports](/docs/Install/Exposed_port_numbers.md).
 
--   License Server installs and manages the license that is required to run the Swarm Learning framework. The licenses are managed by the AutoPass License Server \(APLS\) that runs on a separate node. For more information on APLS.
+-   License Server installs and manages the license that is required to run the Swarm Learning framework. The licenses are managed by the AutoPass License Server \(APLS\) that runs on a separate node. For more information, see [APLS User Guide](/docs/HPE%20AutoPass%20License%20Server%20User%20Guide.pdf).
 
 Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state.
 
