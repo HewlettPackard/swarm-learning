@@ -7,10 +7,10 @@
      3.   The docker digest hash file \(JSON\). 
      4.   Download the Swarm Learning installer for your platform, Mac, Windows, or Linux. 
 
-2.   Run the Swarm Learning installer Web App. This is launched in a web browser. 
+2.   Run the Swarm Learning installer Web App from the command prompt by providing `-edition eval`. This is launched in a web browser. 
 
 <blockquote>
-    IMPORTANT: For Mac users, HPE recommends you to run the downloaded Swarm Learning installer from the terminal window only.
+    IMPORTANT: HPE recommends you to run the downloaded Swarm Learning installer from the terminal window only with the `edition` option.
 </blockquote>
 
 The installer has a few configurable options. To change the default options, run the installer from a command prompt. Use the following optional flags to customize the configuration or behavior of the installer:
@@ -20,26 +20,21 @@ The installer has a few configurable options. To change the default options, run
 
         Example, `-port 30355`
 
-      -edition
+     -edition
      :   Configure the Swarm Learning edition that must be installed. The following are the available options:
 
          eval
          :   This option installs the community edition \(free edition\) of the Swarm Learning.
 
-         :   Example, `-edition eval`
+             Example, `-edition eval`
 
-         ga
-         :   This option installs the enterprise edition \(paid edition\) of the Swarm Learning.
-
-         :   Example, `-edition ga`
-
-       -logs
+     -logs
      :   If enabled, displays the detail message on the CLI during the installation. To enable, use the command, `-logs verbose`.
 
-      -version
+     -version
      :   This option defines the version of docker images that must be installed. The default value is 1.0.0. Example, `-version 0.3.0`
 
-      -timeoutDuration
+     -timeoutDuration
      :   Defines installer timeout duration for individual installation tasks. The default value is 300 seconds.
 
         Example, `-timeoutDuration 600`
