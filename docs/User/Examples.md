@@ -6,3 +6,9 @@ In this section, examples use different models, data, ML platforms, and Swarm cl
 NOTE:HPE recommends that users must use their own certificates in actual production environment.
 
 </blockquote>
+
+See:
+-   [MNIST](MNIST.md)
+-   [MNIST-PYT](MNIST-PYT.md)
+-   [CIFAR-10](CIFAR-10.md)
+-   [Credit card fraud detection](Credit_card_fraud_detection.md)
