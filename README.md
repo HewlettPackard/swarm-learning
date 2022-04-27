@@ -49,7 +49,7 @@ NOTE: HPE recommends users to build an ML Docker container.
 
 </blockquote>
 
-The ML node is responsible to train and iteratively update the model. For each ML node, there is a corresponding SL node in the Swarm Learning framework, which performs the Swarm training. Each pair of ML and SL nodes must riun on the same host. This process continues until the SL nodes train the model to the desired state.
+The ML node is responsible to train and iteratively update the model. For each ML node, there is a corresponding SL node in the Swarm Learning framework, which performs the Swarm training. Each pair of ML and SL nodes must run on the same host. This process continues until the SL nodes train the model to the desired state.
 
 **NOTE**: All the ML nodes must use the same ML platform either Keras \(based on TensorFlow 2 backend\) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
 
