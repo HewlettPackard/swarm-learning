@@ -28,7 +28,7 @@ All third-party trademarks are property of their respective owners.
     -   [Download the License Server](Download_the_License_Server.md)
     -   [Install the License Server](Install_the_License_Server.md)
     -   [Install HPE Swarm Learning](Install_HPE_Swarm_Learning.md)
--   [Versioning and upgrade](Versioning_and_upgrade.md)
+-   [Upgrading from earlier evaluation versions](Versioning_and_upgrade.md)
 -   [Running Swarm Learning](Running_Swarm_Learning.md)
     -   [Starting Sentinel node](Starting_Sentinel_node.md)
     -   [Starting Swarm Learning node](Starting_Swarm_Learning_node.md)
