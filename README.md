@@ -67,7 +67,8 @@ The ML node is responsible to train and iteratively update the model. For each M
   - [Swarm Learning Concepts](/docs/User/Swarm_Learning_concepts.md)
   - [Working of a Swarm Learning node](/docs/User/Working_of_a_Swarm_Learning_node.md)
   - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
-  - [Configuring and Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
+  - [Configuring Swarm Learning components](/docs/Install/Configuring_Swarm_Learning.md) 
+  - [Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
   - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
   
