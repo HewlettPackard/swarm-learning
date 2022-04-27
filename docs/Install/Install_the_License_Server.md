@@ -24,8 +24,6 @@
 6.   Activate the license: 
     
      1.   Select the number of licenses to activate and click **Next**.
-     
-          **NOTE**: You can select the number of licenses to be installed on the host machines. For example, if you have 5 licenses, you can install 2 on Windows, and 3 on Linux machines.
      2.   Designate yourself or for another user for activation. Click **Next**.
      3.   Enter the lock code you got from the **Install Licenses** page in the HPE Serial Number field and click **Activate**. 
 
