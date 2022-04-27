@@ -36,27 +36,41 @@ For more information on port details that must be opened, see Exposed Ports in *
 
 -   License Server installs and manages the license that is required to run the Swarm Learning framework. The licenses are managed by the AutoPass License Server \(APLS\) that runs on a separate node. For more information on APLS, see ***HPE Swarm Learning Installation and Configuration Guide***.
 
-**NOTE**: All the Swarm Learning nodes must use the same ML platform – either Keras (based on TensorFlow 2) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
-
 Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state.
 
-You can transform any Keras or PyTorch based ML program that has been written using Python3 into a Swarm Learning ML program by making a [few simple changes](docs/ml_algorithm.md) to the model training code, such as updating the paths from where the program reads and writes data; and including the `SwarmCallback` object. See the [examples](examples) included with the Swarm Learning package for sample code.
+## User ML components
+
+User can transform any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see the [examples](./docs/User/Examples.md) included with the Swarm Learning package for a sample code.
+
+The transformed user Machine Learning \(user ML node\) program can be run on the host or user can build it as a Docker container.
+
+<blockquote>
+NOTE: HPE recommends users to build an ML Docker container.
+
+</blockquote>
+
+The ML node is responsible to train and iteratively update the model. For each ML node, there is a corresponding SL node in the Swarm Learning framework, which performs the Swarm training. Each pair of ML and SL nodes must riun on the same host. This process continues until the SL nodes train the model to the desired state.
+
+**NOTE**: All the ML nodes must use the same ML platform either Keras \(based on TensorFlow 2 backend\) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
 
 ## Getting Started
-  - [Prerequisites](docs/Prerequisites.md) for Swarm Learning
+  - [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
   - Clone this repository 
-  - [Download and setup](docs/setup.md) docker images and evaluation licenses
-  - Execute [MNIST example](examples/mnist-keras) 
-  - [Frequently Asked Questions](docs/FAQ.md)
-  - [Troubleshooting](docs/Troubleshooting.md)
+  - [Download and setup](/docs/Install/HPE_Swarm_Learning_installation.md) Swarm wheels package, Swarm Docker images, and Swarm evaluation licenses 
+  - Execute [MNIST example](/docs/User/MNIST.md) 
+  - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  - [Troubleshooting](/docs/User/Troubleshooting.md)
 
 ## Documentation
-  - [How Swarm Learning Components interact](docs/Component_interactions.md)
-  - [Adapting ML programs for Swarm Learning](docs/ml_algorithm.md)
-  - [Configuring and Running Swarm Learning Components](docs/RunningSL.md)
-  - [Using SWCI Tool](docs/swci_tool.md)
+
+  - [How Swarm Learning Components interact](/docs/User/Swarm_Learning_component_interactions.md)
+  - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
+  - [Configuring and Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
+  - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
+  - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
   
 ## References
+
   - [Papers](docs/papers-and-articles.md)
   - [Videos](docs/videos.md)
   - [URLs](docs/URL.md)
