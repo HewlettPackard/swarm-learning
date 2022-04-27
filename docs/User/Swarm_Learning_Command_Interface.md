@@ -76,4 +76,6 @@ Users are required to explicitly create a context \(using the CREATE context com
 |`EXIT`|This command exits the SWCI session unconditionally.|
 |`EXIT ON FAILURE \[ON/OFF\]`|This command instructs SWCI to exit the current session when any of the subsequent commands fail. The default value is OFF.|
 |`LIST NODES`|This command prints the list of registered and active nodes.|
+  
+**For programmatic interface of SWCI**, see - [SWCI APIs](SWCI_APIs.md)
 
