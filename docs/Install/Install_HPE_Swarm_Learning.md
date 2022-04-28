@@ -7,10 +7,10 @@
      3.   The docker digest hash file \(JSON\). 
      4.   Download the Swarm Learning installer for your platform, Mac, Windows, or Linux. 
 
-2.   Run the Swarm Learning installer Web App from the command prompt by providing `-edition eval`. This is launched in a web browser. 
+2.   Run the Swarm Learning installer Web App from the command prompt. This is launched in a web browser. 
 
 <blockquote>
-    IMPORTANT: HPE recommends you to run the downloaded Swarm Learning installer from the terminal window only with the `edition` option.
+    IMPORTANT: HPE recommends you to run the downloaded Swarm Learning installer from the terminal window only.
 </blockquote>
 
 The installer has a few configurable options. To change the default options, run the installer from a command prompt. Use the following optional flags to customize the configuration or behavior of the installer:
