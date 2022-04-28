@@ -60,9 +60,9 @@ NOTE: All the ML nodes must use the same ML platform either Keras \(based on Ten
 
 ## Getting Started
   - [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
-  - Clone this repository
+  - Clone this repository on all machines where you want to run Swarm Learning
   - [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
-  - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) which includes [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md), Swarm Docker images, and Swarm evaluation licenses 
+  - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
   - Execute [MNIST example](/docs/User/MNIST.md) 
   - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   - [Troubleshooting](/docs/User/Troubleshooting.md)
@@ -73,6 +73,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras \(based on Ten
   - [Swarm Learning Concepts](/docs/User/Swarm_Learning_concepts.md)
   - [Working of a Swarm Learning node](/docs/User/Working_of_a_Swarm_Learning_node.md)
   - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
+  - [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md)
   - [Configuring Swarm Learning components](/docs/Install/Configuring_Swarm_Learning.md) 
   - [Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
