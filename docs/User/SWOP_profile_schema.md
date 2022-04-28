@@ -3,7 +3,7 @@
 <blockquote>
 NOTE:
 
-The source code of the profile schema \(`SWOP-profile-schema.yaml`\) is present in the same directory as the User Guide.
+The source code of the profile schema [SWOP-profile-schema.yaml](/docs/SWOP-profile-schema.yaml).
 
 </blockquote>
 
