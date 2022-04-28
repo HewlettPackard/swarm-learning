@@ -3,7 +3,7 @@
 <blockquote>
 NOTE:
 
-The source code of the task schema [SWOP-task-schema.yaml](/docs/SWOP-task-schema.yaml) is present in the same directory as the User Guide.
+The source code of the task schema [SWOP-task-schema.yaml](/docs/SWOP-task-schema.yaml).
 
 </blockquote>
 
