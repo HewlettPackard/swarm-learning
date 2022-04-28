@@ -1,5 +1,5 @@
 ## Prerequisite for all examples
-Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](../docs/setup.md#installing-licenses-and-starting-license-server).
+Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](/docs/Install/HPE_Swarm_Learning_installation.md).
 
 ## Swarm Learning Examples
 
