@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+##################################################################
+## (C)Copyright 2021, 2022 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+##################################################################
+
+###############################################################
+# Script to start SWCI container
+###############################################################
+
+## EXAMPLES
+## --------
+##  1. SWCI, with user provided ID
+##      Reset blackboard, using user-provided identities
+##      printf "%s\n"                                                          \
+##          "EXIT ON FAILURE"                                                  \
+##          "$(echo "create context example $(docker exec sn-2 hostname -I)")" \
+##          "switch context example"                                           \
+##          "RESET CONTRACT defaultbb.cqdb.sml.hpe"                            \
+##          "EXIT"                                                             \
+##    a. Run SWCI without init script
+##      run-swci                                                               \
+##          --key=/tmp/id/swci-key.pem                                         \
+##          --cert=/tmp/id/swci-certchain.pem                                  \
+##          --capath=/tmp/id/ca/capath   
+##  
+##    b. Run SWCI with init script
+##      run-swci                                                               \
+##          --key=/tmp/id/swci-key.pem                                         \
+##          --cert=/tmp/id/swci-certchain.pem                                  \
+##          --capath=/tmp/id/ca/capath                                         \
+##          --usr-dir=/home/user/swci-scripts                                  \
+##          --init-script-name=swci-init                                                                                                         
+##
+##  2. SWCI, with SPIFFE ID
+##      The value to this variable "swarm_node_type" is the custom name provided
+##      by the user while creating a registration entry inside spire-server.
+##
+##    a. Start SWCI without init script
+##      run-swci                                                               \
+##        --socket-path spire-agent                                            \
+##        -e swarm_node_type=swci                                              \
+##
+##    a. Start SWCI without init script
+##      run-swci                                                               \
+##        --socket-path spire-agent                                            \
+##        --usr-dir=/home/user/swci-scripts                                    \
+##        --init-script-name=swci-init                                         \
+##        -e swarm_node_type=swci                                               
+                                         
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+funcCallOrder=("Common" "APLS" "UserID" "SpiffeID" "Component")
+
+# SWCI is an interactive program
+# even when start-up scripts are present
+# Users can override them, if needed
+rm="--rm"
+interactive="-i"
+
+# Used by printCommonUsage.
+defaultImageName="${swarmDockerHub}/${swarmOrg}/${swciRepoName}"
+defaultImageTag="${swarmVer}"
+
+containerUsrDir="/platform/swarm/usr"
+
+printComponentUsage()
+{
+    printf -- "--usr-dir <dir>\n"
+    printf -- "\tHost directory that should be used as the user directory by\n"
+    printf -- "\tthis SWCI node.\n\n"
+
+    printf -- "--init-script-name <swci-init file>\n"
+    printf -- "\tname of swci-init file.\n"
+    printf -- "\tThis file should be located inside the user directory, at the top-level itself. \n\n"
+
+    return 0
+}
+
+
+processComponentBatchOpt()
+{
+    local sidecar="${1}"        # Ignored.
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    case "${opt}" in
+        --usr-dir) checkAndAssign "${opt}" "${optarg}";;
+        --init-script-name) checkAndAssign "${opt}" "${optarg}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+onTrainEnd()
+{
+    
+    if [[ -n "${usrDir}" ]]
+    then
+        # check if the directory exists
+        [[ ! -d "$(realpath "${usrDir}")" ]] && error "--usr-dir: ${usrDir}: bad path"
+        mounts+=(-v "$(realpath "${usrDir}"):${containerUsrDir}:rw")
+    fi
+    
+    if [[ -n "${initScriptName}" ]]
+    then 
+        # check if the file exists 
+        path="$(realpath "${usrDir}")/${initScriptName}"
+        
+        [[ ! -f "${path}" ]] && \
+            error "--init-script-name: ${initScriptName}: bad file"        
+            
+        envvar+=(-e "STARTUP_SCRIPT=${initScriptName}")
+    fi 
+
+    cmd+=("${unprocessedOpts[@]}")
+    unprocessedOpts=()
+
+    return 0
+}
+
+
+main "${@}"

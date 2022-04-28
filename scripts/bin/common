@@ -1,0 +1,1258 @@
+#!/usr/bin/env bash
+
+######################################################################
+## (C)Copyright 2021, 2022 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+######################################################################
+
+################################################################################
+## Notes on "sidecar" container support
+## ------------------------------------
+## We allow the user to specify an arbitrary number of "sidecars" that we should
+## run along with the main container. These sidecars are freely configurable by
+## the user - since these are arbitrary containers, we do not (and cannot) take
+## much responsibility for supplying any parameters that might be required. We
+## need a scheme to associate command line parameters with the right sidecar to
+## support this model. For the data structure, we have two choices - either one
+## single, giant dictionary that contains all the parameters or several smaller
+## ones. We go with several small arrays because it is easier to integrate with
+## our existing code. Accordingly, we create these arrays and scalar variables:
+##  1. sidecars - an associative name for each sidecar. This name might be set
+##     either internally for known sidecars, such as the user ML container and
+##     the decoupled SPIRE agent (assuming we support it) or by the user using
+##     the --sidecar parameter. Whether internal or external, for every sidecar,
+##     we mandatorily require an entry in this array. Its value, with a leading
+##     double dash, is prefixed to all sidecar command line parameters. And its
+##     camel-cased value is prefixed to all sidecar configuration property array
+##     variables. For example, if the decoupled SPIRE agent is given the name,
+##     "spire-agent", the command line parameter to specify its image would be,
+##     "--spire-agent-image". The corresponding value for this property would be
+##     stored in a variable called, "spireAgentImage".
+##  2. ${camelCasedSidecarName}Image, ${camelCasedSidecarName}Entrypoint, etc. -
+##     scalar variables that hold corresponding single-value properties.
+##  3. ${camelCasedSidecarName}Ports, ${camelCasedSidecarName}BindMounts, etc. -
+##     array variables to hold lists of values.
+##  4. ${camelCasedSidecarName}PidMain - this is a special variable to specify
+##     that the process namespace should be shared between the sidecar and the
+##     main container. To share the process namespace with other sidecars, name
+##     the containers and then, use --<sidecar1-name>-pid <sidecar2-name>.
+##  5. ${camelCasedSidecarName}VolumesFromMain - this is another special flag to
+##     specify that all anonymous volumes associated with the main container are
+##     to be mounted onto the sidecar. The mechanism for mounting volumes from
+##     other sidecars is similar to that for sharing process namespaces - name
+##     them and then, use --<sidecar1-name>-volumes-from <sidecar2-name>. We do
+##     not try to detect and avoid conflicting mounts. The result of a conflict
+##     is undefined.
+## We launch the main container first and then, the sidecars in the order that
+## they were declared on the command line. The user must bear this in mind when
+## defining PID namespace sharing and anonymous volume mount properties. In the
+## examples above, sidecar1 refers to sidecar2's namespace and volumes. sidecar2
+## must be launched first and only then, sidecar1, for this to work. Therefore,
+## "--sidecar sidecar2" must precede "--sidecar sidecar1" on the command line.
+## Note that the other sidecar configuration properties can occur in any order.
+## The order requirement applies only to the sidecar parameter. Currently, The
+## use of this sidecar is being managed entirely from common script. In future
+## if need arise, changes to be done on the individual swarm component scripts.
+################################################################################
+
+
+# Enable extended pattern matching in case statements.
+shopt -s extglob
+
+# Enable case-insensitive matching in case statements.
+shopt -s nocasematch
+
+
+ourPID=$$
+trap "exit 1" SIGUSR1 SIGUSR2
+
+
+# Swarm product version.
+swarmVer="1.0.0"
+
+swarmDockerHub="hub.myenterpriselicense.hpe.com"
+swarmOrg="hpe_eval/swarm-learning"
+
+slRepoName="sl"
+snRepoName="sn"
+swciRepoName="swci"
+swopRepoName="swop"
+
+slImage="${swarmDockerHub}/${swarmOrg}/${slRepoName}:${swarmVer}"
+snImage="${swarmDockerHub}/${swarmOrg}/${snRepoName}:${swarmVer}"
+swciImage="${swarmDockerHub}/${swarmOrg}/${swciRepoName}:${swarmVer}"
+swopImage="${swarmDockerHub}/${swarmOrg}/${swopRepoName}:${swarmVer}"
+
+# We need elevated privileges to run docker commands, if the current user is not
+# a member of the docker group. Given, the user has configured password-less
+# sudo.
+id -Gn 2> /dev/null | grep "\(\<docker\>\)\|\(\<root\>\)" > /dev/null 2>&1
+[[ ${?} -ne 0 ]] && sudo="sudo"
+
+
+# Order of process and usage functions to call.
+funcCallOrder=()
+
+
+# By default, we keep the containers after they exit. The user must pass "--rm"
+# on the command line to remove them automatically.
+rm=
+
+
+# Note that this is an array with an empty first element. The first element maps
+# to the main container. This is functionally the same as:
+#   sidecars=
+# And, it is NOT the same as:
+#   sidecars=()
+# We have opted for readability here.
+declare -a sidecars
+sidecars[0]=
+
+
+error()
+{
+    # Print the error message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}" >&2
+    kill -s SIGUSR1 ${ourPID}
+}
+
+
+camelCase()
+{
+    # https://unix.stackexchange.com/questions/196239.
+    # The first sed nukes all leading dashes. The second upper-cases everything
+    # that follows one or more dashes while also nuking the dashes.
+    echo "${1}" | sed -r 's/^-+//;s/-+(.)/\U\1/g'
+}
+
+
+# CamelCase upper-cases the first character of the first word. camelCase leaves
+# this as is:
+#      | Input     | camelCase | CamelCase
+#   ---|-----------|-----------|----------
+#   1. | --foo-bar | fooBar    | FooBar
+#   2. | --Foo-bar | FooBar    | FooBar
+#   3. | foo-bar   | fooBar    | FooBar
+#   4. | Foo-bar   | FooBar    | FooBar
+CamelCase()
+{
+    # https://unix.stackexchange.com/questions/196239.
+    echo "${1}" | sed -r 's/-+(.)/\U\1/g;s/^(.)/\U\1/'
+}
+
+
+# Params:
+#   1. Optional prefix.
+#   2. Variable name.
+makeVarName()
+{
+    echo "$(camelCase "${1}${2}")"
+}
+
+
+# Params:
+#   1. Variable name prefix
+#   2. Variable name.
+#   3. Value.
+assignVar()
+{
+    declare -n var="$(makeVarName "${1}" "${2}")"
+    shift 2
+    var="${@}"
+
+    return 0
+}
+
+
+# Params:
+#   1. Variable name prefix
+#   2. Variable name.
+#   3. Value.
+appendVar()
+{
+    declare -n var="$(makeVarName "${1}" "${2}")"
+    shift 2
+    var="${var} ${@}"
+
+    return 0
+}
+
+
+# Params:
+#   1. Variable name prefix
+#   2. Variable name.
+#   3. Value.
+assignArrayVar()
+{
+    declare -n var="$(makeVarName "${1}" "${2}")"
+    shift 2
+    [[ ${#} -gt 0 ]] && var[0]="${@}" || var=()
+
+    return 0
+}
+
+
+# Params:
+#   1. Variable name prefix
+#   2. Variable name.
+#   3. Value.
+appendArrayVar()
+{
+    declare -n var="$(makeVarName "${1}" "${2}")"
+    shift 2
+    var+=("${@}")
+
+    return 0
+}
+
+
+# Params:
+#   1. opt
+#   2. optarg
+checkOptarg()
+{
+    [[ -z "${2}" || "${2:0:1}" == "-" ]] && error "${1}: missing argument"
+    return 0
+}
+
+
+# Params:
+#   1. The command line switch.
+#   2. The value to assign.
+#   3. Optional prefix for value.
+#   4. Optional name of variable.
+#   5. Optional sidecar prefix.
+checkAndAssign()
+{
+    checkOptarg "${1}" "${2}"
+    [[ -n "${4}" ]] && \
+        assignVar "${5}" "${4}" "${3}${2}" || assignVar "" "${1}" "${3}${2}"
+    return 0
+}
+
+
+# Params:
+#   1. The command line switch.
+#   2. The value to assign.
+#   3. Optional prefix for value.
+#   4. Optional name of array.
+#   5. Optional sidecar prefix.
+#   6. Optional flag to specify whether prefix should be a separate array item.
+#   7. Optional flag to specify whether the value should be split into several
+#      items that are appended individually to the array. Splitting splits the
+#      value around whitespace characters. For example, splitting "foo bar" will
+#      produce two array elements - "foo" and "bar".
+checkAndAppend()
+{
+    checkOptarg "${1}" "${2}"
+
+    local val=()
+    [[ -n "${3}" && -n "${6}" ]] && val+=("${3}" "${2}") || val+=("${3}${2}")
+    
+    # The quintessential command line parameter and its corresponding value has
+    # the form:
+    #       --foo=bar
+    # However, we have a use case for whitespace-separated, multi-word values:
+    #       --foo="bar baz"
+    # The quintessential example of this is:
+    #       --ml-cmd="python3 /path/to/user-ml-program.py [arg]..."
+    # Such a value must be split and presented as several, individual arguments
+    # to the "docker run" command and not as a single mega string:
+    #       Wrong invocation:
+    #           docker run ml-img "python3 /path/to/user-ml-program.py [arg]..."
+    # This will fail because it will make docker look for an executable called
+    # "python3 /path/to/user-ml-program.py [arg]..."
+    #       Correct invocation:
+    #           docker run ml-img python3 /path/to/user-ml-program.py [arg]...
+    # So, we provide some support for this. Our implementation is complicated by
+    # two considerations:
+    #   1. The quintessential onTrainEnd function adds all unprocessed options
+    #      to the cmd array. These should not be subjected to splitting because
+    #      they have already been split by the shell. Therefore, splitting must
+    #      be performed here and not when we are constructing the "docker run"
+    #      command.
+    #   2. We want to support whitespaces as a part of the argument:
+    #       --foo="\"bar baz\""
+    #      In the example above, foo should be set to a single value, "bar baz",
+    #      not "bar" and "baz".
+    # Our implementation is based on https://stackoverflow.com/a/36281632. But,
+    # these additional resources deserve a special mention for being excellent
+    # reading material:
+    #   1. http://mywiki.wooledge.org/BashFAQ/050
+    #   2. http://mywiki.wooledge.org/WordSplitting
+    #   3. http://mywiki.wooledge.org/Arguments
+    #   4. http://mywiki.wooledge.org/Quotes
+    # xargs performs the critical job of word splitting. We cannot use standard,
+    # well-understood pipes to feed the printf output to readarray. We muse use
+    # process substitution. https://unix.stackexchange.com/a/263885 explains why
+    # pipes do not work.
+    # We do not want a potential conflict with a user-specified newline. So we
+    # use the null character as the delimiter.
+    # We do not see a need to split before handling $3 and $6.
+    # Note that we support only arrays at the moment. But, this can be extended
+    # to checkAndAssign too, should the need arise.
+    [[ -n "${7}" ]] &&  \
+        readarray -d $'\0' val < <(xargs printf "%s\0" <<< "${val[@]}")
+    
+    [[ -n "${4}" ]]                                 \
+     && appendArrayVar "${5}" "${4}" "${val[@]}"    \
+     || appendArrayVar "" "${1}" "${val[@]}"
+
+    return 0
+}
+
+
+# Params:
+#   1. The command line switch.
+#   2. The user-specified value to be assigned.
+#   3. The default value to be used, if the user does not specify one.
+checkAndAssignOptVal()
+{
+    if [[ -z "${2}" || "${2:0:1}" == "-" ]]
+    then
+        # Missing argument
+        checkAndAssign "${1}" "${3}"
+        return 1
+    else
+        checkAndAssign "${1}" "${2}"
+        return 0
+    fi
+}
+
+
+printCommonUsage()
+{
+    printf -- "--\n"
+    printf -- "\tEnd of switches.\n"
+    printf -- "\tAll command line parameters that follow this\n"
+    printf -- "\tare passed directly to the target container.\n\n"
+
+    printf -- "--hostname <name>\n"
+    printf -- "\tThe host name assigned to the docker container.\n"
+    printf -- "\tDefault: --name, if it is specified. Else, Docker assigns a host name\n\n"
+
+    printf -- "--name <name>\n"
+    printf -- "\tThe name assigned to the docker container.\n"
+    printf -- "\tDefault: Docker assigns a random name to the container\n\n"
+
+    printf -- "--network <network name>\n"
+    printf -- "\tThe docker network that the container should belong to.\n"
+    printf -- "\tDefault: docker's default bridge network\n\n"
+
+    printf -- "--pull\n"
+    printf -- "\tPull the docker image from its repository before running it.\n"
+    printf -- "\tDefault: false; the image is not pulled from its repository,\n"
+    printf -- "\tif it is already available locally\n\n"
+
+    printf -- "--sudo\n"
+    printf -- "\tPrefix docker commands with \"sudo\".\n"
+    printf -- "\tDefault: false, if the current user belongs to the docker\n"
+    printf -- "\tgroup; true otherwise\n\n"
+
+    printf -- "-d, --detach\n"
+    printf -- "\tRun the container in the background.\n"
+    printf -- "\tDefault: A pseudo-terminal is allocated if the launcher has\n"
+    printf -- "\tan associated terminal; otherwise, the container is run in\n"
+    printf -- "\tthe background\n\n"
+
+    printf -- "-i, --interactive\n"
+    printf -- "\tKeep STDIN open even if not attached to a terminal.\n"
+    printf -- "\tDefault: STDIN is kept open if a pseudo-terminal is allocated\n"
+    printf -- "\tto the container; otherwise, it is closed.\n\n"
+
+    printf -- "-t, --tty\n"
+    printf -- "\tAllocate a pseudo-terminal for the container.\n"
+    printf -- "\tDefault: A pseudo-terminal is allocated if the launcher has\n"
+    printf -- "\tan associated terminal; otherwise, the container is run in\n"
+    printf -- "\tthe background\n\n"
+
+    printf -- "-e, --env var=val\n"
+    printf -- "\tSet an environment variable inside the container.\n\n"
+
+    printf -- "-l, --label key=val\n"
+    printf -- "\tSet meta-data on a container.\n\n"
+
+    printf -- "-p, --publish host-port:container-port\n"
+    printf -- "\tPublish a container's port to the host.\n\n"
+
+    printf -- "--pid { container-id | host }\n"
+    printf -- "\tPID namespace to use.\n\n"
+
+    printf -- "--pid-main\n"
+    printf -- "\tUse the main container's PID namespace.\n\n"
+
+    printf -- "-u, --user { name | uid } [ : { group | gid } ]\n"
+    printf -- "\tUser and group ID to use inside the container.\n\n"
+
+    printf -- "--group-add { group | gid }\n"
+    printf -- "\tAdditional groups to join.\n\n"
+
+    printf -- "-v, --volume [host-source:]container-dest[:options]\n"
+    printf -- "\tMount either a host path or a volume onto the container.\n\n"
+
+    printf -- "--volumes-from container-id\n"
+    printf -- "\tMount all defined volumes from the referenced container.\n\n"
+
+    printf -- "--volumes-from-main\n"
+    printf -- "\tMount all defined volumes from the main container.\n\n"
+
+    printf -- "-w, --workdir container-path\n"
+    printf -- "\tWorking directory inside the container.\n\n"
+
+    printf -- "--rm\n"
+    printf -- "\tSame as --no-keep. Request Docker to automatically remove the container when it exits.\n\n"
+
+    printf -- "--no-rm\n"
+    printf -- "\tSame as --keep. Request Docker to preserve the container after it exits.\n\n"
+
+    printf -- "--keep\n"
+    printf -- "\tSame as --no-rm. Request Docker to preserve the container after it exits.\n\n"
+
+    printf -- "--no-keep\n"
+    printf -- "\tSame as --rm. Request Docker to automatically remove the container when it exits.\n\n"
+
+    printf -- "-h, --help\n"
+    printf -- "\tThis (helpful) message.\n\n"
+
+    return 0
+}
+
+
+printAPLSUsage()
+{
+    printf -- "--apls-ip <IP address or DNS name>\n"
+    printf -- "\tSynonym for --primary-apls-ip.\n"
+    printf -- "\tDefault: $(hostname -I | cut -d' ' -f1)\n\n"
+
+    printf -- "--primary-apls-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address on which the primary Autopass License Server is serving license requests.\n"
+    printf -- "\tDefault: $(hostname -I | cut -d' ' -f1)\n\n"
+
+    printf -- "--secondary-apls-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address on which the secondary Autopass License Server is serving license requests.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--apls-port <port number>\n"
+    printf -- "\tSynonym for --primary-apls-port.\n"
+    printf -- "\tDefault: 5814\n\n"
+
+    printf -- "--primary-apls-port <port number>\n"
+    printf -- "\tThe port number on which the primary Autopass License Server is serving license requests.\n"
+    printf -- "\tDefault: 5814\n\n"
+
+    printf -- "--secondary-apls-port <port number>\n"
+    printf -- "\tThe port number on which the secondary Autopass License Server is serving license requests.\n"
+    printf -- "\tDefault: the value assigned to --primary-apls-port\n\n"
+
+    return 0
+}
+
+
+printUserIDUsage()
+{
+    printf -- "--cacert <path to certificates file>\n"
+    printf -- "\tThe path to the file containing the list of CA certificates.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--capath <path to certificates directory>\n"
+    printf -- "\tThe path to the directory containing CA certificate files.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--cert <path to certificate file>\n"
+    printf -- "\tThe path to the certificate file that provides the component's ID.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--key <path to key file>\n"
+    printf -- "\tThe path to the private key file corresponding to the certificate.\n"
+    printf -- "\tDefault: None\n\n"
+    
+    return 0
+}
+
+
+printSpiffeIDUsage()
+{
+    printf -- "--socket-path <SPIFFE Workload API socket>\n"
+    printf -- "\tPath, volume or container hosting the socket on which the SPIFFE Agent serves the Workload API.\n"
+    printf -- "\tDefault: None\n\n"
+    
+    return 0
+}
+
+
+usage()
+{
+    # Print the message, if there is one.
+    [[ -n "${1}" ]] && echo "${progName}: ${1}"
+
+    printf -- "${progName}: usage: ${progName} [ OPTIONS ]\n"
+    printf -- "Options:\n"
+
+    for funcName in "${funcCallOrder[@]}"
+    do
+        declare -F "print${funcName}Usage" > /dev/null && print${funcName}Usage
+    done
+
+    return 0
+}
+
+
+isLocalhost()
+{
+    # TODO: check whether there is a "universal" alternative for hostname -I. -I
+    # does not work on some Linux flavours, like Alpine. They accept only -i. -i
+    # on Ubuntu returns 127.0.1.1.
+    local ourIP=$(hostname -I | cut -d' ' -f1)
+    local ourFQDN=$(hostname -f)
+    local ourHostname=$(hostname)
+
+    [[ "${1}" == "${ourIP}"        \
+    || "${1}" == "${ourFQDN}"      \
+    || "${1}" == "${ourHostname}" ]]
+}
+
+# Given an IP address and an image label, try and find a running container with
+# those attributes and, return a "docker exec" command that can connect to it.
+# Params:
+#   1. Image label.
+#   2. Optional image name. There could be several running container instances
+#      on a system for the image. We must connect to the right one - we rely on
+#      the user telling us which one to pick. This parameter can be omitted (by
+#      passing in an empty string) when the caller knows there is only a single
+#      running instance of the image.
+#   3. A descriptive name for the image - to include in error messages.
+
+genDockerExec()
+{
+    # Command to get the "right" running instance of the image. We do not prefix
+    # ${sudo} here because its position depends on whether we are running on the
+    # local system on a remote one.
+    local dockerPSCmd="docker ps --format {{.Names}}"
+    [[ -n "${2}" ]] &&                          \
+        dockerPSCmd+=" --filter=name=${2}" ||   \
+        dockerPSCmd+=" --filter=ancestor=${1}"
+
+    # TODO: check whether there is a "universal" alternative for hostname -I. -I
+    # does not work on some Linux flavours, like Alpine. They accept only -i. -i
+    # on Ubuntu returns 127.0.1.1.
+    local containerName="$(${sudo} ${dockerPSCmd})"
+
+    if [ -n "${containerName}" ]
+    then
+        # The specified server address might be an internal one - especially if
+        # the containers are running on a dedicated bridge network.
+        # TODO: handle the case where there are multiple values.
+
+        # The tr command is required. hostname, for reasons completely unknown,
+        # adds a carriage return to the output. This makes a comprehensive mess
+        # of everything and so, should be removed before it can do any mischief.
+        # The '\r' is sufficient. We have added the '\n' as a safety measure.
+        local containerIP="$(${sudo}                                        \
+            docker exec -it ${containerName} hostname -i | tr -d '\r\n')"
+        local containerFQDN="$(${sudo}                                      \
+            docker exec -it ${containerName} hostname -f | tr -d '\r\n')"
+        local containerHostname="$(${sudo}                                  \
+            docker exec -it ${containerName} hostname | tr -d '\r\n')"
+    fi
+    if [[ -z "${containerName}" ]]
+    then
+        error "cannot contact ${3}"
+    fi
+    # [ sudo ] docker exec <container-name>.
+    echo "${sudo} docker exec ${containerName}"
+
+    return 0
+}
+
+processSidecarBatchOpt()
+{
+    local sidecar="${1}"        # Ignored.
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    if [[ "${opt}" == "--sidecar" ]]
+    then
+        checkAndAppend "${opt}" "${optarg}" "" sidecars
+    else
+        unprocessedOpts+=("${origParam}")
+        nShift=1
+    fi
+
+    return 0
+}
+
+
+processCommonBatchOpt()
+{
+    local sidecar="${1}"
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+
+    case "${opt}" in
+        # General options that are not related to any container - be it main or
+        # sidecar.
+        -h|--help) usage && exit 0;;
+        --sudo) sudo="sudo"; nShift=1;;
+
+        # Container-specific options.
+        --${sidecarPrefix}cmd) checkAndAppend "${opt}" "${optarg}" "" "" "" "" "y";;
+
+        -${sidecarPrefix}e|--${sidecarPrefix}e|--${sidecarPrefix}env)
+            # We do not use checkAndAssign here because optarg can start with a
+            # leading dash.
+            [[ ! "${optarg}" =~ ^[[:alpha:]_][[:alnum:]_]*= ]] && \
+                error "${opt}: bad or missing environment variable"
+
+            appendArrayVar "${sidecarPrefix}" envvar -e "${optarg}"
+            ;;
+
+        --${sidecarPrefix}entrypoint) checkAndAssign "${opt}" "${optarg}";;
+
+        --${sidecarPrefix}group-add)
+            checkAndAppend "${opt}" "${optarg}" "--group-add=" groups "${sidecarPrefix}"
+            ;;
+
+        --${sidecarPrefix}?(host)name) checkAndAssign "${opt}" "${optarg}";;
+
+        --${sidecarPrefix}image)
+            checkAndAssign "${opt}" "${optarg}";;
+
+        -${sidecarPrefix}l|--${sidecarPrefix}l|--${sidecarPrefix}label)
+            checkAndAppend "${opt}" "${optarg}" "-l" labels "${sidecarPrefix}" y
+            ;;
+
+        --${sidecarPrefix}net|--${sidecarPrefix}network)
+            checkAndAssign "${opt}" "${optarg}" "--network=" network "${sidecarPrefix}";;
+
+        -${sidecarPrefix}p|--${sidecarPrefix}p|--${sidecarPrefix}publish)
+            checkAndAppend "${opt}" "${optarg}" "-p" ports "${sidecarPrefix}" y
+            ;;
+
+        --${sidecarPrefix}pid)
+            checkAndAssign "${opt}" "${optarg}";;
+
+        --${sidecarPrefix}pid-main)
+            assignVar "${sidecarPrefix}" pidMain "y"; nShift=1;;
+
+        --${sidecarPrefix}pull)
+            assignVar "${sidecarPrefix}" pull "y"; nShift=1;;
+
+        --${sidecarPrefix}d|-${sidecarPrefix}d|--${sidecarPrefix}detach)
+            assignVar "${sidecarPrefix}" interactive
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}i|-${sidecarPrefix}i|--${sidecarPrefix}interactive)
+            assignVar "${sidecarPrefix}" interactive "-i"
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}t|-${sidecarPrefix}t|--${sidecarPrefix}tty)
+            assignVar "${sidecarPrefix}" tty "-t"
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}di|-${sidecarPrefix}di) ;&    # Fall through.
+        --${sidecarPrefix}id|-${sidecarPrefix}id)
+            # We flipped a coin and decided "-d" has precedence over "-i". This
+            # is okay - the user can issue an explicit "docker attach" because
+            # the stdin is still open. Offhand, we do not know whether the other
+            # way round would work - the user might not be able to switch from
+            # attached to detached mode. So, all in all, we believe this was a
+            # good toss to win.
+            assignVar "${sidecarPrefix}" interactive
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}dt|-${sidecarPrefix}dt) ;&    # Fall through.
+        --${sidecarPrefix}td|-${sidecarPrefix}td)
+            assignVar "${sidecarPrefix}" interactive
+            assignVar "${sidecarPrefix}" tty "-t"
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}it|-${sidecarPrefix}it) ;&    # Fall through.
+        --${sidecarPrefix}ti|-${sidecarPrefix}ti)
+            assignVar "${sidecarPrefix}" interactive "-i"
+            assignVar "${sidecarPrefix}" tty "-t"
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}dit|-${sidecarPrefix}dit) ;&  # Fall through.
+        --${sidecarPrefix}dti|-${sidecarPrefix}dti) ;&  # Fall through.
+        --${sidecarPrefix}idt|-${sidecarPrefix}idt) ;&  # Fall through.
+        --${sidecarPrefix}itd|-${sidecarPrefix}itd) ;&  # Fall through.
+        --${sidecarPrefix}tdi|-${sidecarPrefix}tdi) ;&  # Fall through.
+        --${sidecarPrefix}tid|-${sidecarPrefix}tid)
+            assignVar "${sidecarPrefix}" interactive
+            assignVar "${sidecarPrefix}" tty "-t"
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}rm|--${sidecarPrefix}no-keep)
+            assignVar "${sidecarPrefix}" rm "--rm"
+            nShift=1
+            ;;
+
+        --${sidecarPrefix}no-rm|--${sidecarPrefix}keep)
+            assignVar "${sidecarPrefix}" rm
+            nShift=1
+            ;;
+
+        -${sidecarPrefix}u|--${sidecarPrefix}u|--${sidecarPrefix}user)
+            checkAndAssign "${opt}" "${optarg}" "--user=" "${sidecarPrefix}" user;;
+
+        -${sidecarPrefix}v|--${sidecarPrefix}v|--${sidecarPrefix}volume)
+            checkAndAssign "${opt}" "${optarg}"
+
+            # A volume specification has three parts, separated by colons:
+            #   1. Source - Either a volume name or a local file or directory.
+            #   2. Target - The mount point inside the container.
+            #   3. Options
+            # The Source and Options fields are optional. A volume that does not
+            # exist is created automatically. File and directory references must
+            # be specified as absolute paths. But, as a convenience, we accept a
+            # non-absolute path and convert it to an absolute one. This creates
+            # a problem with artifacts that are in the current directory:
+            #   -v foo:/mount/point/for/foo
+            # Should we treat foo as a (perhaps not-yet-created) volume or as a
+            # bind artifact? We impose a restriction to help us resolve this: a
+            # source specification for a bind mount must have at least one path
+            # separator. Therefore:
+            #   -v foo:/mount/point/for/foo
+            # refers to a volume mount; while:
+            #   -v ./foo:/mount/point/for/foo
+            # refers to a bind mount.
+
+            # https://linuxhandbook.com/bash-split-string.
+            IFS=':' read -ra specParts <<< "${optarg}"
+
+            case "${#specParts[@]}" in
+                1) mntTgt="${specParts[0]}";;
+
+                2)
+                    # This could be either a "src:tgt" or a "tgt:opt". We rely
+                    # on target having to be an absolute path to determine the
+                    # form that we have.
+                    [[ "${specParts[1]}" =~ ^/.+ ]]                             \
+                     && { optSrc="${specParts[0]}"; mntTgt="${specParts[1]}"; } \
+                     || { mntTgt="${specParts[0]}"; optOpt=":${specParts[1]}"; }
+                    ;;
+
+                3)
+                    optSrc="${specParts[0]}"
+                    mntTgt="${specParts[1]}"
+                    optOpt=":${specParts[2]}"
+                    ;;
+            esac
+
+            if [ -n "${optSrc}" ]
+            then
+                if [ -n "$(echo "${optSrc}" | cut -d'/' -f1 -s)" ]
+                then
+                    # Bind mount.
+                    [[ ! -e "${optSrc}" ]] &&   \
+                        error "${opt}: ${optarg}: bad mount"
+
+                    optSrc="$(realpath "${optSrc}"):"
+                else
+                    # Volume mount.
+                    optSrc="${optSrc}:"
+                fi
+            fi
+
+            mountSpec="${optSrc}${mntTgt}${optOpt}"
+            appendArrayVar "${sidecarPrefix}" mounts -v "${mountSpec}"
+            ;;
+
+        --${sidecarPrefix}volumes-from)
+            checkAndAssign "${opt}" "${optarg}" "--volumes-from=";;
+
+        --${sidecarPrefix}volumes-from-main)
+            assignVar "${sidecarPrefix}" volumesFromMain "y"; nShift=1;;
+
+        -${sidecarPrefix}w|--${sidecarPrefix}w|--${sidecarPrefix}workdir)
+            checkAndAssign "${opt}" "${optarg}" "--workdir=" workdir "${sidecarPrefix}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return ${?}
+}
+
+onCommonBatchEnd()
+{
+    [[ -n "${1}" ]] && local sidecarPrefix="${1}-"
+
+    declare -n imgNameVar=$(makeVarName "${sidecarPrefix}" "imageName")
+    declare -n imgTagVar=$(makeVarName "${sidecarPrefix}" "imageTag")
+    declare -n imgVar=$(makeVarName "${sidecarPrefix}" "image")
+
+    declare -n defImgNameVar=$(makeVarName "${sidecarPrefix}" defaultImageName)
+    declare -n defImgTagVar=$(makeVarName "${sidecarPrefix}" defaultImageTag)
+
+    [[ -z "${imgNameVar}" ]] && imgNameVar="${defImgNameVar}"
+    [[ -z "${imgTagVar}" ]] && imgTagVar="${defImgTagVar}"
+    [[ -z "${imgVar}" ]] && {                               \
+        [[ -n "${imgTagVar}" ]]                             \
+         && imgVar="${imgNameVar}:${imgTagVar}"             \
+         || imgVar="${imgNameVar}"                          \
+         ;                                                  \
+    }
+
+    local pullVar=$(makeVarName "${sidecarPrefix}" pull)
+    [[ -n "${!pullVar}" ]] && ${sudo} docker image pull "${imgVar}"    
+
+    local nameVar=$(makeVarName "${sidecarPrefix}" name)
+    declare -n hostnameVar=$(makeVarName "${sidecarPrefix}" hostname)
+    [[ -z "${hostnameVar}" ]] && hostnameVar="${!nameVar}"
+
+    return 0
+}
+
+
+processAPLSBatchOpt()
+{
+    local sidecar="${1}"
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+
+    case "${opt}" in
+        --${sidecarPrefix}apls-@(ip|port))
+            checkAndAssign "${opt}" "${optarg}";;
+        --${sidecarPrefix}@(primary|secondary)-apls-@(ip|port))
+            checkAndAssign "${opt}" "${optarg}";;
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return ${?}
+}
+
+
+onAPLSBatchEnd()
+{
+    local sidecar="${1}"
+
+    [[ -z "${primaryAplsIp}" ]] && primaryAplsIp="${aplsIp}"
+    [[ -z "${primaryAplsPort}" ]] && primaryAplsPort="${aplsPort}"
+
+    [[ -n "${sidecar}" ]] && return 0
+
+    [[ -n "${primaryAplsIp}" ]] && \
+        envvar+=(-e "SWARM_LICENSE_AUTOPASSJ_SERVER_PRIMARY_IP=${primaryAplsIp}")
+
+    [[ -n "${primaryAplsPort}" ]] && \
+        envvar+=(-e "SWARM_LICENSE_AUTOPASSJ_SERVER_PRIMARY_PORT=${primaryAplsPort}")
+
+    [[ -n "${secondaryAplsIp}" ]] && \
+        envvar+=(-e "SWARM_LICENSE_AUTOPASSJ_SERVER_SECONDARY_IP=${secondaryAplsIp}")
+
+    [[ -n "${secondaryAplsPort}" ]] && \
+        envvar+=(-e "SWARM_LICENSE_AUTOPASSJ_SERVER_SECONDARY_PORT=${secondaryAplsPort}")
+
+    return 0
+}
+
+
+processUserIDBatchOpt()
+{
+    local sidecar="${1}"
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+
+    case "${opt}" in
+        --${sidecarPrefix}cacert)
+            checkAndAssign "${opt}" "${optarg}"
+            [[ ! -f "${optarg}" ]] && error "${optarg}: bad file"
+            appendArrayVar "${sidecarPrefix}" mounts -v "$(realpath ${optarg}):$(realpath ${optarg}):ro"
+            appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_ID_CACERT=$(realpath ${optarg})"
+            ;;
+
+        --${sidecarPrefix}capath)
+            checkAndAssign "${opt}" "${optarg}"
+            [[ ! -d "${optarg}" ]] && error "${optarg}: bad directory"
+            appendArrayVar "${sidecarPrefix}" mounts -v "$(realpath ${optarg}):$(realpath ${optarg}):ro"
+            appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_ID_CAPATH=$(realpath ${optarg})"
+            ;;
+
+        --${sidecarPrefix}cert)
+            checkAndAssign "${opt}" "${optarg}"
+            [[ ! -f "${optarg}" ]] && error "${optarg}: bad file"
+            appendArrayVar "${sidecarPrefix}" mounts -v "$(realpath ${optarg}):$(realpath ${optarg}):ro"
+            appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_ID_CERT=$(realpath ${optarg})"
+            ;;
+
+        --${sidecarPrefix}key)
+            checkAndAssign "${opt}" "${optarg}"
+            [[ ! -f "${optarg}" ]] && error "${optarg}: bad file"
+            appendArrayVar "${sidecarPrefix}" mounts -v "$(realpath ${optarg}):$(realpath ${optarg}):ro"
+            appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_ID_KEY=$(realpath ${optarg})"
+            ;;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+processSpiffeIDBatchOpt()
+{
+    local sidecar="${1}"
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+
+    case "${opt}" in
+        --${sidecarPrefix}socket-path)
+            checkAndAssign "${opt}" "${optarg}"
+
+            # The value can represent one of four things:
+            #   1. Path to a socket file - we are lucky in this case.
+            #   2. A volume name or ID.
+            #   3. A container name or ID.
+            #   4. A volume name or ID and the path to the socket file relative
+            #      to the mount point, separated by a colon.
+            # For the second and third case, we try and locate the actual socket
+            # file - the envvar requires this.
+            if [[ -S "${optarg}" ]]
+            then
+                local sockfile="$(basename "${optarg}")"
+                appendArrayVar "${sidecarPrefix}" mounts -v "$(realpath ${optarg}):/tmp/spire-agent/${sockfile}"
+                appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_SPIFFE_WORKLOAD_API_SOCKET_PATH=/tmp/spire-agent/${sockfile}"
+            elif [[ -n "$(echo "${optarg}" | cut -s -d':' -f2)" ]]
+            then
+                # Case 4: volume name, followed by the socket path.
+                local volname="$(echo "${optarg}" | cut -s -d':' -f1)"
+                local sockpath="$(echo "${optarg}" | cut -s -d':' -f2)"
+
+                [[ -z "${volname}" || -z "${sockpath}" ]] && \
+                    error "${optarg}: bad socket path"
+
+                appendArrayVar "${sidecarPrefix}" mounts -v "${volname}:/tmp/spire-agent"
+                appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_SPIFFE_WORKLOAD_API_SOCKET_PATH=/tmp/spire-agent/${sockpath}"
+            else
+                # Try and detect socket files. For a container, we get a list of
+                # all volumes and then, search within them for socket files. For
+                # a volume, we, er, search within the volume.
+                # If the search turns up more than one socket, we use the first
+                # one.
+                # Note that the "find" requires sudo. Only the root user has any
+                # permissions on the directory representing a docker volume.
+                [[ $(id -u) -ne 0 ]] && \
+                    local sudoForFind="sudo" || local sudoForFind=
+
+                # Volumes have a name while bind mounts do not. We use this fact
+                # to filter out bind mounts from our search - our typical agent
+                # mounts /var/run/docker.sock and we do not want that to turn up
+                # as the first socket.
+                local firstSocket="$(${sudoForFind} find    \
+                    $(                                      \
+                        ${sudo} docker inspect ${optarg}    \
+                      | grep -C1 "\<Name\>"                 \
+                      | grep "\(Source\)\|\(Mountpoint\)"   \
+                      | cut -d'"' -f4                       \
+                    ) -type s -print | cut -d' ' -f1        \
+                )"
+
+                [[ -z "${firstSocket}" ]] && error "${optarg}: bad socket path"
+
+                # Extract the volume ID and path to socket from firstSocket. We
+                # mount the entire volume and not just the socket file because
+                # we would have to be root to do the latter. firstSocket is in
+                # this form:
+                #   /var/lib/docker/volumes/<volume-ID>/_data/path/to/socket
+                # We do not know whether this is configurable - we rely on the
+                # "_data" being present.
+                [[ ! "${firstSocket}" =~ ^.+/([^/]+)/_data/(.+)$ ]] && \
+                    error "${optarg}: cannot determine volume name and socket path"
+                local volname="${BASH_REMATCH[1]}"
+                local sockpath="${BASH_REMATCH[2]}"
+
+                appendArrayVar "${sidecarPrefix}" mounts -v "${volname}:/tmp/spire-agent"
+                appendArrayVar "${sidecarPrefix}" envvar -e "SWARM_SPIFFE_WORKLOAD_API_SOCKET_PATH=/tmp/spire-agent/${sockpath}"
+            fi
+            ;;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+# Process the train of command line arguments.
+processTrain()
+{
+    local category="${1}"
+    local sidecar="${2}"
+    local sidecarPrefix="$(CamelCase "${2}")"
+    shift 2
+
+    local genericProcessBatchOptFunc="process${category}BatchOpt"
+    local genericOnBatchBeginFunc="on${category}BatchBegin"
+    local genericOnBatchEndFunc="on${category}BatchEnd"
+
+    local sidecarProcessBatchOptFunc="process${sidecarPrefix}${category}BatchOpt"
+    local sidecarOnBatchBeginFunc="on${sidecarPrefix}${category}BatchBegin"
+    local sidecarOnBatchEndFunc="on${sidecarPrefix}${category}BatchEnd"
+
+    local processBatchOptFunc=$(                                \
+        declare -F "${sidecarProcessBatchOptFunc}" > /dev/null  \
+         && echo "${sidecarProcessBatchOptFunc}"                \
+         || echo "${genericProcessBatchOptFunc}"                \
+    )
+    local onBatchBeginFunc=$(                                   \
+        declare -F "${sidecarOnBatchBeginFunc}" > /dev/null     \
+         && echo "${sidecarOnBatchBeginFunc}"                   \
+         || echo "${genericOnBatchBeginFunc}"                   \
+    )
+    local onBatchEndFunc=$(                                     \
+        declare -F "${sidecarOnBatchEndFunc}" > /dev/null       \
+         && echo "${sidecarOnBatchEndFunc}"                     \
+         || echo "${genericOnBatchEndFunc}"                     \
+    )
+
+    # After reading through https://stackoverflow.com/questions/85880, we could
+    # not decide whether "type" is better than "declare". So we adopted a very
+    # scientific approach - we tossed a coin.
+    declare -F "${onBatchBeginFunc}" > /dev/null &&    \
+        ${onBatchBeginFunc} "${sidecar}"
+
+    declare -F "${processBatchOptFunc}" > /dev/null
+    if [ ${?} -eq 0 ]
+    then
+        unprocessedOpts=()  # Global.
+
+        while [ ${#} -gt 0 ]
+        do
+            if [[ "${1}" =~ (-[^=]+)(=(.*)) ]]
+            then
+                local opt="${BASH_REMATCH[1]}"
+                local optarg="${BASH_REMATCH[3]}"
+                nShift=1    # Global.
+            else
+                local opt="${1}"
+                local optarg="${2}"
+                nShift=2    # Global.
+            fi
+
+            if [ "${opt}" == "--" ]
+            then
+                shift
+                # All remaining arguments are passed to the main container, not
+                # sidecars.
+                cmd+=("${@}")
+                break
+            fi
+
+            ${processBatchOptFunc} "${sidecar}" "${1}" "${opt}" "${optarg}"
+
+            shift ${nShift}
+        done
+    fi
+
+    declare -F "${onBatchEndFunc}" > /dev/null &&   \
+        ${onBatchEndFunc} "${sidecar}"
+
+    return 0
+}
+
+
+dockerRun()
+{
+    local sidecar="${1}"
+    [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+    shift
+
+    declare -n imgVar=$(makeVarName "${sidecarPrefix}" image)
+    [[ -z "${imgVar}" ]] && {
+        [[ -n "${sidecar}" ]] && msg="sidecar ${sidecar}" || msg="internal error"
+        msg="${msg}: no image specified"
+        error "${msg}"
+    }
+
+    declare -n mountsVar=$(makeVarName "${sidecarPrefix}" mounts)
+    declare -n cmdVar=$(makeVarName "${sidecarPrefix}" cmd)
+    declare -n entrypointVar=$(makeVarName "${sidecarPrefix}" entrypoint)
+    declare -n envvarVar=$(makeVarName "${sidecarPrefix}" envvar)
+    declare -n groupsVar=$(makeVarName "${sidecarPrefix}" groups)
+    declare -n hostnameVar=$(makeVarName "${sidecarPrefix}" hostname)
+    declare -n labelsVar=$(makeVarName "${sidecarPrefix}" labels)
+    declare -n miscDockerRunParamsVar=$(makeVarName "${sidecarPrefix}" miscDockerRunParams)
+    declare -n nameVar=$(makeVarName "${sidecarPrefix}" name)
+    declare -n networkVar=$(makeVarName "${sidecarPrefix}" network)
+    declare -n pidVar=$(makeVarName "${sidecarPrefix}" pid)
+    declare -n pidMainVar=$(makeVarName "${sidecarPrefix}" pidMain)
+    declare -n portsVar=$(makeVarName "${sidecarPrefix}" ports)
+    declare -n rmVar=$(makeVarName "${sidecarPrefix}" rm)
+    declare -n ttyVar=$(makeVarName "${sidecarPrefix}" tty)
+    declare -n userVar=$(makeVarName "${sidecarPrefix}" user)
+    declare -n volumesFromVar=$(makeVarName "${sidecarPrefix}" volumesFrom)
+    declare -n volumesFromMainVar=$(makeVarName "${sidecarPrefix}" volumesFromMain)
+    declare -n workdirVar=$(makeVarName "${sidecarPrefix}" workdir)
+
+    [[ -n "${hostnameVar}" ]] && hostnameVar="--hostname=${hostnameVar}"
+    [[ -n "${nameVar}" ]] && nameVar="--name=${nameVar}"
+    [[ -n "${entrypointVar}" ]] && entrypointVar="--entrypoint=${entrypointVar}"
+    [[ -n "${pidMainVar}" ]] && pidVar="${containerID}"
+    [[ -n "${pidVar}" ]] && pidVar="--pid=${pidVar}"
+    [[ -n "${volumesFromMainVar}" ]] && volumesFromVar+=(--volumes-from "${containerID}")
+
+    # Decide whether we want to allocate a terminal for our runner. We cannot do
+    # so when we are running in, say, nohup mode and so, do not have a terminal
+    # to send the output to.
+    [[ -z "${ttyVar}" ]] && { tty -s && ttyVar="-t" ; }
+
+    declare -n containerIDVar=$(makeVarName "${sidecarPrefix}" containerID)
+    containerIDVar=$(${sudo} docker container create    \
+        ${rmVar}                                        \
+        -i                                              \
+        ${ttyVar}                                       \
+        ${hostnameVar}                                  \
+        ${nameVar}                                      \
+        ${pidVar}                                       \
+        "${mountsVar[@]}"                               \
+        ${entrypointVar}                                \
+        "${envvarVar[@]}"                               \
+        "${groupsVar[@]}"                               \
+        "${labelsVar[@]}"                               \
+        ${networkVar}                                   \
+        "${portsVar[@]}"                                \
+        ${userVar}                                      \
+        "${volumesFromVar[@]}"                          \
+        ${workdirVar}                                   \
+        "${miscDockerRunParamsVar[@]}"                  \
+        "${imgVar}"                                     \
+        "${cmdVar[@]}"                                  \
+        "${@}"                                          \
+    )
+    ret=${?}
+
+    [[ ${ret} -eq 0 ]] && ${sudo} docker container start ${containerIDVar}
+    ret=${?}
+
+    return ${ret}
+}
+
+
+# Params:
+#   1. User-specified sidecar name. This will be camel-cased and prefixed to the
+#      variable names.
+createContainerVars()
+{
+    [[ -n "${1}" ]] && local sidecarPrefix="${1}-"
+
+    # Bind and volume mounts for the container. We do not support tmpfs for now.
+    assignArrayVar "${sidecarPrefix}" "mounts"
+
+    # Arguments to pass to the container entry point.
+    assignArrayVar "${sidecarPrefix}" "cmd"
+
+    # Environment variables for the container.
+    assignArrayVar "${sidecarPrefix}" "envvar"
+
+    # Extra groups that the user should be added to.
+    assignArrayVar "${sidecarPrefix}" "groups"
+
+    # Metadata labels for the container.
+    assignArrayVar "${sidecarPrefix}" "labels"
+
+    # Exposed ports.
+    assignArrayVar "${sidecarPrefix}" "ports"
+
+    # Non-configurable arameters that we want to pass to "docker run".
+    assignArrayVar "${sidecarPrefix}" "miscDockerRunParams"
+
+    # Volumes mounted from other containers.
+    assignArrayVar "${sidecarPrefix}" "volumesFrom"
+
+    return 0
+}
+
+
+main()
+{
+    # We need to preserve whitespaces. So, all of these are arrays, not simple
+    # variables. See https://mywiki.wooledge.org/BashFAQ/050. The empty brackets
+    # are required to create empty arrays correctly. Without them, we will need
+    # empty-array checks all over the place or, we will end up with arrays that
+    # have an extra element - an empty string as the very first item - and, we
+    # will end up with checks for that all over the place.
+
+    # Command line parameters that we do not recognize. The caller should check
+    # the value of this variable after we return and, process it suitably.
+    unprocessedOpts=("${@}")
+
+    declare -F onTrainBegin > /dev/null && onTrainBegin
+
+    processTrain Sidecar "" "${unprocessedOpts[@]}"
+
+    for sidecar in "${sidecars[@]}"
+    do
+        createContainerVars "${sidecar}"
+
+        for funcName in "${funcCallOrder[@]}"
+        do
+            processTrain "${funcName}" "${sidecar}" "${unprocessedOpts[@]}"
+        done
+    done
+
+    declare -F onTrainEnd > /dev/null && onTrainEnd
+
+    for sidecar in "${sidecars[@]}"
+    do
+        local sidecarDockerRunFunc="$(camelCase "custom-${sidecar}-dockerRun")"
+        local customDockerRunFunc="customDockerRun"
+        local dockerRunFunc="dockerRun"
+
+        local runFunc="${sidecarDockerRunFunc}"
+        declare -F "${runFunc}" > /dev/null || runFunc="${customDockerRunFunc}"
+        declare -F "${runFunc}" > /dev/null || runFunc="${dockerRunFunc}"
+
+        # Note: unprocessedOpts is passed in to every container that we launch.
+        # If this does not make sense, the caller should clear the array before
+        # we get here.
+        ${runFunc} "${sidecar}" "${unprocessedOpts[@]}"
+        [[ ${?} -ne 0 ]] && exit 1
+    done
+
+    for sidecar in "${sidecars[@]}"
+    do
+        [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+
+        declare -n interactiveVar=$(makeVarName "${sidecarPrefix}" interactive)
+        declare -n containerIDVar=$(makeVarName "${sidecarPrefix}" containerID)
+
+        if [ -n "${interactiveVar}" -a -n "${containerIDVar}" ]
+        then
+            ${sudo} docker logs ${containerIDVar}
+            ${sudo} docker attach ${containerIDVar}
+            break
+        fi
+    done
+
+    return 0
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-############################################################################
-## Copyright 2021 Hewlett Packard Enterprise Development LP
+######################################################################
+## (C)Copyright 2021, 2022 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -13,7 +13,7 @@
 ## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 ## License for the specific language governing permissions and limitations
 ## under the License.
-############################################################################
+######################################################################
 
 
 # Set Swarm product version.
@@ -24,7 +24,6 @@ progDir=$(realpath $(dirname "${0}"))
 # Sets the image variables and sudo. We do not call any of the functions here.
 source "${progDir}/common"
 
-
 usage()
 {
     echo
@@ -34,14 +33,11 @@ usage()
     echo
     echo "Options:"
     echo
-    echo "--all           stop all components - APLS, SPIRE Server, SL, SN and SWCI"
-    echo "--apls          stop Autopass License Server"
-    echo "--sl            stop both Tensorflow-based and PyTorch-based SL nodes"
-    echo "--sl-pyt        stop PyTorch-based SL nodes"
-    echo "--sl-tf         stop Tensorflow-based SL nodes"
+    echo "--all           stop all components - SL, SN, SWCI and SWOP"
+    echo "--sl            stop SL nodes"
     echo "--sn            stop SN nodes"
-    echo "--spire-server  stop SPIRE server"
     echo "--swci          stop SWCI nodes"
+    echo "--swop          stop SWOP nodes"
     echo "--keep          keep stopped containers - they are removed by default"
     echo "--sudo          invoke docker with sudo permissions"
     echo
@@ -81,21 +77,17 @@ for opt in "${@}"
 do
     case ${opt} in
         --all)
-            apls="y"
-            slPyt="y"
-            slTF="y"
+            sl="y"
             sn="y"
-            spireServer="y"
             swci="y"
+            swop="y"
             ;;
 
-        --apls) apls="y";;
-        --sl) slPyt="y"; slTF="y";;
-        --sl-pyt) slPyt="y";;
-        --sl-tf) slTF="y";;
+
+        --sl) sl="y";;
         --sn) sn="y";;
-        --spire-server) spireServer="y";;
         --swci) swci="y";;
+        --swop) swop="y";;
 
         --keep) keep="y";;
         --sudo) sudo="sudo";;
@@ -111,25 +103,19 @@ do
 done
 
 
-if [[ -z "${apls}"              \
-   && -z "${slPyt}"             \
-   && -z "${slTF}"              \
+if [[ -z "${sl}"                \
    && -z "${sn}"                \
-   && -z "${spireServer}"       \
    && -z "${swci}"              \
+   && -z "${swop}"              \
    ]]
 then
-    slPyt="y"
-    slTF="y"
+    sl="y"
     sn="y"
-    spireServer="y"
     swci="y"
+    swop="y"
 fi
 
-
-[[ -n "${slPyt}" ]] && stopContainers "${slPytImage}" "Swarm Learning (PyTorch)"
-[[ -n "${slTF}" ]] && stopContainers "${slTFImage}" "Swarm Learning (Tensorflow)"
+[[ -n "${sl}" ]] && stopContainers "${slImage}" "Swarm Learning"
 [[ -n "${sn}" ]] && stopContainers "${snImage}" "Swarm Network"
 [[ -n "${swci}" ]] && stopContainers "${swciImage}" "Swarm Command Interface"
-[[ -n "${spireServer}" ]] && stopContainers "${spireImage}" "SPIRE Server"
-[[ -n "${apls}" ]] && stopContainers "${aplsImage}" "APLS"
+[[ -n "${swop}" ]] && stopContainers "${swopImage}" "Swarm Operator"
