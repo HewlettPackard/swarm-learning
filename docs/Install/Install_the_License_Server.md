@@ -1,10 +1,10 @@
 # <a name="GUID-CCE936EF-FB0D-4BF1-B002-3CB9125C55B9"/> Install the License Server
 
-1.   Download the [APLS](https://myenterpriselicense.hpe.com/cwp-ui/free-software/APLS) software. 
-2.   To install the APLS software on a host machine \(Linux or Windows\), see *AutoPass License Server User Guide*, which is part of the downloaded APLS software. 
-3.   From a browser, access the APLS management console using the URL `https://<localhost>:5814` on the host machine where you installed the license server. 
+1. Download the [APLS](https://myenterpriselicense.hpe.com/cwp-ui/free-software/APLS) software. 
+2. To install the APLS software on a host machine \(Linux or Windows\), see *AutoPass License Server User Guide*, which is part of the downloaded APLS software. 
+3. From a browser, access the APLS management console using the URL `https://<localhost>:5814` on the host machine where you installed the license server. 
 
-     The default user name is admin, and the password is password.
+   The default user name is admin, and the password is password.
 
 <blockquote>
     NOTE: These instructions assume that the host IP of license server is <localhost\> and the external port is 5814. Host IP is the IP of the system where the license server is running. Modify these values to match the actual IP and external port on your system.
@@ -13,29 +13,25 @@
     
    If the web browser cannot connect to the APLS management console, check your network proxy settings and firewall policies. Consider techniques like port forwarding to work around firewall policies. If necessary, work with your network administrator to diagnose and resolve connectivity problems.
 
-4.   In the APLS web GUI, go to **License Management** -\> **Install License** and note down the lock code. 
-    
-     ![Lock code](GUID-A37C5798-B8B7-4B93-B786-A2682797AB37-high.png)
+4. In the APLS web GUI, go to **License Management** -\> **Install License** and note down the lock code. 
+   
+   ![Lock code](GUID-A37C5798-B8B7-4B93-B786-A2682797AB37-high.png)
 
-5.   Go to the Software Notification Message Receipt page and click **Access Your Products**. 
+5. Navigate to the [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) home page. After signing in with your HPE Passport credentials and perform the following actions:
+   
+   Click **Software** (left pane) -> **Search** "Swarm Learning" -> **Action** -> **Get License**
 
-  You will be navigated to the [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) home page. After signing in with your HPE Passport credentials, you will see the **Activate** page.
+6. Enter the lock code you got from the **Install Licenses** page in the HPE Serial Number field and click **Activate**. 
 
-6.   Activate the license: 
-    
-     1.   Select license to activate and click **Next**.
-     2.   Designate yourself or for another user for activation. Click **Next**.
-     3.   Enter the lock code you got from the **Install Licenses** page in the HPE Serial Number field and click **Activate**. 
-
-7.   Once you activate the licenses, you will see the **Download Files** page. Select the keys and the software and download them. 
-8.   Install and manage the Swarm Learning license:
+7. Once you activate the licenses, you will see the **Download Files** page. Select the keys and the software and download them. 
+8. Install and manage the Swarm Learning license:
     
      1.   Open the APLS management console. 
      2.   Select **License Management** -\> **Install License**. 
      3.   Select **Choose** file to upload the license file that you downloaded and click **Next**. 
      4.   Select the required feature IDs and click **Install Licenses**. 
 
-  ![APLS License Management](GUID-979617B4-8568-4BB7-A536-9B1E304A86CA-high.png)
+  ![APLS License Management](Community_License_server.png)
 
 <blockquote>
 
