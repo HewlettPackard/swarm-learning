@@ -26,10 +26,11 @@
 7. Once you activate the licenses, you will see the **Download Files** page. Select the keys and the software and download them. 
 8. Install and manage the Swarm Learning license:
     
-     1.   Open the APLS management console. 
-     2.   Select **License Management** -\> **Install License**. 
-     3.   Select **Choose** file to upload the license file that you downloaded and click **Next**. 
-     4.   Select the required feature IDs and click **Install Licenses**. 
+   1. Open the APLS management console. 
+   2. Select **License Management** -\> **Install License**. 
+   3. Select **Choose** file to upload the license file that you downloaded and click **Next**. 
+   4. Select the required feature IDs and click **Install Licenses**.
+   5. On a successfull installation, you will see the following screen.
 
   ![APLS License Management](Community_License_server.png)
 
