@@ -1,4 +1,4 @@
-# <a name="GUID-CCE936EF-FB0D-4BF1-B002-3CB9125C55B9"/> Install the License Server
+# <a name="GUID-CCE936EF-FB0D-4BF1-B002-3CB9125C55B9"/> Install the License Server and download Swarm Learning
 
 1. Download the [APLS](https://myenterpriselicense.hpe.com/cwp-ui/free-software/APLS) software. 
 2. To install the APLS software on a host machine \(Linux or Windows\), see *AutoPass License Server User Guide*, which is part of the downloaded APLS software. 
@@ -23,8 +23,9 @@
 
 6. Enter the lock code you got from the **Install Licenses** page in the HPE Serial Number field and click **Activate**. 
 
-7. Once you activate the licenses, you will see the **Download Files** page. Select the keys and the software and download them. 
-8. Install and manage the Swarm Learning license:
+7. Once you activate the licenses, you will see the **Download Files** page. 
+8. Select and download the **keys and all the listed software files** (7 files). 
+9. Install and manage the Swarm Learning license:
     
    1. Open the APLS management console. 
    2. Select **License Management** -\> **Install License**. 
