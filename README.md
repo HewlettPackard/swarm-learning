@@ -60,7 +60,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras \(based on Ten
 
 ## Getting Started
   - [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
-  - Clone this repository on all machines where you want to run Swarm Learning.
+  - Clone this repository on all machines where you want to run Swarm Learning.<br>
     **Note**: The suggested default location is to clone it under `/opt/hpe`. It will create a `swarm-learning` folder and copy the files under it. If you clone it in a different location, please make sure to give the same location when running the installer UI, under the `Swarm Installation location` text box - as `<clone-location>/swarm-learning`. For the default case, the UI screen would have `/opt/hpe/swarm-learning` pre-populated.
   - [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
   - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
