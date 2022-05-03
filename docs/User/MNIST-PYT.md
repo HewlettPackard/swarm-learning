@@ -108,7 +108,7 @@ sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist-pyt/swop/swop*_profile.yaml w
 
 ```
 docker volume create sl-cli-lib
-docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sn:1.0.0
+docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.0.0
 docker cp lib/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 ```
