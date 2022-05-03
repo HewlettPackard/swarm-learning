@@ -1,13 +1,12 @@
 # <a name="GUID-60017971-B0A9-4119-AEAF-A21594EE5C1E"/> Install HPE Swarm Learning
 
-1.   After installing the license, download the following from the [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) page: 
+1.   After [completing installation of license server and downloading of the Swarm Learning installation files](/docs/Install/Install_the_License_Server.md), you must run one of the Swarm Learning installer based on your platform (Linux, Windows, or Mac as listed below). 
 
-     1.   The tar file containing docs and scripts. 
-     2.   The signature file for the above tar file. 
-     3.   The docker digest hash file \(JSON\). 
-     4.   Download the Swarm Learning installer for your platform, Mac, Windows, or Linux. 
-
-2.   Run the Swarm Learning installer Web App from the command prompt. This is launched in a web browser. 
+     - HPE_SWARM_LEARNING_INSTALLER_LINUX_Q2V41-11036
+     - HPE_SWARM_LEARNING_INSTALLER_WINDOWS_Q2V41-11038.EXE
+     - HPE_SWARM_LEARNING_INSTALLER_MAC_Q2V41-11039
+     
+     The Swarm Learning Web App is launched in a web browser.
 
 <blockquote>
     IMPORTANT: HPE recommends you to run the downloaded Swarm Learning installer from the terminal window only.
