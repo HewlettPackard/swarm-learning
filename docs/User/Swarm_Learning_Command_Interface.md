@@ -4,6 +4,8 @@ Swarm Learning Command Line Interface \(SWCI\) is the command interface tool to 
 
 The user can enter any command from the predefined set of commands in the SWCI prompt. The entered command is parsed, then executed and the output is shown in the command line.
 
+The user can provide an init script file that has SWCI commands to be executed at the start of SWCI. If we provide this option, all the SWCI commands within this script file are processed, before it enters the interactive mode and waits for users commands. Users can simulate a non-interactive SWCI run, by having a bunch of SWCI commands and an SWCI `EXIT` command at the end of this init script file. This could be used for automation.
+
 The subsequent sections mention about SWCI-related commands, and these commands are also part of the help text and these are also part of the handy online help available from within the tool.
 
 ## <a name="SECTION_ZL5_PFG_HSB"/> SWCI commands related to context
