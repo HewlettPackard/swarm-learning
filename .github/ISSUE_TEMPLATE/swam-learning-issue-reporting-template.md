@@ -14,6 +14,9 @@ assignees: ''
 - commands used for starting containers: 
 - docker logs [APLS, SPIRE, SN, SL, SWCI]: 
 
+# Swarm Learning Version:
+- Find the docker tag of the Swarm images ( $ docker images | grep hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning )
+
 # OS and ML Platform
 - details of host OS: 
 - details of ML platform used: 
