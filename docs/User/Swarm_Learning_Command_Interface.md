@@ -1,6 +1,6 @@
 # <a name="GUID-4AB7AD75-8467-4F3F-9392-23C694131D4F"/> Swarm Learning Command Interface
 
-Swarm Learning Command Line Interface \(SWCI\) is the command interface tool to the Swarm Learning framework. It is used to view the status, control, and manage the Swarm Learning framework. SWCI manages the Swarm Learning framework using contexts and contracts. For more information on how to start the SWCI tool, see *HPE Swarm Learning Installation and Configuration Guide*.
+Swarm Learning Command Line Interface \(SWCI\) is the command interface tool to the Swarm Learning framework. It is used to view the status, control, and manage the Swarm Learning framework. SWCI manages the Swarm Learning framework using contexts and contracts. For more information on how to start the SWCI tool, see [Running SWCI](/docs/Install/Running_Swarm_Learning.md).
 
 The user can enter any command from the predefined set of commands in the SWCI prompt. The entered command is parsed, then executed and the output is shown in the command line.
 
@@ -8,7 +8,7 @@ The subsequent sections mention about SWCI-related commands, and these commands 
 
 ## <a name="SECTION_ZL5_PFG_HSB"/> SWCI commands related to context
 
-Users are required to explicitly create a context \(using the CREATE context command\) and activate it as follows:
+A SWCI tool can control operations on multiple Swarm Learning framework instances. Each instance is encapsulated and represented as a context. At a given time, only one context is active. All SWCI commands work with the current active context (default context) and they do not take context as an explicit argument. Before running any SWCI command, users are required to explicitly create a context \(using the CREATE context command\) and activate it as follows:
 
 ```
 +----------------------------------------------------------------+
