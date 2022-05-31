@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+######################################################################
+# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+######################################################################
+
+# Certificate generation utility
+
+script_name=$(basename "${0}")
+script_dir=$(realpath $(dirname "${0}"))
+
+# Help function
+help()
+{
+   echo ""
+   echo "Usage: $script_name -e EXAMPLE-NAME -i HOST-INDEX"
+   echo -e "\\t-e Name of the example e.g. mnist, mnist-pyt, cifar10 etc."
+   echo -e "\\t-i Host index like 1,2 etc."
+   echo -e "\\t-h Show help."
+   echo ""
+   exit 1
+}
+
+# Process command options
+while getopts "e:i:h?:" opt
+do
+   case "$opt" in
+      e ) example="$OPTARG" ;;
+      i ) host="$OPTARG" ;;
+      h ) help ;;
+      ? ) help ;;
+   esac
+done
+
+# Checks
+if [ -z "$example" ] || [ -z "$host" ]
+then
+   echo "Some or all of the parameters are empty";
+   help
+fi
+
+# Create CA
+mkdir -p "workspace/${example}/cert/ca/capath"
+   
+# Create CSR
+openssl req                                                   \
+    -new                                                      \
+    -nodes                                                    \
+    -keyout workspace/"$example"/cert/ca/ca-"$host"-key.pem   \
+    -out workspace/"$example"/cert/ca/ca-"$host"-csr.pem      \
+    -subj "/OU=Swarm-Learning/CN=CA-"$host""
+
+# We do not use the default configuration file because it
+# might specify a different set of properties.
+local opensslConf=()
+opensslConf+=("basicConstraints = critical, CA:TRUE")
+opensslConf+=("keyUsage = critical, digitalSignature, keyCertSign")
+opensslConf+=("subjectKeyIdentifier = hash")
+
+# Self-sign CSR
+openssl x509                                                       \
+    -req                                                           \
+    -in workspace/"$example"/cert/ca/ca-"$host"-csr.pem            \
+    -signkey workspace/"$example"/cert/ca/ca-"$host"-key.pem       \
+    -out workspace/"$example"/cert/ca/capath/ca-"$host"-cert.pem   \
+    -extfile <(printf "%s\n" "${opensslConf[@]}")
+    
+# Create keys and certificates for each Swarm component
+local opensslConf=()
+opensslConf+=("authorityKeyIdentifier = keyid:always, issuer")
+opensslConf+=("basicConstraints = critical, CA:FALSE")
+opensslConf+=("keyUsage = critical, digitalSignature, keyCertSign")
+opensslConf+=("subjectKeyIdentifier = hash")
+
+for comp in sn sl swci swop
+do
+    openssl req                                                        \
+        -new                                                           \
+        -nodes                                                         \
+        -keyout workspace/"$example"/cert/${comp}-"$host"-key.pem      \
+        -out workspace/"$example"/cert/${comp}-"$host"-csr.pem         \
+        -subj "/OU=Swarm-Learning/CN=${comp^^}-"$host""
+
+    openssl x509                                                       \
+        -req                                                           \
+        -in workspace/"$example"/cert/${comp}-"$host"-csr.pem          \
+        -out workspace/"$example"/cert/${comp}-"$host"-cert.pem        \
+        -CA workspace/"$example"/cert/ca/capath/ca-"$host"-cert.pem    \
+        -CAkey workspace/"$example"/cert/ca/ca-"$host"-key.pem         \
+        -CAcreateserial                                                \
+        -CAserial workspace/"$example"/cert/ca/ca-"$host"-srl.srl      \
+        -extfile <(printf "%s\n" "${opensslConf[@]}")
+done
+
