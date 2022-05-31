@@ -12,7 +12,8 @@ NOTE:HPE recommends that users must use their own certificates in actual product
 
 </blockquote>
 
-See the README file for each example for brief instructions on running them:
+For details of running each example, see the below:
+
 -   [MNIST](/docs/User/MNIST.md)
 -   [MNIST-PYT](/docs/User/MNIST-PYT.md)
 -   [CIFAR-10](/docs/User/CIFAR-10.md)
