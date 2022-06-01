@@ -126,8 +126,8 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
    On host-2, run SN node (SN2).
 
     ```
-    ./scripts/bin/run-sn -d --rm --name=sn2 --network=host-2-net\
-    --host-ip=172.2.2.2 --sentinel-ip=172.1.1.1 --sn-p2p-port=30303\
+    ./scripts/bin/run-sn -d --rm --name=sn2 --network=host-2-net \
+    --host-ip=172.2.2.2 --sentinel-ip=172.1.1.1 --sn-p2p-port=30303 \
     --sn-api-port=30304 --key=workspace/mnist/cert/sn-2-key.pem \
     --cert=workspace/mnist/cert/sn-2-cert.pem \
     --capath=workspace/mnist/cert/ca/capath --apls-ip=172.1.1.1
@@ -140,10 +140,10 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 </blockquote>
 
 ```
-./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net\
---usr-dir=workspace/mnist/swop --profile-file-name=swop1_profile.yaml\
+./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net \
+--usr-dir=workspace/mnist/swop --profile-file-name=swop1_profile.yaml \
 --key=workspace/mnist/cert/swop-1-key.pem \
---cert=workspace/mnist/cert/swop-1-cert.pem\
+--cert=workspace/mnist/cert/swop-1-cert.pem \
 --capath=workspace/mnist/cert/ca/capath -e http_proxy= -e \
 https_proxy= --apls-ip=172.1.1.1
 ```
@@ -155,10 +155,10 @@ https_proxy= --apls-ip=172.1.1.1
 </blockquote>
 
     ```
-    ./scripts/bin/run-swop -d --rm --name=swop2 --network=host-2-net\
-    --usr-dir=workspace/mnist/swop --profile-file-name=swop2_profile.yaml\
+    ./scripts/bin/run-swop -d --rm --name=swop2 --network=host-2-net \
+    --usr-dir=workspace/mnist/swop --profile-file-name=swop2_profile.yaml \
     --key=workspace/mnist/cert/swop-2-key.pem \
-    --cert=workspace/mnist/cert/swop-2-cert.pem\
+    --cert=workspace/mnist/cert/swop-2-cert.pem \
     --capath=workspace/mnist/cert/ca/capath -e http_proxy= -e \
     https_proxy= --apls-ip=172.1.1.1
     ```
@@ -175,7 +175,7 @@ NOTE: If required, according to the environment, modify SN IP in <code>workspace
 
 ```
 ./scripts/bin/run-swci -ti --rm --name=swci1 --network=host-1-net \
---usr-dir=workspace/mnist/swci --init-script-name=swci-init\
+--usr-dir=workspace/mnist/swci --init-script-name=swci-init \
 --key=workspace/mnist/cert/swci-1-key.pem \
 --cert=workspace/mnist/cert/swci-1-cert.pem \
 --capath=workspace/mnist/cert/ca/capath \
