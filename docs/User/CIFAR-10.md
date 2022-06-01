@@ -77,10 +77,10 @@ docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 6.  On host-1, Run Swarm Network node \(sentinel node\)
 
 ```
-./scripts/bin/run-sn -d --rm --name=sn1 --host-ip=172.1.1.1\
---sentinel --sn-api-port=30304 --key=workspace/cifar10/cert/sn-1-key.pem\
+./scripts/bin/run-sn -d --rm --name=sn1 --host-ip=172.1.1.1 \
+--sentinel --sn-api-port=30304 --key=workspace/cifar10/cert/sn-1-key.pem \
 --cert=workspace/cifar10/cert/sn-1-cert.pem \
---capath=workspace/cifar10/cert\
+--capath=workspace/cifar10/cert \
 /ca/capath --apls-ip=172.1.1.1
 ```
 
@@ -100,7 +100,7 @@ docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 --capath=workspace/cifar10/cert/ca/capath --ml-it \
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
 --ml-w=/tmp/test --ml-entrypoint=python3 \
---ml-cmd=model/cifar10.py --ml-v=workspace/cifar10/app-data\
+--ml-cmd=model/cifar10.py --ml-v=workspace/cifar10/app-data \
 :/tmp/test/app-data --ml-v=workspace/cifar10/model:/tmp/test/model \
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
