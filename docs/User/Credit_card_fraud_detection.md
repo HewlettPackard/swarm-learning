@@ -90,9 +90,9 @@ docker network create host-1-net
 
 ```
 ./scripts/bin/run-sn -d --rm --name=sn1 \
---network=host-1-net --host-ip=sn1 --sentinel\
+--network=host-1-net --host-ip=sn1 --sentinel \
 --key=workspace/fraud-detection/cert/sn-1-key.pem \
---cert=workspace/fraud-detection/cert/sn-1-cert.pem\
+--cert=workspace/fraud-detection/cert/sn-1-cert.pem \
 --capath=workspace/fraud-detection/cert/ca/capath \
 --apls-ip=172.1.1.1
 ```
@@ -113,11 +113,11 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 
 ```
 ./scripts/bin/run-swop -d --rm --name=swop1 \
---network=host-1-net --usr-dir=workspace/fraud-detection/swop\
+--network=host-1-net --usr-dir=workspace/fraud-detection/swop \
 --profile-file-name=swop1_profile.yaml \
---key=workspace/fraud-detection/cert/swop-1-key.pem\
+--key=workspace/fraud-detection/cert/swop-1-key.pem \
 --cert=workspace/fraud-detection/cert/swop-1-cert.pem \
---capath=workspace/fraud-detection/cert/ca/capath\
+--capath=workspace/fraud-detection/cert/ca/capath \
 -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
 
@@ -135,11 +135,11 @@ NOTE: If required, according to environment, modify SN IP in <code>workspace/fra
 
 ```
 ./scripts/bin/run-swci -ti --rm --name=swci1 \
---network=host-1-net --usr-dir=workspace/fraud-detection/swci\
+--network=host-1-net --usr-dir=workspace/fraud-detection/swci \
 --init-script-name=swci-init \
---key=workspace/fraud-detection/cert/swci-1-key.pem\
+--key=workspace/fraud-detection/cert/swci-1-key.pem \
 --cert=workspace/fraud-detection/cert/swci-1-cert.pem \
---capath=workspace/fraud-detection/cert/ca/capath\
+--capath=workspace/fraud-detection/cert/ca/capath \
 -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
 
