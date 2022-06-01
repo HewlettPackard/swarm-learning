@@ -1,0 +1,60 @@
+---
+######################################################################
+# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+######################################################################
+groupname  : demo
+taskrunner : defaulttaskbb.taskdb.sml.hpe
+policyuri  : ~
+resourcemgr :
+    mgrtype    : DOCKER
+    accessinfo :
+        accesstype : FROMENV
+network    : host-2-net
+# apls, spiresrv , apisrv are defaulted to envvar not defined here
+apls :
+    locator :
+        host : 172.1.1.1
+        port : ~
+apisrv :
+    locator :
+        host : 172.2.2.2
+        port : ~
+envvars :
+    - SL_LOG_LEVEL : INFO
+    - http_proxy : ~
+    - https_proxy : ~
+    - no_proxy : ~
+    - HTTP_PROXY : ~
+    - HTTPS_PROXY : ~
+    - NO_PROXY : ~
+nodes :
+    - slnodedef :
+        idx : 0
+        identity :
+            - attribute :
+                aType : KEY
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist/cert/sl-2-key.pem"
+                tgt : "/swarm-cert/sl-2-key.pem"
+                subPath : null
+            - attribute :
+                aType : CERT
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist/cert/sl-2-cert.pem"
+                tgt : "/swarm-cert/sl-2-cert.pem"
+                subPath : null
+            - attribute :
+                aType : CAPATH
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist/cert/ca/capath"
+                tgt : "/swarm-cert/capath"
+                subPath : null
+        slhostname : sl2
+        slhostip   : 172.2.2.2
+        slport : 18000
+        usrhostname : user2
+        privatedata :
+            src: "<CURRENT-PATH>/workspace/mnist/app-data"
+            mType : BIND
+        slenvvars : null
+        usrenvvars : null
