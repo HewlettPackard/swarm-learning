@@ -73,6 +73,10 @@ cp -r examples/utils/gen-cert workspace/cifar10/
 cp lib/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl workspace/cifar10/ml-context/
 docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 ```
+You may need to specify the correct https_proxy for the docker build if you are behind a firewall. For eg,
+``` 
+docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-server-ip>:<port> workspace/cifar10/ml-context
+```
 
 6.  On host-1, Run Swarm Network node \(sentinel node\)
 
@@ -80,8 +84,7 @@ docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 ./scripts/bin/run-sn -d --rm --name=sn1 --host-ip=172.1.1.1 \
 --sentinel --sn-api-port=30304 --key=workspace/cifar10/cert/sn-1-key.pem \
 --cert=workspace/cifar10/cert/sn-1-cert.pem \
---capath=workspace/cifar10/cert \
-/ca/capath --apls-ip=172.1.1.1
+--capath=workspace/cifar10/cert/ca/capath --apls-ip=172.1.1.1
 ```
 
    Use the Docker logs command to monitor this Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:
@@ -90,7 +93,7 @@ docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
     swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
     ```
 
-7.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\):
+7.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset.
 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
@@ -99,15 +102,15 @@ docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 --cert=workspace/cifar10/cert/sl-1-cert.pem \
 --capath=workspace/cifar10/cert/ca/capath --ml-it \
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
---ml-w=/tmp/test --ml-entrypoint=python3 \
---ml-cmd=model/cifar10.py --ml-v=workspace/cifar10/app-data \
-:/tmp/test/app-data --ml-v=workspace/cifar10/model:/tmp/test/model \
+--ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cifar10.py \
+--ml-v=workspace/cifar10/model:/tmp/test/model \
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
+--ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
 --apls-ip=172.1.1.1
 ```
 
-8.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\):
+8.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset
 
 ```
 ./scripts/bin/run-sl --name=sl2 --host-ip=172.2.2.2 \
@@ -117,10 +120,10 @@ docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 --capath=workspace/cifar10/cert/ca/capath \
 --ml-it --ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cifar10.py \
---ml-v=workspace/cifar10/app-data:/tmp/test/app-data \
 --ml-v=workspace/cifar10/model:/tmp/test/model \
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
+--ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
 --apls-ip=172.1.1.1
 ```
 
