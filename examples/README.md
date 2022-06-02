@@ -14,7 +14,7 @@ NOTE:HPE recommends that users must use their own certificates in actual product
 
 For details of running each example, see the below:
 
--   [MNIST](/docs/User/MNIST.md)
--   [MNIST-PYT](/docs/User/MNIST-PYT.md)
--   [CIFAR-10](/docs/User/CIFAR-10.md)
--   [Credit card fraud detection](/docs/User/Credit_card_fraud_detection.md)
+-   [MNIST](/examples/mnist/MNIST.md)
+-   [MNIST-PYT](/examples/mnist-pyt/MNIST-PYT.md)
+-   [CIFAR-10](/examples/cifar/CIFAR-10.md)
+-   [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md)
