@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-############################################################################
-## Copyright 2021 Hewlett Packard Enterprise Development LP
+######################################################################
+## (C)Copyright 2021, 2022 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -13,7 +13,7 @@
 ## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 ## License for the specific language governing permissions and limitations
 ## under the License.
-############################################################################
+######################################################################
 
 
 # Set Swarm product version.
@@ -28,27 +28,43 @@ source "${progDir}/common"
 
 usage()
 {
+    echo ""
     echo "${progName}: usage: ${progName}"
-    echo "This program will remove all Swarm Learning components,"
-    echo "documentation, code samples and scripts."
-    echo
-
+    echo ""
+    echo "This program will stops all Swarm Learning containers,"
+    echo "removes Swarm Learning images and deletes the files within"
+    echo "swarm-learning-docs installation directory."
+    echo ""
+    echo "Please note, this program will not remove any user specific "
+    echo "images and will not uninstall the swarm learning wheel package."
+    echo ""
     exit 1
 }
 
+for opt in "${@}"
+do
+    case ${opt} in
+    --help) usage;;
+        *)
+            echo "Invalid flag: ${opt}"
+            usage
+            ;;
+    esac
+
+    shift
+done
 
 ${progDir}/stop-swarm --all
 
-
-${sudo} docker image rm -f "${slPytImage}"
-${sudo} docker image rm -f "${slTFImage}"
+${sudo} docker image rm -f "${slImage}"
 ${sudo} docker image rm -f "${snImage}"
 ${sudo} docker image rm -f "${swciImage}"
-${sudo} docker image rm -f "${spireImage}"
-${sudo} docker image rm -f "${aplsImage}"
+${sudo} docker image rm -f "${swopImage}"
 
 
 rm -rf                              \
     "${swarmInstallDir}/docs"       \
     "${swarmInstallDir}/examples"   \
-    "${swarmInstallDir}/scripts"
+    "${swarmInstallDir}/scripts"    \
+    "${swarmInstallDir}/lib"        \
+    "${swarmInstallDir}/README.md"

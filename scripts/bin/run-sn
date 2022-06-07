@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+
+##################################################################
+## (C)Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+##################################################################
+
+###############################################################
+# Script to start Swarm Network container
+###############################################################
+
+## EXAMPLES
+## --------
+##  1.a. SN as sentinel, with user-provided Identity
+##      run-sn                                                  \
+##          -i --name=sn-1                                      \
+##          --sentinel=1                                        \
+##          --host-ip=sn-1                                      \
+##          --key=/tmp/id/sn-1-key.pem                          \
+##          --cert=/tmp/id/sn-1-certchain.pem                   \
+##          --capath=/tmp/id/ca/capath                          \
+##          --apls-ip=xx.xxx.xxx.xxx                            \
+##          --apls-port=5814                                    \
+##          --sn-api-port=30304        
+##  1.b. SN as non sentinel, with user-provided Identity
+##      run-sn                                                  \
+##          -i --name=sn-2                                      \
+##          --host-ip=sn-2                                      \
+##          --sentinel-ip=sn-1                                  \
+##          --key=/tmp/id/sn-2-key.pem                          \
+##          --cert=/tmp/id/sn-2-certchain.pem                   \
+##          --capath=/tmp/id/ca/capath                          \
+##          --apls-ip=xx.xxx.xxx.xxx                            \
+##          --apls-port=5814                                    \
+##          --sn-api-port=30304   
+##  2.  SN with SPIFFE ID
+##      The value to this variable "swarm_node_type" is the custom name provided
+##      by the user while creating a registration entry inside spire-server.
+##
+##    a. SN as sentinel,
+##        run-sn                                                \
+##          -i --name=sn-1                                      \
+##          --host-ip=sn-1                                      \
+##          --sentinel=1                                        \
+##          -e swarm_node_type=sn                               \
+##          --socket-path $(                                    \
+##              docker ps --format '{{.Names}}'                 \
+##              --filter=ancestor=spire-agent:0.12.0             
+##          )
+##    b. SN as non sentinel
+##        run-sn                                                \
+##          -i --name=sn-2                                      \
+##          --host-ip=sn-2                                      \
+##          --sentinel-ip=sn-1                                  \
+##          -e swarm_node_type=sn                               \
+##          --socket-path $(                                    \
+##              docker ps --format '{{.Names}}'                 \
+##              --filter=ancestor=spire-agent:0.12.0             
+##          )
+
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+funcCallOrder=("Common" "APLS" "UserID" "SpiffeID" "Component")
+
+# Used by printCommonUsage.
+defaultImageName="${swarmDockerHub}/${swarmOrg}/${snRepoName}"
+defaultImageTag="${swarmVer}"
+
+internalP2PPort=30303
+defaultAPIPort=30304
+
+
+printComponentUsage()
+{
+    printf -- "--host-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which this\n"
+    printf -- "\tSwarm Network node will be created.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sentinel \n"
+    printf -- "\tIf this flag is passed, this node will do the Blockchain\n"
+    printf -- "\tinitialization and make config info ready to be shared with\n"
+    printf -- "\tother SN nodes. Also it does not expect sentinel node IP to be passed. \n"
+    printf -- "\tIf this flag is not passed this node will be a regular SN node and \n"
+    printf -- "\twill need a sentinel node IP for initialization. \n\n"    
+
+    printf -- "--sentinel-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which the\n"
+    printf -- "\tSentinel Swarm Network node is running. If this parameter\n"
+    printf -- "\tis not specified, this Swarm Network node will make itself as the sentinel.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sentinel-api-port <port number>\n"
+    printf -- "\tHost port for the Sentinel Swarm Network node's API Server.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sn-api-port <port number>\n"
+    printf -- "\tHost port for this Swarm Network node's API Server.\n"
+    printf -- "\tDefault: 30304\n\n"
+
+    printf -- "--sn-p2p-port <port number>\n"
+    printf -- "\tHost port for this Swarm Network node's P2P communications.\n"
+    printf -- "\tDefault: 30303\n\n"
+
+    return 0
+}
+
+
+processComponentBatchOpt()
+{
+    local sidecar="${1}"        # Ignored.
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    case "${opt}" in
+        --@(host|sentinel)-ip) checkAndAssign "${opt}" "${optarg}";;
+        --sentinel) checkAndAssign "${opt}" "1"; nShift=1;;
+        --sentinel-api-port) checkAndAssign "${opt}" "${optarg}";;
+        --sn-@(api|p2p)-port) checkAndAssign "${opt}" "${optarg}";;
+
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+onTrainEnd()
+{
+    [[ -z "${hostIp}" ]] && error "mandatory parameter --host-ip not specified"
+    [[ -z "${sentinel}" && -z "${sentinelIp}" ]] && \
+        error "either --sentinel or --sentinel-ip must be specified"
+
+    if [[ -n "${hostIp}" ]]
+    then
+        envvar+=(-e "THIS_NODE_IP=${hostIp}")
+    fi
+
+    [[ -n "${sentinelIp}" ]] && envvar+=(-e "SENTINEL_NODE_IP=${sentinelIp}")
+    [[ -n "${sentinelApiPort}" ]] && \
+        envvar+=(-e "SENTINEL_API_SERVER_PORT=${sentinelApiPort}")
+    if [[ -n "${snApiPort}" ]]
+    then
+        envvar+=(-e "API_SERVER_PORT=${snApiPort}")
+        ports+=(-p "${snApiPort}:${snApiPort}")
+    fi
+    
+    if [[ -n "${sentinel}" ]]
+    then
+        envvar+=(-e "SN_I_AM_SENTINEL=${sentinel}")
+    fi
+
+    if [[ -n "${snP2pPort}" ]]
+    then
+        envvar+=(-e "SN_ETH_PORT_EXT=${snP2pPort}")
+        ports+=(-p "${snP2pPort}:${internalP2PPort}")
+    fi
+
+    cmd+=("${unprocessedOpts[@]}")
+    unprocessedOpts=()
+
+    return 0
+}
+
+
+main "${@}"

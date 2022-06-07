@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+
+##################################################################
+## (C)Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+## Licensed under the Apache License, Version 2.0 (the "License"); you may
+## not use this file except in compliance with the License. You may obtain
+## a copy of the License at
+##
+##    http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+## WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+## License for the specific language governing permissions and limitations
+## under the License.
+##################################################################
+
+##################################################################################
+# Script to start Swarm Learning container and, optionally, the user ML container
+##################################################################################
+
+
+## EXAMPLES
+## --------
+##  1. SL, with user-provided Identity
+##      run-sl                                                  \
+##          --name=sl-2 --host-ip=sl-2                          \
+##          --sn-ip=$(docker exec sn-2 hostname -I)             \
+##          --ml-i --ml-image mnist:1.0.0                       \
+##          --key=/tmp/id/sl-2-key.pem                          \
+##          --cert=/tmp/id/sl-2-certchain.pem                   \
+##          --capath=/tmp/id/ca/capath                          
+
+##  2. SL, with SPIFFE ID
+##      The value to this variable "swarm_node_type" is the custom name provided
+##      by the user while creating a registration entry inside spire-server.
+##
+##      run-sl                                                          \
+##          --name=sl-1 --host-ip=sl-1                                  \
+##          --ml-i --ml-image mnist:1.0.0                               \
+##          -e swarm_node_type=sl                                       \
+##          --socket-path $(                                            \
+##              docker ps --format '{{.Names}}'                         \
+##              --filter=ancestor=gcr.io/spiffe-io/spire-agent:1.1.3
+##          )
+
+progName=$(basename "${0}")
+progDir=$(realpath $(dirname "${0}"))
+
+# Source a bunch of code that is common to all our scripts.
+source "${progDir}/common"
+
+funcCallOrder=("Common" "APLS" "UserID" "SpiffeID" "Component")
+
+# Used by printCommonUsage.
+defaultImageName="${swarmDockerHub}/${swarmOrg}/${slRepoName}"
+defaultImageTag="${swarmVer}"
+
+internalFSPort=30305
+
+
+printComponentUsage()
+{
+    printf -- "--host-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which this\n"
+    printf -- "\tSwarm Learning node will be created.\n"
+    printf -- "\tMandatory Parameter\n\n"
+
+    printf -- "--sn-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which the\n"
+    printf -- "\tSwarm Network (SN) node with which this Swarm Learning node must.\n"
+    printf -- "\tassociate, is running.\n\n"
+
+    printf -- "--sn-api-port <port number>\n"
+    printf -- "\tHost port for the API Server of the associated Swarm Network node.\n"
+    printf -- "\tDefault: 30304\n\n"
+
+    printf -- "--sl-fs-port <port number>\n"
+    printf -- "\tHost port for this Swarm Learning node's File Server.\n"
+    printf -- "\tDefault: 30305\n\n"
+
+    printf -- "--sn-docker-name <container name>\n"
+    printf -- "\tDocker container name for the associated Swarm Network node.\n"
+    printf -- "\tDefault: None\n\n"
+    
+
+    printf -- "Machine Learning container parameters\n"
+    printf -- "-------------------------------------\n\n"
+    printf -- "--ml-image <ML image name>\n"
+    printf -- "\tName of the User's Machine Learning image \n"
+    printf -- "\tOptional parameter.\n\n"
+
+    printf -- "--ml-entrypoint <entrypoint>\n"
+    printf -- "\tEntrypoint to the Machine Learning container \n"
+    printf -- "\tOptional parameter \n\n"
+
+    printf -- "--ml-cmd <command>\n"
+    printf -- "\tCommand to the Machine Learning container \n"
+    printf -- "\tOptional parameter \n\n"
+
+    printf -- "--ml-w <directory path>\n"
+    printf -- "\tWorking directory of the Machine Learning container \n"
+    printf -- "\tOptional parameter \n\n"
+
+    printf -- "--ml-name <container name>\n"
+    printf -- "\tName of the Machine Learning container \n"
+    printf -- "\tOptional parameter \n\n"
+
+    printf -- "--ml-v <host-path:container-path>\n"
+    printf -- "\tBind mount a volume for the Machine Learning container\n"
+    printf -- "\tOptional parameter \n\n"
+
+    printf -- "--ml-e <environmental-variable-name=value>\n"
+    printf -- "\tTo pass environmental variable to the Machine Learning container\n"
+    printf -- "\tOptional parameter \n\n"
+
+    return 0
+}
+
+
+processComponentBatchOpt()
+{
+    local sidecar="${1}"        # Ignored.
+    local origParam="${2}"
+    local opt="${3}"
+    local optarg="${4}"
+
+    case "${opt}" in
+        --host-ip) checkAndAssign "${opt}" "${optarg}";;
+        --sl-fs-port) checkAndAssign "${opt}" "${optarg}";;
+        --sn-@(api-port|docker-name|ip)) checkAndAssign "${opt}" "${optarg}";;
+        *) unprocessedOpts+=("${origParam}"); nShift=1;;
+    esac
+
+    return 0
+}
+
+
+onMlComponentBatchEnd()
+{
+    local sidecar="${1}"
+    [[ -n "${sidecar}" ]] && local sidecarPrefix="${sidecar}-"
+
+    declare -n sidecarEnvvarVar=$(makeVarName "${sidecarPrefix}" envvar)
+    declare -n mainEnvvarVar="envvar"
+    declare -n mainMountsVar="mounts"
+
+    mainMountsVar+=(-v /tmp/channel)
+    mainEnvvarVar+=(-e SL_REQUEST_CHANNEL="/tmp/channel/request.channel")
+    mainEnvvarVar+=(-e SL_RESPONSE_CHANNEL="/tmp/channel/response.channel")
+    sidecarEnvvarVar+=(-e SL_REQUEST_CHANNEL="/tmp/channel/request.channel")
+    sidecarEnvvarVar+=(-e SL_RESPONSE_CHANNEL="/tmp/channel/response.channel")
+
+    assignVar "${sidecarPrefix}" volumesFromMain "y"
+
+    return 0
+}
+
+
+onTrainEnd()
+{
+    [[ -z "${hostIp}" ]] && error "mandatory parameter --host-ip not specified"
+
+    if [[ -n "${hostIp}" ]]
+    then
+        envvar+=(-e "THIS_NODE_IP=${hostIp}")
+    fi
+
+    if [[ -z "${snIp}" ]]
+    then
+        snExec=$(genDockerExec \
+            "${snImage}" "${snDockerName}" "Swarm Network node")
+        snIp="$(${snExec} hostname -i | tr -d '\r\n')"
+    fi
+
+    [[ -n "${snIp}" ]] && envvar+=(-e "SENTINEL_NODE_IP=${snIp}")
+    [[ -n "${snApiPort}" ]] && envvar+=(-e "API_SERVER_PORT=${snApiPort}")
+
+    if [[ -n "${slFsPort}" ]]
+    then
+        envvar+=(-e "ML_FS_PORT=${slFsPort}")
+        ports+=(-p "${slFsPort}:${internalFSPort}")
+    fi
+
+    cmd+=("${unprocessedOpts[@]}")
+    unprocessedOpts=()
+
+    return 0
+}
+
+# We use "ml" as the default name for the User ML App sidecar. The user can pass
+# in its properties (image, env, entrypoint, etc.) by adding a "--ml-" prefix to
+# the corresponding parameters. However, the user may or might not want to run a
+# ML container as a sidecar. Adding "ml" to the list of sidecars when there are
+# no corresponding configuration parameters would produce errors (missing image
+# specification, etc.). Therefore, we scan the command line first and check for
+# at least one property. We ignore the corner case of a "--sidecar ml". We will
+# do at least two things incorrectly for this case:
+#   1. We will add "ml" twice to the list of sidecars - here for the first time
+#      and then, again for a second time, when we process the "--sidecar". So,
+#      we will error out trying to create the container for a second time.
+#   2. We will invoke onMlComponentBatchEnd on the assumption that this is the
+#      User ML container when, in fact, it could be a completely unrelated one.
+[[ "${@}" =~ (^|[[:space:]])--ml-[[:alnum:]] ]] && sidecars+=(ml)
+
+main "${@}"
