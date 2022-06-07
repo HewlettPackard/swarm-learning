@@ -1,38 +1,86 @@
 # <d></d> <img style="float: right;" src="docs/images/GettyImages-1148109728_EAA-graphic-A_112_0_72_RGB.jpg?raw=true"/> SWARM LEARNING
+
+#### Product version: 1.0.0
+
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
 
-<d></d> <img style="float: center;" src="docs/images/sl_platform_components.png?raw=true"/>
+![Swarm_components_architecture](./docs/User/GUID-E80D248E-E754-498E-99D6-67508092F779-high.png)
 
-Swarm Learning has five components, connected to form a network: 
-- Swarm Learning (SL) nodes – These nodes run a user-defined Machine Learning algorithm. This algorithm is called the Swarm Learning ML Program. This program is responsible for training and updating the model in an iterative fashion. The Swarm Learning ML program should be either a Keras (TensorFlow 2 backend) or PyTorch based Machine Learning algorithm that is implemented using Python3. It can also be configured to run on NVIDIA GPUs.
-- Swarm Network (SN) nodes – These nodes form the blockchain network. The current version of Swarm Learning uses an open-source version of Ethereum as the underlying blockchain platform. The Swarm Network nodes interact with each other using this blockchain platform to maintain global state information about the model that is being trained and to track progress (note that only metadata is written to the blockchain. The model itself is not stored in the blockchain.) The Swarm Network nodes use this state and progress information to coordinate the working of the Swarm Learning nodes. Each Swarm Learning node registers itself with a Swarm Network node as a part of its startup and initialization.
-   - Sentinel node: This is a special Swarm Network node. The Sentinel node is responsible for initializing the blockchain network. This should be the first node to start.
-- Swarm Learning Command Interface node (SWCI) - SWCI node is the command interface tool to the Swarm Learning framework. It is used to view the status, control and manage the swarm learning framework. It uses a secure link to connect to the Swarm Network node, using the API port. SWCI node can connect to any of the SN nodes in a given Swarm Learning framework to manage the framework.
-- SPIFFE SPIRE Server nodes – These nodes provide the security for the whole network. The platform can run one or more SPIRE Server nodes that are connected together to form a federation. The platform includes a SPIRE Agent Workload Attestor plugin (not shown in the figure) that communicates with the SPIRE Servers to attest the identities of the Swarm Network and Swarm Learning nodes, acquire and manage a SPIFFE Verifiable Identity Document (SVID). For an overview SPIFFE, SPIRE and their capabilities refer to <https://spiffe.io/docs/latest/spiffe-about/overview/>
+-   Swarm Learning \(SL\) nodes run the core of Swarm Learning. An SL node works in collaboration with all the other SL nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. SL nodes act as an interface between the user model application and other Swarm Learning components. SL nodes take care of distributing and merging model weights in a secured way.
 
-- License Server node – The license to run the Swarm Learning platform is installed and managed by the License Server node.
+-   Swarm Network \(SN\) nodes form the blockchain network. The current version of Swarm Learning uses an open-source version of Ethereum as the underlying blockchain platform. The SN nodes interact with each other using this blockchain platform to maintain and track progress. The SN nodes use this state and progress information to co-ordinate the working of the other swarm learning components.
 
->**NOTE**: All the Swarm Learning nodes must use the same ML platform – either Keras (based on TensorFlow 2) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
+    **Sentinel Node** is a special SN node. The Sentinel node is responsible for initializing the blockchain network. This is the first node to start.
+
+<blockquote>
+    NOTE: Only metadata is written to the blockchain. The model itself is not stored in the blockchain.
+</blockquote>
+
+-   Swarm Learning Command Interface \(SWCI\) node is the command interface tool to the Swarm Learning framework. It is used to monitor the Swarm Learning framework. SWCI nodes can connect to any of the SN nodes in a given Swarm Learning framework to manage the framework. 
+For more information on SWCI, see [Swarm Learning Command Interface](./docs/User/Swarm_Learning_Command_Interface.md).
+
+-   Swarm Operator node \(SWOP\) is an agent that can manage Swarm Learning operations. SWOP is responsible to execute tasks that are assigned to it. A SWOP node can execute only one task at a time. SWOP helps in executing tasks such as starting and stopping Swarm runs, building and upgrading ML containers, and sharing models for training. For more information about SWOP, see [Swarm Operator node \(SWOP\)](./docs/User/Swarm_Operator_node_(SWOP).md).
+
+-   Swarm Learning security and digital identity aspects are handled by X.509 certificates. Communication among Swarm Learning components are secured using X.509 certificates. User can either generate their own certificates or directly use certificates generated by any Standard Security software such as SPIRE. For more information on SPIRE, see [https://thebottomturtle.io/Solving-the-bottom-turtle-SPIFFE-SPIRE-Book.pdf](https://thebottomturtle.io/Solving-the-bottom-turtle-SPIFFE-SPIRE-Book.pdf) and [https://spiffe.io/](https://spiffe.io/).
+
+<blockquote>
+    NOTE: Swarm Learning framework does not initialize if certificates are not provided.
+</blockquote>
+
+-   Swarm Learning components communicate with each other using a set of TCP/IP ports.
+
+<blockquote>
+NOTE: The participating nodes must be able to access each other's ports.
+</blockquote>
+
+For more information on port details that must be opened, see [Exposed Ports](/docs/Install/Exposed_port_numbers.md).
+
+-   License Server installs and manages the license that is required to run the Swarm Learning framework. The licenses are managed by the AutoPass License Server \(APLS\) that runs on a separate node. For more information, see [APLS User Guide](/docs/HPE%20AutoPass%20License%20Server%20User%20Guide.pdf).
 
 Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state.
 
-You can transform any Keras or PyTorch based ML program that has been written using Python3 into a Swarm Learning ML program by making a [few simple changes](docs/ml_algorithm.md) to the model training code, such as updating the paths from where the program reads and writes data; and including the `SwarmCallback` object. See the [examples](examples) included with the Swarm Learning package for sample code.
+## User ML components
 
-## Getting Started
-  - [Prerequisites](docs/Prerequisites.md) for Swarm Learning
-  - Clone this repository 
-  - [Download and setup](docs/setup.md) docker images and evaluation licenses
-  - Execute [MNIST example](examples/mnist-keras) 
-  - [Frequently Asked Questions](docs/FAQ.md)
-  - [Troubleshooting](docs/Troubleshooting.md)
+User can transform any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see the [examples](./docs/User/Examples.md) included with the Swarm Learning package for a sample code.
+
+The transformed user Machine Learning \(user ML node\) program can be run on the host or user can build it as a Docker container.
+
+<blockquote>
+NOTE: HPE recommends users to build an ML Docker container.
+
+</blockquote>
+
+The ML node is responsible to train and iteratively update the model. For each ML node, there is a corresponding SL node in the Swarm Learning framework, which performs the Swarm training. Each pair of ML and SL nodes must run on the same host. This process continues until the SL nodes train the model to the desired state.
+
+<blockquote>
+NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
+</blockquote>
+
+## Getting Started 
+  - [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
+  - Clone this repository on all machines where you want to run Swarm Learning.<br> <br>
+    **NOTE**: The suggested default location is to clone it under `/opt/hpe`. It will create a `swarm-learning` folder and copy the files under it. If you clone it in a different location, please make sure to give the same location when running the installer UI, under the `Swarm Installation location` text box - as `<clone-location>/swarm-learning`. For the default case, the UI screen would have `/opt/hpe/swarm-learning` pre-populated. <br>
+    **Caution**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
+  - [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
+  - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
+  - Execute [MNIST example](/docs/User/MNIST.md) 
+  - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  - [Troubleshooting](/docs/User/Troubleshooting.md)
 
 ## Documentation
-  - [How Swarm Learning Components interact](docs/Component_interactions.md)
-  - [Adapting ML programs for Swarm Learning](docs/ml_algorithm.md)
-  - [Configuring and Running Swarm Learning Components](docs/RunningSL.md)
-  - [Using SWCI Tool](docs/swci_tool.md)
+
+  - [How Swarm Learning Components interact](/docs/User/Swarm_Learning_component_interactions.md)
+  - [Swarm Learning Concepts](/docs/User/Swarm_Learning_concepts.md)
+  - [Working of a Swarm Learning node](/docs/User/Working_of_a_Swarm_Learning_node.md)
+  - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
+  - [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md)
+  - [Configuring Swarm Learning components](/docs/Install/Configuring_Swarm_Learning.md) 
+  - [Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
+  - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
+  - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
   
 ## References
+
   - [Papers](docs/papers-and-articles.md)
   - [Videos](docs/videos.md)
   - [URLs](docs/URL.md)
@@ -41,10 +89,8 @@ You can transform any Keras or PyTorch based ML program that has been written us
   Refer to [Acronyms and Abbreviations](docs/acronyms.md) for more information.
 
 ## Getting in touch 
-  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.
-  
-  or
-  
+  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  
+  or  
   Join below Slack channel to communicate with us. 
   
   [hpe-ai-swarm-learning](https://hpe-external.slack.com/archives/C02PWRJPWVD)
