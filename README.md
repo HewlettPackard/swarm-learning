@@ -41,7 +41,7 @@ Swarm Learning nodes works in collaboration with other Swarm Learning nodes in t
 
 ## User ML components
 
-User can transform any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see the [examples](./docs/User/Examples.md) included with the Swarm Learning package for a sample code.
+User can transform any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see any of the [examples](/examples/README.md) included with the Swarm Learning package for a sample code.
 
 The transformed user Machine Learning \(user ML node\) program can be run on the host or user can build it as a Docker container.
 
@@ -63,7 +63,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
     **Caution**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
   - [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
   - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
-  - Execute [MNIST example](/docs/User/MNIST.md) 
+  - Execute [MNIST example](/examples/mnist/MNIST.md) 
   - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   - [Troubleshooting](/docs/User/Troubleshooting.md)
 

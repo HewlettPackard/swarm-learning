@@ -17,7 +17,7 @@ This example shows the Swarm training of the credit card fraud detection model u
 
 The following image illustrates a cluster setup that uses only one host:
 
-![Credit Card Fraud Detection](GUID-BE2185B8-5C3B-4BD3-91FF-9ABC77D0720C-high.png)
+![Credit Card Fraud Detection](/docs/User/GUID-BE2185B8-5C3B-4BD3-91FF-9ABC77D0720C-high.png)
 
 -   This example uses one SN node. The names of the docker containers representing this node is SN1. SN1 is also the Sentinel Node. SN1 runs on the host 172.1.1.1.
 
@@ -74,7 +74,7 @@ mv workspace/fraud-detection/data-and-scratch workspace/fraud-detection/user4/
 ```
 docker volume create sl-cli-lib
 docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.0.0
-docker cp lib/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl helper:/data
+docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 
 ```
