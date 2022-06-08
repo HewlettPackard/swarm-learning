@@ -10,7 +10,7 @@ This example shows the Swarm training of Keras based CIFAR-10 model using two ML
 
 The following image illustrates a cluster setup for the CIFAR-10 example:
 
-![CIFAR-10 Cluster Setup](docs/User/GUID-4D303DEC-8E71-43F4-BDCB-04B0C1AE79D8-high.png)
+![CIFAR-10 Cluster Setup](/docs/User/GUID-4D303DEC-8E71-43F4-BDCB-04B0C1AE79D8-high.png)
 
 -   This example uses one SN node. SN1 is the name of the Docker container that runs on host 172.1.1.1.
 
