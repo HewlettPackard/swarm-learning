@@ -63,7 +63,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
     **Caution**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
   - [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
   - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
-  - Execute [MNIST example](/docs/User/MNIST.md) 
+  - Execute [MNIST example](/examples/mnist/MNIST.md) 
   - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   - [Troubleshooting](/docs/User/Troubleshooting.md)
 
