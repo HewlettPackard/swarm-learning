@@ -41,7 +41,7 @@ Swarm Learning nodes works in collaboration with other Swarm Learning nodes in t
 
 ## User ML components
 
-User can transform any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see the [examples](./docs/User/Examples.md) included with the Swarm Learning package for a sample code.
+User can transform any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see any of the [examples](/examples/README.md) included with the Swarm Learning package for a sample code.
 
 The transformed user Machine Learning \(user ML node\) program can be run on the host or user can build it as a Docker container.
 
