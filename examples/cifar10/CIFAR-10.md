@@ -10,7 +10,7 @@ This example shows the Swarm training of Keras based CIFAR-10 model using two ML
 
 The following image illustrates a cluster setup for the CIFAR-10 example:
 
-![CIFAR-10 Cluster Setup](GUID-4D303DEC-8E71-43F4-BDCB-04B0C1AE79D8-high.png)
+![CIFAR-10 Cluster Setup](docs/User/GUID-4D303DEC-8E71-43F4-BDCB-04B0C1AE79D8-high.png)
 
 -   This example uses one SN node. SN1 is the name of the Docker container that runs on host 172.1.1.1.
 
@@ -70,7 +70,7 @@ cp -r examples/utils/gen-cert workspace/cifar10/
 5.  On both host-1 and host-2, copy Swarm Learning wheel file inside build context and build Docker image for ML that contains environment to run Swarm training of user models.
 
 ```
-cp lib/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl workspace/cifar10/ml-context/
+cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl workspace/cifar10/ml-context/
 docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
 ```
 You may need to specify the correct https_proxy for the docker build if you are behind a firewall. For eg,
