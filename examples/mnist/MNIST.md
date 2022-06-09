@@ -14,7 +14,7 @@ The Machine Learning program, after conversion to Swarm Learning for the TensorF
 
 This example shows the Swarm training of MNIST model using two ML nodes. ML nodes are automatically spawned by SWOP nodes running on two different hosts. Swarm training is initiated by SWCI node and orchestrated by two SN nodes running in different hosts. This example also shows how private data and shared model can be mounted to ML nodes for Swarm training.
 
-The following image illustrates a cluster setup for the MNIST example:![Two cluster setup](GUID-66B1F78E-34E6-475D-AE8D-966BCF93539B-high.png)
+The following image illustrates a cluster setup for the MNIST example:![Two cluster setup](/docs/User/GUID-66B1F78E-34E6-475D-AE8D-966BCF93539B-high.png)
 
 -   This example uses two SN nodes. The names of the Docker containers representing these two nodes are SN1 and SN2. SN1 is the Sentinel Node. SN1 runs on host 172.1.1.1 and SN2 runs on host 172.2.2.2.
 
@@ -88,7 +88,7 @@ sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist/swop/swop*_profile.yaml works
 ```
 docker volume create sl-cli-lib
 docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.0.0
-docker cp lib/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl helper:/data
+docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 ```
 

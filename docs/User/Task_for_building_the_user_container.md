@@ -18,7 +18,7 @@ Body:
     - '   keras matplotlib opencv-python pandas protobuf==3.15.6 sklearn'
     - ' '
     - RUN mkdir -p /tmp/hpe-swarmcli-pkg
-    - COPY swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl /tmp/hpe-swarmcli-pkg/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl
-    - RUN pip3 install /tmp/hpe-swarmcli-pkg/swarmlearning-1.0.0-py3-none-manylinux_2_24_x86_64.whl
+    - COPY swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+    - RUN pip3 install /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
 ```
 
