@@ -17,9 +17,13 @@
    
    ![Lock code](GUID-A37C5798-B8B7-4B93-B786-A2682797AB37-high.png)
 
+## Download Swarm Learning
+
 5. Navigate to the [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) home page. After signing in with your HPE Passport credentials and perform the following actions:
    
-   Click **Software** (left pane) -> **Search** "Swarm Learning" -> **Action** -> **Get License**
+   Click **Software** (left pane) -> Under **Search** Select "Product Info" -> enter the string "Swarm Learning".
+
+   Under the search results, For the product "HPE-SWARM-CMT 1.0.0"-> Click on **Action** -> **Get License**
 
 6. Enter the lock code you got from the **Install Licenses** page in the HPE Serial Number field and click **Activate**. 
 
