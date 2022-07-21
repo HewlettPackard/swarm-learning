@@ -169,7 +169,7 @@ https_proxy= --apls-ip=172.1.1.1
 -   `swarm_mnist_task` - run Swarm training across for two ML nodes.
 
 <blockquote>
-NOTE: If required, according to the environment, modify SN IP in <code>workspace/mnist-pyt/swci/swci-init</code> file.
+NOTE: If required, according to the environment, modify SN IP in <code>workspace/mnist/swci/swci-init</code> file.
 </blockquote>
 
 ```
