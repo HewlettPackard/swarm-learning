@@ -65,7 +65,7 @@ with constructive feedback. If your pull request is not accepted at
 first, please try again after addressing the feedback you received.
 
 To make a pull request you will need a GitHub account. For help, see
-[GitHub's documentation](https://docs.github.com/en/github) on forking and pull requests.
+[GitHub's documentation](https://docs.github.com/en/) on forking and pull requests.
 
 ## Steps To Follow:
 1. [Fork this repository](https://github.com/HewlettPackard/swarm-learning/fork)
