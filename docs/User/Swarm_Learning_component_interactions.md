@@ -1,6 +1,6 @@
 # <a name="GUID-CE2496F4-22BD-468B-AD40-011E3F113E6E"/> Swarm Learning component interactions
 
-The Swarm nodes interact with each other in many ways using network ports that are dedicated for each purpose:![Swarm component interactions](GUID-7DB64042-89CD-49D1-9728-A93739BF8816-high.png)
+The Swarm nodes interact with each other in many ways using network ports that are dedicated for each purpose:![Swarm component interactions](Swarm_Learning_component_interaction.png)
 
 |Callout|Description|
 |-------|-----------|
