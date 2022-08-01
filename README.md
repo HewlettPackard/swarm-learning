@@ -1,6 +1,6 @@
 # <d></d> <img style="float: right;" src="docs/images/GettyImages-1148109728_EAA-graphic-A_112_0_72_RGB.jpg?raw=true"/> SWARM LEARNING
 
-#### Product version: 1.0.0
+#### Product version: 1.1.0
 
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
 
