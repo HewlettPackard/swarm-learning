@@ -78,7 +78,7 @@ trap "exit 1" SIGUSR1 SIGUSR2
 
 
 # Swarm product version.
-swarmVer="1.0.0"
+swarmVer="1.1.0"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
 swarmOrg="hpe_eval/swarm-learning"
@@ -714,7 +714,20 @@ processCommonBatchOpt()
             ;;
 
         -${sidecarPrefix}u|--${sidecarPrefix}u|--${sidecarPrefix}user)
-            checkAndAssign "${opt}" "${optarg}" "--user=" "${sidecarPrefix}" user;;
+            # This conditional logic keeps additional safety measure to run ml container with
+            # primary group id of the "user id" passed. If group id is not passed along with the user id in the
+            # --user argument then container will run with 0 as group id which is not right approach
+            # So, We explicitly add primary group id to the argument when not passed by user.
+            
+            # The sequence of the arguments are modified to correct order for checkAndAssign
+            # function. The sidecarPrefix would be the last argument which is not the case earlier.
+            if [[ -n ${optarg} ]] && [[ ${optarg} != *":"* ]] && [[ ${sidecarPrefix} == "ml-" ]]
+            then
+                checkAndAssign "${opt}" "${optarg}:$(id -g ${optarg})" "--user=" user "${sidecarPrefix}"
+            else
+                checkAndAssign "${opt}" "${optarg}" "--user=" user "${sidecarPrefix}"
+            fi
+            ;;
 
         -${sidecarPrefix}v|--${sidecarPrefix}v|--${sidecarPrefix}volume)
             checkAndAssign "${opt}" "${optarg}"
@@ -1120,6 +1133,16 @@ dockerRun()
     [[ -n "${pidMainVar}" ]] && pidVar="${containerID}"
     [[ -n "${pidVar}" ]] && pidVar="--pid=${pidVar}"
     [[ -n "${volumesFromMainVar}" ]] && volumesFromVar+=(--volumes-from "${containerID}")
+
+    # This logic checks if user argument is not passed to ml container then
+    # it defaults userVar variable to current "host machine" user id and primary group id.
+    # When --user argument is not passed explicitly, This ensures to run ml 
+    # container with the current "host machine" user id and primary group id.
+    if [[ -z ${userVar} ]] && [[ ${sidecarPrefix} == "ml-" ]]
+    then
+        userVar="--user=$(id -u):$(id -g)"
+    fi
+
 
     # Decide whether we want to allocate a terminal for our runner. We cannot do
     # so when we are running in, say, nohup mode and so, do not have a terminal
