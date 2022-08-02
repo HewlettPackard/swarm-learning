@@ -89,7 +89,7 @@ sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist/swop/swop*_profile.yaml works
 docker volume rm sl-cli-lib
 docker volume create sl-cli-lib
 docker container create --name helper -v sl-cli-lib:/data hello-world
-docker cp lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
+docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 ```
 
