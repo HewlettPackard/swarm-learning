@@ -6,7 +6,7 @@
 3. All the examples refer to a generic Swarm Learning client python wheel file. Create a symbolic link to the actual wheel file version, before running the examples
  ```
  cd swarm-learning/lib
- ln -fs swarmlearning-1.0.1-py3-none-manylinux_2_24_x86_64.whl swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+ ln -fs swarmlearning-1.1.0-py3-none-manylinux_2_24_x86_64.whl swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
  ```
  
 ## Swarm Learning Examples
