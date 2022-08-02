@@ -75,7 +75,7 @@ mv workspace/fraud-detection/data-and-scratch workspace/fraud-detection/user4/
 docker volume rm sl-cli-lib
 docker volume create sl-cli-lib
 docker container create --name helper -v sl-cli-lib:/data hello-world
-docker cp lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
+docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 
 ```
