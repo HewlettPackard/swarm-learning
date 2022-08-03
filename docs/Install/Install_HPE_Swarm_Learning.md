@@ -4,7 +4,7 @@
 run one of the Swarm Learning installer based on your platform (Linux, Windows, or Mac as listed below). 
 
      - HPE_SWARM_LEARNING_INSTALLER_LINUX_Q2V41-11036
-     - HPE_SWARM_LEARNING_INSTALLER_WINDOWS_Q2V41-11038.EXE
+     - HPE_SWARM_LEARNING_INSTALLER_WINDOWS_Q2V41-11038.exe
      - HPE_SWARM_LEARNING_INSTALLER_MAC_Q2V41-11039
 
 2.   The Swarm Learning Web App is launched in a web browser.
