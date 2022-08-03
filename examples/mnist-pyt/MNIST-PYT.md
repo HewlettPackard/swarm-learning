@@ -151,7 +151,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 ./scripts/bin/run-sn -d --rm --name=sn2 --network=host-2-net \
 --host-ip=172.2.2.2 --sentinel-ip=172.1.1.1 --sn-p2p-port=30303 \
 --sn-api-port=30304 --key=workspace/mnist-pyt/cert/sn-2-key.pem \
---cert=workspace/mnist-pyt/cert/sn-2-cert.pem \ 
+--cert=workspace/mnist-pyt/cert/sn-2-cert.pem \
 --capath=workspace/mnist-pyt/cert/ca/capath \
 --apls-ip=172.1.1.1
 ```
