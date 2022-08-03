@@ -16,7 +16,7 @@ The environment variables are passed to containers or added to the environment v
 |`SWCI_STARTUP_SCRIPT`|This is a default start script of SWCI.|
 |`SWCI_WEB_PORT`|Default port on which SWCI-WEB starts server.|
 |`SWOP_PROFILE`|Indicates default profile for SWOP.|
-|`SWOP_KEEP_CONTAINERS`|SL and ML containers spawned by SWOP are not removed. This option can be enabled to retain the stopped containers for debugging.<br>Default value: False|
+|`SWOP_KEEP_CONTAINERS`|By default, SL and ML containers spawned by SWOP are removed. This option can be enabled to retain the stopped containers for debugging.<br>Default value: False|
 |`SWARM_ID_CACERT`|Indicates user CA certificates file.|
 |`SWARM_ID_CAPATH`|Indicates user CA certificates directory.|
 |`SWARM_ID_CERT`|Indicates user certificates file.|
