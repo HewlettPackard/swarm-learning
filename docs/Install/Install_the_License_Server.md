@@ -23,7 +23,7 @@
    
    Click **Software** (left pane) -> Under **Search** Select "Product Info" -> enter the string "Swarm Learning".
 
-   Under the search results, For the product "HPE-SWARM-CMT 1.0.0"-> Click on **Action** -> **Get License**
+   Under the search results, For the product "HPE-SWARM-CMT 1.1.0"-> Click on **Action** -> **Get License**
 
 6. Enter the lock code you got from the **Install Licenses** page in the HPE Serial Number field and click **Activate**. 
 
