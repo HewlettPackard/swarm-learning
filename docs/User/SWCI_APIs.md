@@ -43,6 +43,42 @@ The python3 program needs to import the SWCI class, and then use the below APIs.
 |`registerTask()`|This method registers a task into the SN network and finalizes it, if the task is valid.|`yamlFileName, finalize=True`|
 |`resetTaskRunner()`|This method resets the state of the taskrunner contract to an uninitialized state.<br><strong>WARNING:</strong>This action cannot be undone, reset only completed Taskrunner contracts. Resetting the active taskrunner contract can result in unexpected behavior.|`trName='defaulttaskbb.taskdb.sml.hpe'`|
 |`resetTrainingContract()`|This method resets the state of the training contract to an uninitialized state.<br><strong>WARNING:</strong>This action cannot be undone, reset only completed Swarm Learning contracts. Resetting the active contracts can result in unexpected behavior.|`ctName='defaultbb.cqdb.sml.hpe'`|
+|`sleep()`|This method sleeps for a specified time before executing the subsequent commands.<br>&nbsp;<br>For example, in between a `WAIT FOR TASKRUNNER` and `RESET TASKRUNNER`, one can use a `SLEEP 10`, to give a grace time of 10 secs, before the `RESET` command cleans up the SL and user container.<br>&nbsp;<br>This would be required to allow the user ML code to save the model or do any inference of the model, after the Swarm training is over.<br>&nbsp;<br>For more information, see the example SWCI scripts in the  `swarmlearning/examples/` directory.|`time in seconds`|
 |`setLogLevel()`|This method sets the logging level for the SWCI container.|logLv One of `{ logging.CRITICAL, logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG }`<br>|
 |`uploadTaskDefintion()`|This method uploads the local task definition file to the SWCI container.|`taskFilePath`|
 
+
+## Example snippet of an API
+
+```
+##################################################################################################################
+# This code snippet shows how an user can use SWCI API's
+#
+# We assume the following things before running this script:
+# 1. Swarm Learning Infrastructure is setup and ready.
+# 2. SWCI container is running in WEB mode (-e SWCI_MODE='WEB')
+# 3. There should be explicit port forwarding for SWCI_WEB_PORT while running the SWCI container (ex: -p 30306:30306)
+# 4. Swarm learning wheel package should be installed in the environment where we run this file.
+##################################################################################################################
+```
+
+```
+# Import swci from the swarmlearning whl package
+import swarmlearning.swci as sw
+
+swciSrvName = 'SWCI Server Name or IP'
+snServerName = 'SN Server Name or IP'
+
+# Connect to the SWCI via SWCI_WEB_PORT
+s = sw.Swci(swciSrvName,port=30306) #30306 is the default port
+# Connect to SN and create context
+print(s.createContext('testContext', snServerName))
+# Switches the context to testContext
+print(s.switchContext('testContext'))
+# Creates a training contract
+print(s.createTrainingContract('testContract'))
+# Lists all the created Contexts
+print(s.listContexts())
+# Lists all the tasks that includes root task
+print(s.listTasks())
+```

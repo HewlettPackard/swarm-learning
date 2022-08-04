@@ -86,8 +86,9 @@ sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist/swop/swop*_profile.yaml works
 6.  On both host-1 and host-2, create a Docker volume and copy Swarm Learning wheel file.
 
 ```
+docker volume rm sl-cli-lib
 docker volume create sl-cli-lib
-docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.0.0
+docker container create --name helper -v sl-cli-lib:/data hello-world
 docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 ```

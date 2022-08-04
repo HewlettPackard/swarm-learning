@@ -119,11 +119,17 @@ onTrainEnd()
     mounts+=(-v "${containerDockerSock}:${containerDockerSock}:rw")
     # If not passed assign the invoking user as the SWOP_UID
     [[ -z "${swopUid}" ]] && swopUid=$(id -u)
+    # Default the group id of the user running the container to the current user group id.
+    local userGroupId=$(id -g) #Gets the primary group id of the current user.
+    # If not the current user, userGroupId will be the primary group id of the swopUid
+    [[ ${swopUid} -ne $(id -u) ]] && userGroupId=$(id -g ${swopUid})
+
     # If not passed, get the docker group id using getent group docker command
     [[ -z "${dockerGroupId}" ]] && dockerGroupId=$(getent group docker | cut -d':' -f3)
     
     envvar+=(-e "SWOP_UID=${swopUid}")
-    envvar+=(-e "SWOP_GID=${dockerGroupId}")
+    envvar+=(-e "SWOP_GID=${userGroupId}")
+    envvar+=(-e "SWOP_DOCKER_GID=${dockerGroupId}")
     envvar+=(-e "SWOP_PROFILE=${profileFileName}")
 
     cmd+=("${unprocessedOpts[@]}")

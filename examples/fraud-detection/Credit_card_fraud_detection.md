@@ -72,8 +72,9 @@ mv workspace/fraud-detection/data-and-scratch workspace/fraud-detection/user4/
 6.  Create a docker volume and copy Swarm Learning wheel file.
 
 ```
+docker volume rm sl-cli-lib
 docker volume create sl-cli-lib
-docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.0.0
+docker container create --name helper -v sl-cli-lib:/data hello-world
 docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 

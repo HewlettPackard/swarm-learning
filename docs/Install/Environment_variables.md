@@ -10,11 +10,13 @@ The environment variables are passed to containers or added to the environment v
 |`SN_ETH_PORT_EXT`|Sets an Ethernet port for Swarm Network node.|
 |`SN_I_AM_SENTINEL`| Sets a Swarm Network node to become the Sentinel node, only when it is set to true.<br> Default value: False<br> |
 |`SN_START_MINING`| Starts mining on non-sentinel nodes. \(Optional\)<br> Default value: False<br> |
-|`SL_WAIT_FOR_FULL_QUORUM_SECONDS`|Sets maximum time to wait for full quorum before an SL node, designated as leader node, decides to use minPeers nodes.|
+|`SL_WAIT_FOR_FULL_QUORUM_SECONDS`|Sets the maximum time for an SL leader node to wait for full quorum after minPeers are ready for merge. This parameter lets you to maximize the number of peers participating in the merge process.<br>Default value: 30 secs|
+|`SWCI_TASK_MAX_WAIT_TIME`|Specifies a maximum timeout value for the completion of a task.<br>This value must be set in minutes, and the default is 120 mins (2 hours).
 |`SWCI_MODE`| Enables SWCIs web interface instead of command line interface. Allowed values are CLI and WEB.<br> Default value: CLI<br> |
 |`SWCI_STARTUP_SCRIPT`|This is a default start script of SWCI.|
 |`SWCI_WEB_PORT`|Default port on which SWCI-WEB starts server.|
 |`SWOP_PROFILE`|Indicates default profile for SWOP.|
+|`SWOP_KEEP_CONTAINERS`|By default, SL and ML containers spawned by SWOP are removed. This option can be enabled to retain the stopped containers for debugging.<br>Default value: False|
 |`SWARM_ID_CACERT`|Indicates user CA certificates file.|
 |`SWARM_ID_CAPATH`|Indicates user CA certificates directory.|
 |`SWARM_ID_CERT`|Indicates user certificates file.|

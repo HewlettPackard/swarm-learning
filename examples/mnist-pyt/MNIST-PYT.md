@@ -107,8 +107,9 @@ sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist-pyt/swop/swop*_profile.yaml w
 7.  On both host-1 and host-2, create a docker volume and copy Swarm Learning wheel file:
 
 ```
+docker volume rm sl-cli-lib
 docker volume create sl-cli-lib
-docker container create --name helper -v sl-cli-lib:/data hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.0.0
+docker container create --name helper -v sl-cli-lib:/data hello-world
 docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
 docker rm helper
 ```
@@ -132,27 +133,28 @@ docker rm helper
 ```
 ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net \
 --host-ip=172.1.1.1 --sentinel --sn-p2p-port=30303 --sn-api-port=30304 \
---key=workspace/mnist-pyt/cert/sn-1-key.pem --cert=workspace/mnist-pyt/\
-cert/sn-1-cert.pem --capath=workspace/mnist-pyt/cert/ca/capath \
+--key=workspace/mnist-pyt/cert/sn-1-key.pem \
+--cert=workspace/mnist-pyt/cert/sn-1-cert.pem \
+--capath=workspace/mnist-pyt/cert/ca/capath \
 --apls-ip=172.1.1.1
 ```
 
    Use the Docker logs command to monitor the Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:
 
-    ```
-    swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
-    ```
+```
+swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
+```
 
    On host-2, run SN node (SN2).
 
-    ```
-    ./scripts/bin/run-sn -d --rm --name=sn2 --network=host-2-net \
-    --host-ip=172.2.2.2 --sentinel-ip=172.1.1.1 --sn-p2p-port=30303 \
-    --sn-api-port=30304 --key=workspace/mnist-pyt/cert/sn-2-key.pem \
-    --cert=workspace/mnist-pyt/cert/sn-2-cert.pem \ 
-    --capath=workspace/mnist-pyt/cert/ca/capath \
-    --apls-ip=172.1.1.1
-    ```
+```
+./scripts/bin/run-sn -d --rm --name=sn2 --network=host-2-net \
+--host-ip=172.2.2.2 --sentinel-ip=172.1.1.1 --sn-p2p-port=30303 \
+--sn-api-port=30304 --key=workspace/mnist-pyt/cert/sn-2-key.pem \
+--cert=workspace/mnist-pyt/cert/sn-2-cert.pem \
+--capath=workspace/mnist-pyt/cert/ca/capath \
+--apls-ip=172.1.1.1
+```
 
 10. On host-1, run SWOP node \(SWOP1\).
 
@@ -167,8 +169,8 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 --network=host-1-net --usr-dir=workspace/mnist-pyt/swop \
 --profile-file-name=swop1_profile.yaml \
 --key=workspace/mnist-pyt/cert/swop-1-key.pem \
---cert=workspace/mnist-pyt/cert\
-/swop-1-cert.pem --capath=workspace/mnist-pyt/cert/ca/capath \
+--cert=workspace/mnist-pyt/cert/swop-1-cert.pem \
+--capath=workspace/mnist-pyt/cert/ca/capath \
 -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
 
@@ -178,15 +180,15 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
     NOTE: If required, according to environment, modify IP and proxy in the profile files under <code>workspace/mnist/swop</code> folder.
 </blockquote>
 
-    ```
-    ./scripts/bin/run-swop -d --rm --name=swop2 \
-    --network=host-2-net --usr-dir=workspace/mnist-pyt/swop \
-    --profile-file-name=swop2_profile.yaml \
-    --key=workspace/mnist-pyt/cert/swop-2-key.pem \
-    --cert=workspace/mnist-pyt/cert/swop-2-cert.pem \
-    --capath=workspace/mnist-pyt/cert/ca/capath -e http_proxy= \
-    -e https_proxy= --apls-ip=172.1.1.1
-    ```
+```
+./scripts/bin/run-swop -d --rm --name=swop2 \
+--network=host-2-net --usr-dir=workspace/mnist-pyt/swop \
+--profile-file-name=swop2_profile.yaml \
+--key=workspace/mnist-pyt/cert/swop-2-key.pem \
+--cert=workspace/mnist-pyt/cert/swop-2-cert.pem \
+--capath=workspace/mnist-pyt/cert/ca/capath -e http_proxy= \
+-e https_proxy= --apls-ip=172.1.1.1
+```
 
 11. On host-1, run SWCI node and observe sequential execution of two tasks – build task (`user_env_tf_build_task`) and run task (`swarm_mnist_task`).
 

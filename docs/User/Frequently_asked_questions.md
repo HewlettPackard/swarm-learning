@@ -170,3 +170,16 @@ Yes. New nodes can be added in the network at any point in the training. Just li
 
 Swarm Learning uses averaging as the merge algorithm. Currently, users cannot specify the merge algorithm. This will be supported in a later release.
 
+## Before enabling Swarm Learning, how to confirm the standalone user application has no issues and runs?
+
+Run the user container with `SWARM_LOOPBACK` set to `TRUE`, this bypasses Swarm Learning to help you quickly develop, integrate, and test your model code with Swarm Learning package. If your code runs to completion and saves the local model it would indicate that the ML application may not have any issues.
+
+If `SWARM_LOOPBACK` is set to TRUE, all Swarm functionality is bypassed, except parameter validation.
+
+This can help you to verify and test integration of the model code with Swarm without spawning any Swarm Learning
+containers.
+
+## How to run user container as non-root?
+
+By default, when user ML container is run through SWOP or using the `run-sl` script, the user ML container is run with current user's UID and GID of the host machine. If the current user on the host is non-root, the user container also runs as non-root.
+

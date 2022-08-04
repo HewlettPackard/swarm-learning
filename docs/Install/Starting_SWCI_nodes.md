@@ -23,4 +23,14 @@ The run-swci script accepts the following parameters:
 |`--usr-dir <dir>`|The host directory that must be used as the user directory by this SWCI node.|None|
 |`--init-script-name <swci-init file>`*|Name of the init script file that has SWCI commands to be executed at the start of SWCI. <br> This file must be located inside the user directory at the top level.<br>|`swci-init`|
 
-*If init option is provided, all SWCI commands within this script file are processed before it enters the interactive mode and waits for users commands. Users can simulate a non-interactive SWCI run by having a bunch of SWCI commands and an SWCI `EXIT` command at the end of the `swci-init` file. This could be used for automation.
+*If init script option is provided, all SWCI commands within this script file are processed before it enters the interactive mode and waits for users commands. Users can simulate a non-interactive SWCI run by having a bunch of SWCI commands and an SWCI `EXIT` command at the end of the `swci-init` file. This could be used for automation.
+
+<blockquote>
+  
+NOTE: 
+- If you need to use the swci-init script file as-is (default), --usr-dir option must be specified and SWCI looks for this default script file under this user  directory.
+- If you want to run a script file with a different filename, you must explicitly specify the --init-script-name
+and --usr-dir.
+- If the --usr-dir is not specified, the SWCI runs in an interactive mode.
+
+</blockquote>

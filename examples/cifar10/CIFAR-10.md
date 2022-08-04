@@ -104,7 +104,7 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cifar10.py \
 --ml-v=workspace/cifar10/model:/tmp/test/model \
---ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
+--ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
 --apls-ip=172.1.1.1
@@ -121,7 +121,7 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --ml-it --ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cifar10.py \
 --ml-v=workspace/cifar10/model:/tmp/test/model \
---ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
+--ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
 --apls-ip=172.1.1.1

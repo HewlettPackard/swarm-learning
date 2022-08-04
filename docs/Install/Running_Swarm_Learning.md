@@ -65,8 +65,10 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |`--keep`|Same as `--no-rm`. Request Docker to preserve the container after it exits.| |
 |`--no-keep`|Same as `--rm`. Request Docker to automatically remove the container when it exits.| |
 |`-h, --help`|This \(helpful\) message.| |
-|`--apls-ip <IP address or DNS name>`|The IP address on which APLS is serving license requests.|172.1.1.1|
-|`--apls-port <port number>`|The port number on which APLS is serving license requests.|5814|
+|`--primary-apls-ip <IP address or DNS name>`|The IP address on which the primary Autopass License Server is serving license requests.|None|
+|`--secondary-apls-ip <IP address or DNS name>`|The IP address on which the secondary Autopass License Server is serving license requests.|None|
+|`--primary-apls-port <port numberw>`|The port number on which the primary Autopass License Server is serving license requests.|5814|
+|`--secondary-apls-port <port number>`|The port number on which the secondary Autopass License Server is serving license requests.|The value assigned to --primary-apls-port|
 |`--apls-pdf <path to license PD file>`|The path to the license PD file to be used.|None|
 |`--cacert <path to certificates file>`|The path to the file containing the list of CA certificates.|None|
 |`--capath <path to certificates directory>`|The path to the directory containing CA certificate files.|None|
