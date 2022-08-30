@@ -17,6 +17,8 @@ To convert into NPZ format, the image and its label is required and can be done 
 np.savez('destination_path/train.npz', X_train, Y_train)
 ```
 
+The example train-test npz split can be found [here](https://drive.google.com/drive/folders/1vb8q1sqUR55nnZhqQZSRtMM1sGIIJYLF?usp=sharing).
+
 The model being used here is the DenseNet201 from keras.applications.densenet.
 The test set was kept common for both the SL nodes.
 
