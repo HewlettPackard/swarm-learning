@@ -11,7 +11,8 @@ For ease of training and study, the images were converted to NPZ file format.
 To convert an image to a numpy array : 
 np.asarray(Image.open(imname).convert("RGB"))
 
-To convert into NPZ format, the image and its label is required and can be done as shown below : 
+To convert into NPZ format, the image and its label is required and can be done as shown below :
+
 np.savez('destination_path/train.npz', X_train, Y_train)
 
 
