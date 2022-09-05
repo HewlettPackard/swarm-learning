@@ -1,8 +1,3 @@
-######################################################################
-# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
-######################################################################
-# This is a sample docker file to build the user ml container
-
 FROM tensorflow/tensorflow:latest
 
 COPY requirements.txt swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl /tmp/swarmlib/
