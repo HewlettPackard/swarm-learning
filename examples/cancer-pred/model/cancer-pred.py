@@ -32,6 +32,7 @@ model_name = 'cancer-pred.h5'
 df=pd.read_csv("https://raw.githubusercontent.com/Akhil-2001/DecentralizedML-Cancer-Prediction/main/diag-data/train1-diag.csv")
 
 df.drop("Unnamed: 32",axis=1,inplace=True)
+#dropping the last column (an empty last column)
 
 X_train=df.iloc[:,2:].values
 y_train=df.iloc[:,1].values
