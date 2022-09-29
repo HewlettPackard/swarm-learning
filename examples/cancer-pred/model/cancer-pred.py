@@ -29,23 +29,31 @@ save_dir = os.path.join(model_dir, 'saved_models')
 model_name = 'cancer-pred.h5'
 
 
-df=pd.read_csv("https://raw.githubusercontent.com/Akhil-2001/DecentralizedML-Cancer-Prediction/main/diag-data/train1-diag.csv")
+df=pd.read_csv("https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data")
 
 df.drop("Unnamed: 32",axis=1,inplace=True)
 #dropping the last column (an empty last column)
 
-X_train=df.iloc[:,2:].values
-y_train=df.iloc[:,1].values
+#Train and test splits
+train_split, test = train_test_split(df, test_size=0.2, random_state=4)
+
+#Dividing the train set across the two nodes.
+train1, train2 = train_test_split(train_split, test_size=0.5, random_state=4)
+
+#Use train1 or train2 according to the node on which the script is running
+train=train1
+#train=train2
+
+X_train=train.iloc[:,2:].values
+y_train=train.iloc[:,1].values
 
 labelencode = LabelEncoder()
 y_train=labelencode.fit_transform(y_train)
 
-df2=pd.read_csv("https://raw.githubusercontent.com/Akhil-2001/DecentralizedML-Cancer-Prediction/main/diag-data/test-diag.csv")
+test.drop("Unnamed: 32",axis=1,inplace=True)
 
-df2.drop("Unnamed: 32",axis=1,inplace=True)
-
-X_test=df2.iloc[:,2:].values
-y_test=df2.iloc[:,1].values
+X_test=test.iloc[:,2:].values
+y_test=test.iloc[:,1].values
 
 y_test=labelencode.fit_transform(y_test)
 
