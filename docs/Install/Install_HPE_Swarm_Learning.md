@@ -6,6 +6,11 @@ run one of the Swarm Learning installer based on your platform (Linux, Windows, 
      - HPE_SWARM_LEARNING_INSTALLER_LINUX_Q2V41-11036
      - HPE_SWARM_LEARNING_INSTALLER_WINDOWS_Q2V41-11038.exe
      - HPE_SWARM_LEARNING_INSTALLER_MAC_Q2V41-11039
+     
+     <blockquote>
+     
+          NOTE: When you run the Swarm Learning installer on Windows, web browsers such as Google Chrome and Microsoft Edge, are only supported. Internet Explorer browser does not support running the Swarm Learning installer on Windows.
+     </blockquote>
 
 2.   The Swarm Learning Web App is launched in a web browser.
 
