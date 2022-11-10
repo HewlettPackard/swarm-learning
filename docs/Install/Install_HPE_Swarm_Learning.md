@@ -58,4 +58,6 @@ run one of the Swarm Learning installer based on your platform (Linux, Windows, 
 8.   Review the **Summary** screen, which displays all the installed hosts. Click **Finish**. 
 9.   An installation confirmation message is displayed. Click **Close Window**. 
 
+After successful installation, the Swarm Learning docker containers are installed on each of the host; the documentation, the sample code, and the scripts for running Swarm Learning are installed in the Swarm installation location (the default location is \(`/opt/hpe/swarm-learning`\)).
+
 
