@@ -129,7 +129,7 @@ onTrainEnd()
         [[ ! -f "${path}" ]] && \
             error "--init-script-name: ${initScriptName}: bad file"        
             
-        envvar+=(-e "STARTUP_SCRIPT=${initScriptName}")
+        envvar+=(-e "SWCI_STARTUP_SCRIPT=${initScriptName}")
     fi 
 
     cmd+=("${unprocessedOpts[@]}")
