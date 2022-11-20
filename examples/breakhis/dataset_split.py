@@ -25,10 +25,10 @@ def Dataset_loader(DIR, RESIZE, sigmaX=10):
 
 if __name__ == "__main__":
 
-    dir = sys.argv[0]
+    dir = sys.argv[1]
 
-    dir_benign=dir+"/histology_slides/breast/benign/SOB"
-    dir_malig=dir+"/histology_slides/breast/malignant/SOB" 
+    dir_benign=dir+"/BreakHis_v1/histology_slides/breast/benign/SOB"
+    dir_malig=dir+"/BreakHis_v1/histology_slides/breast/malignant/SOB" 
 
     ben=[]
     for i in os.listdir(dir_benign):
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     Y_train_1 = to_categorical(Y_train_1, num_classes= 2)
     Y_test_1 = to_categorical(Y_test_1, num_classes= 2)
 
-    np.savez('./examples/breakhis/ml-context/train.npz', X_train_1, Y_train_1)
-    np.savez('./examples/breakhis/ml-context/test', X_test_1, Y_test_1)
+    np.savez('./workspace/breakhis/ml-context/train.npz', X_train_1, Y_train_1)
+    np.savez('./workspace/breakhis/ml-context/test', X_test_1, Y_test_1)
 
     
