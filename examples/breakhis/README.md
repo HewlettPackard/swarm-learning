@@ -1,19 +1,7 @@
 
-# Breakhis
-
-The dataset used can be obtained [here](https://web.inf.ufpr.br/vri/databases/breast-cancer-histopathological-database-breakhis/). 
+# BreakHis
 
 This dataset consists of microscopic images of breast cancer tumors, both benign and malignant. Under benign, there are four subtypes namely - Adenosis, Fibroadenoma, Phyllodes, and Tubular adenoma. And under Malignant, there are four subtypes namely - Ductal, Lobular, Mucinous and Papillary. 
-
-For ease of training and study, the images were converted to NPZ file format. 
-To convert an image to a numpy array : 
-```
-np.asarray(Image.open(imname).convert("RGB"))
-```
-To convert into NPZ format, the image and its label is required and can be done as shown below :
-```
-np.savez('destination_path/train.npz', X_train, Y_train)
-```
 
 The model being used here is the DenseNet201 from keras.applications.densenet.
 The test set was kept common for both the SL nodes.
@@ -81,11 +69,19 @@ You may need to specify the correct https_proxy for the docker build if you are 
 docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-server-ip>:<port> workspace/breakhis/ml-context
 ```
 
+6. Preparing the dataset -
+-   The dataset used can be obtained [here](https://www.kaggle.com/datasets/ambarish/breakhis/). After downloading the dataset, extract the contents to a suitable location and copy the location of the first ```BreakHis_v1``` folder from the extracted contents.
+
+-   Run the following script which pre-processes the dataset and creates two NumPy zip files to be used by the ML Node containers. 
+``` 
+python ./workspace/breakhis/dataset_split.py "<COPIED LOCATION OF THE DATASET FOLDER>"
+```
+
 <blockquote>
-  NOTE: Please make sure to place the appropriate train.npz and the test.npz dataset files within the "workspace/breakhis/ml-context/" folder. Ensure that the correct npz dataset is being loaded into the docker image by uncommenting line 10 and line 11 from the Dockerfile.  
+  NOTE: The above dataset_split.py script file creates two NumPy zip files namely, train.npz and the test.npz dataset files and places them within the "workspace/breakhis/ml-context/" folder. This particular example selects image samples specifically from the "40X" category of all the different types of tumors. The script file can be further modified as per the requirement of the user to select various images to be a part of the training process.  
 </blockquote>
 
-6.  On host-1, Run Swarm Network node \(sentinel node\)
+7.  On host-1, Run Swarm Network node \(sentinel node\)
 
 ```
 ./scripts/bin/run-sn -d --rm --name=sn1 --host-ip=172.1.1.1 \
@@ -100,7 +96,7 @@ Use the Docker logs command to monitor this Sentinel SN node and wait for the no
 swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 ```
 
-7.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate.
+8.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate.
 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
@@ -117,7 +113,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --apls-ip=172.1.1.1
 ```
 
-8.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate.
+9.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate.
 
 ```
 ./scripts/bin/run-sl --name=sl2 --host-ip=172.2.2.2 \
@@ -134,7 +130,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --apls-ip=172.1.1.1
 ```
 
-9.  On both host-1 and host-2, Two node of Swarm training are started. User can monitor the Docker logs of ML nodes \(ML1 and ML2 containers\) for Swarm training on both host-1 and host-2. Training ends with the following log message:
+10.  On both host-1 and host-2, Two node of Swarm training are started. User can monitor the Docker logs of ML nodes \(ML1 and ML2 containers\) for Swarm training on both host-1 and host-2. Training ends with the following log message:
 
 ```
 SwarmCallback : INFO : Saved the trained model - model/saved_models/breakhis.h5
@@ -142,4 +138,4 @@ SwarmCallback : INFO : Saved the trained model - model/saved_models/breakhis.h5
 
    Final Swarm model is saved inside the model directory that is `workspace/breakhis/model/saved_models` directory on both the hosts. SL and ML nodes exit but it is not removed after the Swarm training.
 
-10. On both host-1 and host-2, To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and delete the workspace directory.
+11. On both host-1 and host-2, To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and delete the workspace directory.
