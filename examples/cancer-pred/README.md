@@ -6,27 +6,27 @@ The above mentioned link is of the official data repository.
 The dataset will be downloaded (from the official source) in the cancer-pred.py file present under the directory model. If you want to download the dataset you can do so by visiting the official data folder - https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/
 Download the file - wdbc.data and use the downloaded file's path where the dataset is being read in the cancer-pred.py file. The file wdmc.names describe the dataset in detail.
 
-
-To download the same from Kaggle, follow the below steps: 
-
-How to Download dataset (from Kaggle):
+To download the same from Kaggle, follow the below steps: (OPTIONAL)
 
 Click on “Download” in this link to the dataset - (https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data)
 
-How to pass the Dataset as input:
 After clicking on  “Download” button, Extract the “archive.zip” present wherever it is saved (in this context - “/Downloads”)  
 Run the command by appropriately replacing “/Downloads” with the saved location of the “data.csv” file -   
+```
 cp /Downloads/data.csv  examples/cancer-pred/ml-context/  
-
-For the file downloaded from Kaggle, change the following line in cancer-pred.py file :  
+```
+For the file downloaded from Kaggle, change the following line in cancer-pred.py file (Line 32):  
+```
 df=pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data', skiprows=32, header=None, delimiter=',', skip_blank_lines=False)
-
+```
 to  
+```
 df=pd.read_csv(<file_path>)  
 df.drop("Unnamed: 32",axis=1,inplace=True)  
-Note : just dropping the empty last column
-
-
+```
+<blockquote>
+NOTE: Dropping the empty last column
+</blockquote>
 
 The following image illustrates a cluster setup for this example:
 
