@@ -14,18 +14,16 @@ How to Download dataset (from Kaggle):
 Click on “Download” in this link to the dataset - (https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data)
 
 How to pass the Dataset as input:
-After clicking on  “Download” button, Extract the “archive.zip” present wherever it is saved (in this context - “/Downloads”)
-Run the command by appropriately replacing “/Downloads” with the saved location of the “data.csv” file - 
-cp /Downloads/data.csv  examples/cancer-pred/ml-context/
+After clicking on  “Download” button, Extract the “archive.zip” present wherever it is saved (in this context - “/Downloads”)  
+Run the command by appropriately replacing “/Downloads” with the saved location of the “data.csv” file -   
+cp /Downloads/data.csv  examples/cancer-pred/ml-context/  
 
-For the file downloaded from Kaggle, change the following line in cancer-pred.py file : 
-
+For the file downloaded from Kaggle, change the following line in cancer-pred.py file :  
 df=pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data', skiprows=32, header=None, delimiter=',', skip_blank_lines=False)
 
-to
-
-df=pd.read_csv(<file_path>)
-df.drop("Unnamed: 32",axis=1,inplace=True)
+to  
+df=pd.read_csv(<file_path>)  
+df.drop("Unnamed: 32",axis=1,inplace=True)  
 Note : just dropping the empty last column
 
 
