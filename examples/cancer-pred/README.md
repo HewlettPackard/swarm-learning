@@ -12,12 +12,10 @@ Run the command by appropriately replacing “/Downloads” with the saved locat
 ```
 cp /Downloads/data.csv  examples/cancer-pred/ml-context/  
 ```
-Replace the file_path in the cancer-pred.py file with the path of data.csv
-df=pd.read_csv(<file_path>)  
+
+Replace the file_path in the cancer-pred.py file with the path of data.csv  
+df=pd.read_csv(<dataset-file_path>)  
 ```
-<blockquote>
-NOTE: Dropping the empty last column
-</blockquote>
 
 The following image illustrates a cluster setup for this example:
 
