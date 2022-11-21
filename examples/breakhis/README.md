@@ -58,18 +58,7 @@ cp -r examples/utils/gen-cert workspace/breakhis/
     scp host-1:<PATH>workspace/breakhis/cert/ca/capath/ca-1-cert.pem workspace/breakhis/cert/ca/capath
     ```
 
-5.  On both host-1 and host-2, copy Swarm Learning wheel file inside build context and build Docker image for ML that contains environment to run Swarm training of user models.
-
-```
-cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl workspace/breakhis/ml-context/
-docker build -t user-ml-env-tf2.7.0 workspace/breakhis/ml-context
-```
-You may need to specify the correct https_proxy for the docker build if you are behind a firewall. For eg,
-``` 
-docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-server-ip>:<port> workspace/breakhis/ml-context
-```
-
-6. Preparing the dataset -
+5. Preparing the dataset -
 -   The dataset used can be obtained [here](https://www.kaggle.com/datasets/ambarish/breakhis/). After downloading the dataset, extract the contents to a suitable location and copy the location of the first ```BreakHis_v1``` folder from the extracted contents.
 
 -   Run the following script which pre-processes the dataset and creates two NumPy zip files to be used by the ML Node containers. 
@@ -80,6 +69,17 @@ python ./workspace/breakhis/dataset_split.py "<COPIED LOCATION OF THE DATASET FO
 <blockquote>
   NOTE: The above dataset_split.py script file creates two NumPy zip files namely, train.npz and the test.npz dataset files and places them within the "workspace/breakhis/ml-context/" folder. This particular example selects image samples specifically from the "40X" category of all the different types of tumors. The script file can be further modified as per the requirement of the user to select various images to be a part of the training process.  
 </blockquote>
+
+6.  On both host-1 and host-2, copy Swarm Learning wheel file inside build context and build Docker image for ML that contains environment to run Swarm training of user models.
+
+```
+cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl workspace/breakhis/ml-context/
+docker build -t user-ml-env-tf2.7.0 workspace/breakhis/ml-context
+```
+You may need to specify the correct https_proxy for the docker build if you are behind a firewall. For eg,
+``` 
+docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-server-ip>:<port> workspace/breakhis/ml-context
+```
 
 7.  On host-1, Run Swarm Network node \(sentinel node\)
 
