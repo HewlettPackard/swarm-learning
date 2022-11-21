@@ -14,6 +14,7 @@ cp /Downloads/data.csv  examples/cancer-pred/ml-context/
 ```
 
 Replace the file_path in the cancer-pred.py file with the path of data.csv  
+```
 df=pd.read_csv(<dataset-file_path>)  
 ```
 
