@@ -8,5 +8,6 @@ Use the `swarm-learning/bin/run-sn` script to start Sentinel and Swarm Network \
 |`--sentinel`| If this flag is passed, this node does the Blockchain initialization and make configuration information ready to be shared with other SN nodes. Also it does not expect sentinel node IP to be passed.<br> If this flag is not passed this node is a regular SN node and needs a sentinel node IP for initialization.<br> | |
 |`--sentinel-ip <IP address or DNS name>`| The IP address or DNS name of the host system on which the Sentinel Swarm Network node is running. If this parameter is not specified, this Swarm Network node makes itself as the sentinel.<br> |None|
 |`--sn-api-port <port number>`|The host port for this Swarm Network node's API Server.|None|
+|`--sn-api-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SN API Service of associated SN node. Here, Port number is optional.| |
 |`--sn-p2p-port <port number>`|The host port for this Swarm Network node's P2P communications.|None|
-
+|`--sn-p2p-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SN P2P Service of associated SN node. Here, Port number is optional.| |
