@@ -1,6 +1,6 @@
 # <a name="GUID-5924CFDA-389E-40ED-94C1-543FEDDFE872"/> Swarm Learning architecture
 
-Swarm Learning is made up of various components known as nodes, such as Swarm Learning (SL) nodes, Swarm Network (SN) nodes, Swarm Learning Command Interface (SWCI) nodes, and Swarm Operator (SWOP) nodes. Each node of SL is modularized and runs in a separate container. The nodes in this illustration represent different Swarm Learning functionality rather than physical server nodes.
+Swarm Learning is made up of various components known as nodes, such as Swarm Learning (SL) nodes, Swarm Network (SN) nodes, Swarm Learning Command Interface (SWCI) nodes, and Swarm Operator (SWOP) nodes. Each node of Swarm Learning is modularized and runs in a separate container. The nodes in this illustration represent different Swarm Learning functionality rather than physical server nodes.
 
 The following illustration is the architecture of Swarm Learning components:
 
