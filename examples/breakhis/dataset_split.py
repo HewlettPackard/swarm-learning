@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
     dir = sys.argv[1]
 
-    dir_benign=dir+"/BreakHis_v1/histology_slides/breast/benign/SOB"
-    dir_malig=dir+"/BreakHis_v1/histology_slides/breast/malignant/SOB" 
+    dir_benign=dir+"/BreaKHis_v1/histology_slides/breast/benign/SOB"
+    dir_malig=dir+"/BreaKHis_v1/histology_slides/breast/malignant/SOB" 
 
     ben=[]
     for i in os.listdir(dir_benign):
