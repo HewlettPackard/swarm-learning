@@ -29,10 +29,9 @@ save_dir = os.path.join(model_dir, 'saved_models')
 model_name = 'cancer-pred.h5'
 
 col_names=['id','diagnosis','radius_mean','texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','radius_se','texture_se','perimeter_se','area_se','smoothness_se','compactness_se','concavity_se','concave points_se','symmetry_se','fractal_dimension_se','radius_worst','texture_worst','perimeter_worst','area_worst','smoothness_worst','compactness_worst','concavity_worst','concave points_worst','symmetry_worst','fractal_dimension_worst']
-df=pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data', skiprows=32, header=None, delimiter=',', skip_blank_lines=False)
+df=pd.read_csv(<dataset-file-path>)
 
-#The column names are missing from the dataset. To insert the names use the following line
-df.columns=col_names
+df=df[col_names]
 
 #Train and test splits
 train_split, test = train_test_split(df, test_size=0.2, random_state=4)
