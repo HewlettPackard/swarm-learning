@@ -6,6 +6,4 @@ Use the `swarm-learning/bin/run-swop` script to start SWOP nodes. This script ac
 |--------------|-----------|-------------|
 |`--usr-dir <dir>`\(Mandatory Parameter\)<br>| Host directory that should be used as the user directory by this SWOP node.<br> | |
 |`--profile-file-name <swop-profile file>`\(Mandatory Parameter\)<br>|This file should be located inside the user directory, at the top-level itself.| |
-|`--sn-ip <IP address or DNS name>`<br>|The IP address or DNS name of the host system on which the Swarm Network node with which this Swarm Learning node must associate, while running.|None|
-|`--sn-api-port <port number>`<br>|The host port for this Swarm Network node's API Server.|None|
-|`--sn-api-service <fqdn>:<port number>`<br>|Fully Qualified Domain Name for the SN API Service of associated SN node. Here, Port number is optional.|None|
+
