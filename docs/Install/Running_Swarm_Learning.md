@@ -60,7 +60,6 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |<code>-u, --user { name &vert; uid } [ : { group &vert; gid } ]</code>|User and group ID to use inside the container.| |
 |`-v, --volume host-path:container-path`|Bind mount a volume.| |
 |`-w, --workdir container-path`|Working directory inside the container.| |
-|`--dns`|The IP address of the custom DNS server. If there are more than one custom DNS servers, then for each DNS, repeat the same argument with different IP address.| |
 |`--rm`|Same as `--no-keep`. Request Docker to automatically remove the container when it exits.| |
 |`--no-rm`|Same as `--keep`. Request Docker to preserve the container after it exits.| |
 |`--keep`|Same as `--no-rm`. Request Docker to preserve the container after it exits.| |
@@ -79,9 +78,7 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |`--host-ip <IP address or DNS name>`\(Mandatory parameter\)<br>|The IP address or DNS name of the host system on which this Swarm Learning node is created.| |
 |`--sn-ip <IP address or DNS name>`|The IP address or DNS name of the host system on which the Swarm Network \(SN\) node with which this Swarm Learning node must associate, is running.| |
 |`--sn-api-port <port number>`|Host port for the API Server of the associated Swarm Network node|30304|
-|`--sn-api-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SN API Service of associated SN node. Here, Port number is optional.| |
 |`--sl-fs-port <port number>`|Host port for this Swarm Learning node's File Server.|30305|
-|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SL FS Service of associated SL node. Here, Port number is optional.| |
 
 ## <a name="SECTION_R43_RBD_JSB"/> User machine learning container parameters
 
