@@ -39,10 +39,5 @@
 
   ![APLS License Management](Community_License_server.png)
 
-<blockquote>
-
-NOTE: Do not stop the license server once the licenses are installed. Whenever the License Server \(APLS\) is stopped or the host system running the License Server reboots, the License Server must be started, and the licenses must be reinstalled again.
-
-</blockquote>
     
 For more information on installing and managing licenses, see the chapter *HPE AutoPass License Server License Management* in *AutoPass License Server User Guide*.

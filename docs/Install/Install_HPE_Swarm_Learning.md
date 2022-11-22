@@ -6,6 +6,11 @@ run one of the Swarm Learning installer based on your platform (Linux, Windows, 
      - HPE_SWARM_LEARNING_INSTALLER_LINUX_Q2V41-11036
      - HPE_SWARM_LEARNING_INSTALLER_WINDOWS_Q2V41-11038.exe
      - HPE_SWARM_LEARNING_INSTALLER_MAC_Q2V41-11039
+     
+     <blockquote>
+     
+          NOTE: When you run the Swarm Learning installer on Windows, web browsers such as Google Chrome and Microsoft Edge, are only supported; Internet Explorer is not supported.
+     </blockquote>
 
 2.   The Swarm Learning Web App is launched in a web browser.
 
@@ -57,5 +62,7 @@ run one of the Swarm Learning installer based on your platform (Linux, Windows, 
 7.   Review **Next Steps** and click **Next**. 
 8.   Review the **Summary** screen, which displays all the installed hosts. Click **Finish**. 
 9.   An installation confirmation message is displayed. Click **Close Window**. 
+
+After successful installation, the Swarm Learning docker containers are installed on each of the host; the documentation, the sample code, and the scripts for running Swarm Learning are installed in the Swarm installation location (the default location is \(`/opt/hpe/swarm-learning`\)).
 
 
