@@ -132,11 +132,11 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 ```
 
 
-10. Run SWCI node and observe sequential execution of two tasks – build task (`user_env_tf_build_task`) and run task (`swarm_mnist_task`).
+10. Run SWCI node and observe sequential execution of two tasks – build task (`build_pyt_user_image`) and run task (`run_mnist_pyt`).
 
--   `user_env_tf_build_task` - builds TensorFlow based ML nodes with model and data.
+-   `build_pyt_user_image` - builds pytorch based user image.
 
--   `swarm_mnist_task` - run Swarm training across for two ML nodes.
+-   `run_mnist_pyt` - runs Swarm training across for four ML nodes.
 
 <blockquote>
    NOTE: If required, according to the environment, modify SN IP in <code>workspace/mnist-pyt/swci/swci-init</code> file.
@@ -151,7 +151,7 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 -e https_proxy= --apls-ip=172.1.1.1
 ```
 
-11. Four nodes of Swarm trainings are automatically started when the run task (`swarm_mnist_task`) gets assigned and executed. Open a new terminal and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
+11. Four nodes of Swarm trainings are automatically started when the run task (`run_mnist_pyt`) gets assigned and executed. Open a new terminal and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
 
 ```
 SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
@@ -159,7 +159,7 @@ SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm
 
    Final Swarm model is saved inside each user’s private `scratch` directory that is, `workspace/mnist-pyt/user/data-and-scratch/scratch`. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continues to run.
 
-12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net` and `host-2-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
+12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
      
 
