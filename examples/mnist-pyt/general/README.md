@@ -48,7 +48,7 @@ NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch
 
 ```
 mkdir workspace
-cp -r examples/mnist-pyt workspace/
+cp -r examples/mnist-pyt/general/ workspace/mnist-pyt/
 cp -r examples/utils/gen-cert workspace/mnist-pyt/
 ```
 
