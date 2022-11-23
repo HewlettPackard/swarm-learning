@@ -10,7 +10,7 @@ NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/da
 
 </blockquote>
 
-The Machine Learning program, after conversion to Swarm Learning for the PyTorch platform, is in `examples/mnist-pyt/model`. The PyTorch-based file is called `mnist_pyt.py`.
+The Machine Learning program, after conversion to Swarm Learning for the PyTorch platform, is in `examples/mnist-pyt/general/model`. The PyTorch-based file is called `mnist_pyt.py`.
 
 This example shows the Swarm training of MNIST model using four ML nodes. ML nodes along with SL nodes are automatically spawned by SWOP nodes - all running on a single host. Swarm training gets initiated by the SWCI node and orchestrated by one SN node running on the same host. This example also shows how private data, private scratch area and shared model can be mounted to ML nodes for Swarm training.
 
