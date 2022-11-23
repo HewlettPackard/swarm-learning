@@ -16,17 +16,17 @@ cd /platform/swarm/usr
 
 # Create and finalize build task
 EXIT ON FAILURE
-create task from taskdefs/user_env_pyt_build_task.yaml
-finalize task user_env_pyt_build_task
-get task info user_env_pyt_build_task
-get task body user_env_pyt_build_task
+create task from taskdefs/build_pyt_user_image.yaml
+finalize task build_pyt_user_image
+get task info build_pyt_user_image
+get task body build_pyt_user_image
 list tasks
 EXIT ON FAILURE OFF
 
 # Assign build task to taskrunner
 EXIT ON FAILURE
 RESET TASKRUNNER defaulttaskbb.taskdb.sml.hpe
-ASSIGN TASK user_env_pyt_build_task TO defaulttaskbb.taskdb.sml.hpe WITH 2 PEERS
+ASSIGN TASK build_pyt_user_image TO defaulttaskbb.taskdb.sml.hpe WITH 1 PEERS
 WAIT FOR TASKRUNNER defaulttaskbb.taskdb.sml.hpe
 EXIT ON FAILURE OFF
 
@@ -34,17 +34,17 @@ EXIT ON FAILURE OFF
 
 # Create and finalize swarm run task
 EXIT ON FAILURE
-create task from taskdefs/swarm_mnist_task.yaml
-finalize task swarm_mnist_task
-get task info swarm_mnist_task
-get task body swarm_mnist_task
+create task from taskdefs/run_mnist_pyt.yaml
+finalize task run_mnist_pyt
+get task info run_mnist_pyt
+get task body run_mnist_pyt
 list tasks
 EXIT ON FAILURE OFF
 
 # Assign run task
 EXIT ON FAILURE
 RESET TASKRUNNER defaulttaskbb.taskdb.sml.hpe
-ASSIGN TASK swarm_mnist_task TO defaulttaskbb.taskdb.sml.hpe WITH 4 PEERS
+ASSIGN TASK run_mnist_pyt TO defaulttaskbb.taskdb.sml.hpe WITH 4 PEERS
 WAIT FOR TASKRUNNER defaulttaskbb.taskdb.sml.hpe
 # Grace period for ML container to save the model,
 # before the below reset command cleans up the ML and SL Containers.

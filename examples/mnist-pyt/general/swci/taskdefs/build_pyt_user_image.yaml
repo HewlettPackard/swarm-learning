@@ -1,11 +1,11 @@
 ######################################################################
 # (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
 ######################################################################
-Name: user_env_pyt_build_task
+Name: build_pyt_user_image
 TaskType: MAKE_USER_CONTAINER
 Author: HPESwarm
 Prereq: ROOTTASK
-Outcome: user-env-pyt1.5-swop
+Outcome: user-image-pyt1.5
 Body:
     BuildContext: sl-cli-lib
     BuildType: INLINE
