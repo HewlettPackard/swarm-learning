@@ -1,0 +1,18 @@
+######################################################################
+# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+######################################################################
+Name: swarm_mnist_task
+TaskType: RUN_SWARM
+Author: HPESwarm
+Prereq: user_env_pyt_build_task
+Outcome: swarm_mnist_task
+Body:
+    Command: model/mnist_pyt.py
+    Entrypoint: python3
+    WorkingDir: /tmp/test
+    Envvars: ["DATA_DIR": data-and-scratch/app-data, "SCRATCH_DIR": data-and-scratch/scratch, "MODEL_DIR": model, "MAX_EPOCHS": 2, "MIN_PEERS": 4]
+    PrivateContent: /tmp/test/data-and-scratch
+    SharedContent:
+    -   Src: <CURRENT-PATH>/workspace/mnist-pyt/model
+        Tgt: /tmp/test/model
+        MType: BIND
