@@ -1,11 +1,11 @@
 ######################################################################
 # (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
 ######################################################################
-Name: swarm_mnist_task
+Name: run_mnist_pyt
 TaskType: RUN_SWARM
 Author: HPESwarm
-Prereq: user_env_pyt_build_task
-Outcome: swarm_mnist_task
+Prereq: build_pyt_user_image
+Outcome: run_mnist_pyt
 Body:
     Command: model/mnist_pyt.py
     Entrypoint: python3

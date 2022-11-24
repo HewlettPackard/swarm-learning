@@ -6,11 +6,11 @@ This example uses one training batch and one test batch. The files for both thes
 
 <blockquote>
     
-NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/app-data/mnist-npz.md</code>.
+NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
-The Machine Learning program, after conversion to Swarm Learning for the PyTorch platform, is in `examples/mnist-pyt/model`. The PyTorch-based file is called `mnist_pyt.py`.
+The Machine Learning program, after conversion to Swarm Learning for the PyTorch platform, is in `examples/mnist-pyt/general/model`. The PyTorch-based file is called `mnist_pyt.py`.
 
 This example shows the Swarm training of MNIST model using four ML nodes. ML nodes along with SL nodes are automatically spawned by SWOP nodes - all running on a single host. Swarm training gets initiated by the SWCI node and orchestrated by one SN node running on the same host. This example also shows how private data, private scratch area and shared model can be mounted to ML nodes for Swarm training.
 
@@ -25,6 +25,8 @@ The following image illustrates a cluster setup for the MNIST example:![Four nod
 
 -   This example assumes that License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
+
+## TBD - UPDATE profile, init files - Remove HOST IPs and PROXIES ##
 
 ## <a name="SECTION_G1M_4RZ_LSB"/> Running the MNIST-PYT example
 
@@ -48,7 +50,8 @@ NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch
 
 ```
 mkdir workspace
-cp -r examples/mnist-pyt workspace/
+cp -r examples/mnist-pyt/general/ workspace/mnist-pyt/
+cp -r examples/mnist-pyt/data-and-scratch workspace/mnist-pyt/
 cp -r examples/utils/gen-cert workspace/mnist-pyt/
 ```
 
@@ -71,10 +74,10 @@ cp -r examples/utils/gen-cert workspace/mnist-pyt/
     ```
 
 
-5.  Search and replace all occurrences of `<CURRENT-PATH>` tag in `swarm_mnist_task.yaml` and `swop_profile.yaml` files with `$(pwd)`.
+5.  Search and replace all occurrences of `<CURRENT-PATH>` tag in `run_mnist_pyt.yaml` and `swop_profile.yaml` files with `$(pwd)`.
 
 ```
-sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist-pyt/swop/swop*_profile.yaml workspace/mnist-pyt/swci/taskdefs/swarm_mnist_task.yaml
+sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist-pyt/swop/swop_profile.yaml workspace/mnist-pyt/swci/taskdefs/run_mnist_pyt.yaml
 
 ```
 
@@ -124,7 +127,7 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 ```
 ./scripts/bin/run-swop -d --rm --name=swop1 \
 --network=host-1-net --usr-dir=workspace/mnist-pyt/swop \
---profile-file-name=swop1_profile.yaml \
+--profile-file-name=swop_profile.yaml \
 --key=workspace/mnist-pyt/cert/swop-1-key.pem \
 --cert=workspace/mnist-pyt/cert/swop-1-cert.pem \
 --capath=workspace/mnist-pyt/cert/ca/capath \
@@ -132,11 +135,11 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 ```
 
 
-10. Run SWCI node and observe sequential execution of two tasks – build task (`user_env_tf_build_task`) and run task (`swarm_mnist_task`).
+10. Run SWCI node and observe sequential execution of two tasks – build task (`build_pyt_user_image`) and run task (`run_mnist_pyt`).
 
--   `user_env_tf_build_task` - builds TensorFlow based ML nodes with model and data.
+-   `build_pyt_user_image` - builds pytorch based user image.
 
--   `swarm_mnist_task` - run Swarm training across for two ML nodes.
+-   `run_mnist_pyt` - runs Swarm training across for four ML nodes.
 
 <blockquote>
    NOTE: If required, according to the environment, modify SN IP in <code>workspace/mnist-pyt/swci/swci-init</code> file.
@@ -151,15 +154,19 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 -e https_proxy= --apls-ip=172.1.1.1
 ```
 
-11. Four nodes of Swarm trainings are automatically started when the run task (`swarm_mnist_task`) gets assigned and executed. Open a new terminal and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
+11. Four nodes of Swarm trainings are automatically started when the run task (`run_mnist_pyt`) gets assigned and executed. Open a new terminal and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
 
 ```
 SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
 ```
 
+<blockquote>
+   NOTE: If you didn't observe SL and ML conatiners in docker space, look at SWOP log. There could be a chance SL and ML containers are started and removed by SWOP due to any internal error, then rerun SWOP with `-e SWOP_KEEP_CONTAINERS=True` so that SWOP doesn't remove stopped SL and ML conatiners. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
+</blockquote>
+
    Final Swarm model is saved inside each user’s private `scratch` directory that is, `workspace/mnist-pyt/user/data-and-scratch/scratch`. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continues to run.
 
-12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net` and `host-2-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
+12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
      
 
