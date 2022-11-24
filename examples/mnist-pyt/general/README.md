@@ -131,7 +131,6 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 --key=workspace/mnist-pyt/cert/swop-1-key.pem \
 --cert=workspace/mnist-pyt/cert/swop-1-cert.pem \
 --capath=workspace/mnist-pyt/cert/ca/capath \
--e SWOP_KEEP_CONTAINERS=True \
 -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
 
@@ -160,6 +159,10 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 ```
 SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
 ```
+
+<blockquote>
+   NOTE: If you didn't observe SL and ML conatiners in docker space, look at SWOP log. There could be a chance SL and ML containers are started and removed by SWOP due to any internal error, then rerun SWOP with `-e SWOP_KEEP_CONTAINERS=True` so that SWOP doesn't remove stopped SL and ML conatiners. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
+</blockquote>
 
    Final Swarm model is saved inside each user’s private `scratch` directory that is, `workspace/mnist-pyt/user/data-and-scratch/scratch`. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continues to run.
 
