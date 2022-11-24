@@ -127,7 +127,7 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 ```
 ./scripts/bin/run-swop -d --rm --name=swop1 \
 --network=host-1-net --usr-dir=workspace/mnist-pyt/swop \
---profile-file-name=swop1_profile.yaml \
+--profile-file-name=swop_profile.yaml \
 --key=workspace/mnist-pyt/cert/swop-1-key.pem \
 --cert=workspace/mnist-pyt/cert/swop-1-cert.pem \
 --capath=workspace/mnist-pyt/cert/ca/capath \
