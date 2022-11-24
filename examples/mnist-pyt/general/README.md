@@ -72,10 +72,10 @@ cp -r examples/utils/gen-cert workspace/mnist-pyt/
     ```
 
 
-5.  Search and replace all occurrences of `<CURRENT-PATH>` tag in `swarm_mnist_task.yaml` and `swop_profile.yaml` files with `$(pwd)`.
+5.  Search and replace all occurrences of `<CURRENT-PATH>` tag in `run_mnist_pyt.yaml` and `swop_profile.yaml` files with `$(pwd)`.
 
 ```
-sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist-pyt/swop/swop*_profile.yaml workspace/mnist-pyt/swci/taskdefs/swarm_mnist_task.yaml
+sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/mnist-pyt/swop/swop_profile.yaml workspace/mnist-pyt/swci/taskdefs/run_mnist_pyt.yaml
 
 ```
 
