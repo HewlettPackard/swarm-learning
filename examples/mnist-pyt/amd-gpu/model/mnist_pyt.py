@@ -31,7 +31,10 @@ trainPrint = True
 # tell swarm after how many batches
 # should it Sync. We are not doing 
 # adaptiveRV here, its a simple and quick demo run
-swSyncInterval = 128 
+swSyncInterval = 256
+
+import pyamdgpuinfo
+
 
 class mnistNet(nn.Module):
     def __init__(self):
@@ -110,9 +113,29 @@ def main():
     modelDir = os.getenv('MODEL_DIR', '/platform/model')
     max_epochs = int(os.getenv('MAX_EPOCHS', str(default_max_epochs)))
     min_peers = int(os.getenv('MIN_PEERS', str(default_min_peers)))
-    batchSz = 128
+    batchSz = 25000
     trainDs, testDs = loadData(dataDir)
     useCuda = torch.cuda.is_available()
+    
+    if useCuda:
+        print("Cuda is accessable")
+    else:
+        print("Cuda is not accessable")
+        
+        
+    n_devices = pyamdgpuinfo.detect_gpus()
+    print("No of GPU devices available in this host:", n_devices)
+    gpusDetected = False
+    gpu = None
+    if (n_devices > 0):
+        gpusDetected = True
+    
+    if (gpusDetected):
+        gpuDeviceNo = os.getenv('HIP_VISIBLE_DEVICES' ,0)
+        print("Gpu id requested for local training :", gpuDeviceNo)
+        gpu = pyamdgpuinfo.get_gpu(int(gpuDeviceNo)) 
+
+
     device = torch.device("cuda" if useCuda else "cpu")  
     model = mnistNet().to(device)
     model_name = 'mnist_pyt'
@@ -135,6 +158,16 @@ def main():
         doTrainBatch(model,device,trainLoader,opt,epoch,swarmCallback)      
         test(model,device,testLoader)
         swarmCallback.on_epoch_end(epoch)
+        if gpu is not None: 
+            print(" Epoch {} : VRAM usage {} ".format(epoch, gpu.query_vram_usage()))
+            # When no GPUs are requested, observed aprrox 2 MB showed by Vram usage
+            # so considering above 100 MB usage of Vram as GPUs accessed. 
+            amdGpuMemoryUsedin100MBs = (gpu.query_vram_usage()/800000000)
+            print(" Gpus use in units of 100Mbs :", amdGpuMemoryUsedin100MBs)
+            VAL = (amdGpuMemoryUsedin100MBs > 1.0)
+            print (" AMD GPUs used : ", VAL)
+            print(" Epoch End callback done")
+
 
     # handles what to do when training ends        
     swarmCallback.on_train_end()
