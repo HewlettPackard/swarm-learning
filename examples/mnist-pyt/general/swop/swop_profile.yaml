@@ -12,16 +12,16 @@ resourcemgr :
 network    : host-1-net
 apls :
     locator :
-        host : 172.1.1.1
+        host : 10.30.90.30
         port : ~
 apisrv :
     locator :
-        host : 172.1.1.1
+        host : 10.30.90.30
         port : ~
 envvars :
     - SL_LOG_LEVEL : INFO
-    - http_proxy : ~
-    - https_proxy : ~
+    - http_proxy : http://proxy.houston.hpecorp.net:8080
+    - https_proxy : http://proxy.houston.hpecorp.net:8080
     - no_proxy : ~
     - HTTP_PROXY : ~
     - HTTPS_PROXY : ~
@@ -49,7 +49,7 @@ nodes :
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl1
-        slhostip   : 172.1.1.1
+        slhostip   : 10.30.90.30
         slport : 16000
         usrhostname : user1
         privatedata :
@@ -79,7 +79,7 @@ nodes :
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl2
-        slhostip   : 172.1.1.1
+        slhostip   : 10.30.90.30
         slport : 17000
         usrhostname : user2
         privatedata :
@@ -109,7 +109,7 @@ nodes :
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl3
-        slhostip   : 172.1.1.1
+        slhostip   : 10.30.90.30
         slport : 18000
         usrhostname : user3
         privatedata :
@@ -139,7 +139,7 @@ nodes :
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl4
-        slhostip   : 172.1.1.1
+        slhostip   : 10.30.90.30
         slport : 19000
         usrhostname : user4
         privatedata :
