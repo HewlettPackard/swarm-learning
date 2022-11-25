@@ -92,7 +92,7 @@ nodes :
             mType : BIND
         slenvvars : null
         usrenvvars : 
-            - HIP_VISIBLE_DEVICES : 1
+            - HIP_VISIBLE_DEVICES : 0
         usrcontaineropts : 
             - device : ["/dev/kfd", "/dev/dri"]
             - group-add : ["video"]
@@ -126,7 +126,12 @@ nodes :
             src: "<CURRENT-PATH>/workspace/mnist-pyt/user3/data-and-scratch"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : 
+            - HIP_VISIBLE_DEVICES : 1
+        usrcontaineropts : 
+            - device : ["/dev/kfd", "/dev/dri"]
+            - group-add : ["video"]
+            - privileged : True
     - slnodedef :
         idx : 3
         identity :
@@ -156,4 +161,9 @@ nodes :
             src: "<CURRENT-PATH>/workspace/mnist-pyt/user4/data-and-scratch"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : 
+            - HIP_VISIBLE_DEVICES : 1
+        usrcontaineropts : 
+            - device : ["/dev/kfd", "/dev/dri"]
+            - group-add : ["video"]
+            - privileged : True
