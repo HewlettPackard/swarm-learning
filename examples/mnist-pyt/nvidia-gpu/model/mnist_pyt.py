@@ -113,6 +113,12 @@ def main():
     batchSz = 128
     trainDs, testDs = loadData(dataDir)
     useCuda = torch.cuda.is_available()
+    
+    if useCuda:
+        print("Cuda is accessable")
+    else:
+        print("Cuda is not accessable")
+        
     device = torch.device("cuda" if useCuda else "cpu")  
     model = mnistNet().to(device)
     model_name = 'mnist_pyt'
