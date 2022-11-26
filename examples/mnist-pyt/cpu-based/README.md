@@ -6,7 +6,7 @@ This example uses one training batch and one test batch. The files for both thes
 
 <blockquote>
     
-NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
+NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/common/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
@@ -37,12 +37,12 @@ cd swarm-learning
 ```
 
 ```<a name="CODEBLOCK_R41_BZX_CTB"/> 
-curl https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -o examples/mnist-pyt/data-and-scratch/app-data/mnist.npz
+curl https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -o examples/mnist-pyt/common/app-data/mnist.npz
 ```
 
 <blockquote>
     
-NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
+NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/common/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
@@ -51,7 +51,7 @@ NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch
 ```
 mkdir workspace
 cp -r examples/mnist-pyt/cpu-based/ workspace/mnist-pyt/
-cp -r examples/mnist-pyt/data-and-scratch workspace/mnist-pyt/
+cp -r examples/mnist-pyt/common/ workspace/mnist-pyt/data-and-scratch/
 cp -r examples/utils/gen-cert workspace/mnist-pyt/
 ```
 
