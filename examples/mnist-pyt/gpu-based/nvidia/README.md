@@ -1,4 +1,4 @@
-# <a name="GUID-41298B6F-BF19-4873-A5AE-1DA0E1CFB358"/> MNIST-PYT
+# <a name="GUID-41298B6F-BF19-4873-A5AE-1DA0E1CFB358"/> Nvidia GPU based MNIST-PYT
 
 This example runs MNIST-PYT[1](#) on the Swarm Learning platform. It uses PyTorch as the backend. The code for this example is modified to run on a Swarm Learning platform.
 
