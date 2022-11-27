@@ -42,7 +42,7 @@ curl https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -o ex
 
 <blockquote>
     
-NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
+NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/common/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
