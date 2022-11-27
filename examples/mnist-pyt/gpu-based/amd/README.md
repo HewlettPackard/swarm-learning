@@ -51,7 +51,7 @@ NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/common/app-data/
 ```
 mkdir workspace
 cp -r examples/mnist-pyt/gpu-based/amd/ workspace/mnist-pyt/
-cp -r examples/mnist-pyt/common/ workspace/mnist-pyt/
+cp -r examples/mnist-pyt/common/ workspace/mnist-pyt/data-and-scratch/
 cp -r examples/utils/gen-cert workspace/mnist-pyt/
 ```
 
