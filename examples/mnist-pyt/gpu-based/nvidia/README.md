@@ -6,11 +6,11 @@ This example uses one training batch and one test batch. The files for both thes
 
 <blockquote>
     
-NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
+NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/common/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
-The Machine Learning program, after conversion to Swarm Learning for the PyTorch platform, is in `examples/mnist-pyt/nvidia-gpu/model`. The PyTorch-based file is called `mnist_pyt.py`.
+The Machine Learning program, after conversion to Swarm Learning for the PyTorch platform, is in `examples/mnist-pyt/gpu-based/nvidia/model`. The PyTorch-based file is called `mnist_pyt.py`.
 
 This example shows the Swarm training of MNIST model using four ML nodes. ML nodes along with SL nodes are automatically spawned by SWOP nodes - all running on a single host. Swarm training gets initiated by the SWCI node and orchestrated by one SN node running on the same host. This example also shows how private data, private scratch area and shared model can be mounted to ML nodes for Swarm training.
 
@@ -37,12 +37,12 @@ cd swarm-learning
 ```
 
 ```<a name="CODEBLOCK_R41_BZX_CTB"/> 
-curl https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -o examples/mnist-pyt/data-and-scratch/app-data/mnist.npz
+curl https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -o examples/mnist-pyt/common/app-data/mnist.npz
 ```
 
 <blockquote>
     
-NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
+NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/common/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
@@ -50,8 +50,8 @@ NOTE: For `mnist.npz` data notice, see <code>examples/mnist-pyt/data-and-scratch
 
 ```
 mkdir workspace
-cp -r examples/mnist-pyt/nvidia-gpu/ workspace/mnist-pyt/
-cp -r examples/mnist-pyt/data-and-scratch workspace/mnist-pyt/
+cp -r examples/mnist-pyt/gpu-based/nvidia/ workspace/mnist-pyt/
+cp -r examples/mnist-pyt/common/ workspace/mnist-pyt/data-and-scratch/
 cp -r examples/utils/gen-cert workspace/mnist-pyt/
 ```
 
