@@ -6,7 +6,7 @@ This example uses one training batch and one test batch. The files for both thes
 
 <blockquote>
     
-NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/data-and-scratch/app-data/mnist-npz.md</code>.
+NOTE: See data license associated with this dataset, <code>examples/mnist-pyt/common/app-data/mnist-npz.md</code>.
 
 </blockquote>
 
