@@ -152,5 +152,6 @@ nodes :
             src: "<CURRENT-PATH>/workspace/mnist-pyt/user4/data-and-scratch"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : 
+            - NVIDIA_VISIBLE_DEVICES : 6
         usrcontaineropts : null
