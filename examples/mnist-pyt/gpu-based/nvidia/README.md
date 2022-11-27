@@ -170,7 +170,37 @@ SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm
 
 12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
-     
+ 
+ 
+
+### run-sl command ###
+
+In place of using swop and swci, execute run-sl command like below to start user and ml conatiners. Refer run-sl documentation and docker options from swop profile for more details.
+User image needs to be build through docker build. 
+```
+./scripts/bin/run-sl --name=sl1 --host-ip=16.16.186.122 \
+--sn-ip=16.16.186.122 --sn-api-port=30304 --sl-fs-port=16000 \
+--key=workspace/mnist-pyt/cert/sl-1-key.pem \
+--cert=workspace/mnist-pyt/cert/sl-1-cert.pem \
+--capath=workspace/mnist-pyt/cert/ca/capath \
+--ml-image=user-image-amd-pyt --ml-name=ml1 \
+--ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/mnist_pyt.py \
+--ml-v=/nfs/radha/extForkRad/swarm-learning/workspace/mnist-pyt/model:/tmp/test/model \
+--ml-v=/nfs/radha/extForkRad/swarm-learning/workspace/mnist-pyt/user1/data-and-scratch:/tmp/test/data-and-scratch \
+--ml-e DATA_DIR=data-and-scratch/app-data \
+--ml-e SCRATCH_DIR=data-and-scratch/scratch \
+--ml-e MODEL_DIR=model \
+--ml-e MAX_EPOCHS=500 \
+--ml-e MIN_PEERS=2 \
+--ml-e HIP_VISIBLE_DEVICES=0 \
+--ml-privileged \
+--ml-device=/dev/kfd \
+--ml-device=/dev/dri \
+--ml-group-add video \
+--ml-user=0:0 \
+--apls-ip=16.16.186.122
+```
+
 
 
 [1](#) [https://yann.lecun.com/exdb/mnist/](#)
