@@ -1,4 +1,4 @@
-# MNIST using Reverse Proxy {#GUID-9BD49A0E-88FF-4F9F-B722-CE9E1AF1CE5B .concept}
+# MNIST using Reverse Proxy
 
 This is single host MNIST example using reverse proxy service parameters with 1 SN node, 1 SWOP node, 1 SWCI node and 2 SL nodes.
 
@@ -21,11 +21,11 @@ This example runs Reverse Proxy with MNIST[1](#fntarg_1) on the Swarm Learning p
 
 This example shows the MNIST using reverse proxy to mimic real world behaviour. This example uses BIND9 as the DNS server and NGINX as the reverse proxy server and builds both the docker images with suitable configurations. \(Please refer to the respective docker files\). This example has automated the end-to-end running of MNIST, and includes starting the BIND9 and NGINX containers for user convenience. For more information on arguments passed to the respective run scripts of swarm components, see `run-all` script.
 
-This example uses one training batch and one test batch. Both batch files are stored in an archive file called mnist.npz. The Machine Learning program, after conversion to Swarm Learning for the TensorFlow-based Keras platform, is in examples/reverse-proxy/mnist/model and the TensorFlow-based file name is mnist tf.py.
+This example uses one training batch and one test batch. Both batch files are stored in an archive file called `mnist.npz`. The Machine Learning program, after conversion to Swarm Learning for the TensorFlow-based Keras platform, is in `examples/reverse-proxy/mnist/model` and the TensorFlow-based file name is `mnist tf.py`.
 
-This example shows the Swarm training of MNIST model using two ML nodes. ML nodes are automatically spawned by SWOP node. Swarm training is initiated by SWCI node and orchestrated by a SN node. This example also shows how private data and shared model can be mounted to ML nodes for Swarm training. For more information, see the profile files and task definition files placed under examples/reverse-proxy/mnist/swop and examples/reverse-proxy/mnist/swci folders, respectively.
+This example shows the Swarm training of MNIST model using two ML nodes. ML nodes are automatically spawned by SWOP node. Swarm training is initiated by SWCI node and orchestrated by a SN node. This example also shows how private data and shared model can be mounted to ML nodes for Swarm training. For more information, see the profile files and task definition files placed under `examples/reverse-proxy/mnist/swop` and `examples/reverse-proxy/mnist/swci` folders, respectively.
 
-## Running the MNIST example {#SECTION_KCL_JHW_NVB .section}
+## Running the MNIST example
 
 1.  On host-1, navigate to swarm-learning folder.
 
