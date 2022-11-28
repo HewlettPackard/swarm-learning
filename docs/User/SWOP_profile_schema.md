@@ -9,7 +9,7 @@ The source code of the profile schema [SWOP-profile-schema.yaml](/docs/SWOP-prof
 
 ```<a name="CODEBLOCK_NBD_FSY_CTB"/> 
 ######################################################################
-## (C)Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
 ######################################################################
 "$schema"   : "https://json-schema.org/draft/2020-12/schema"
 title       : "SWOP Profile definition"
@@ -81,26 +81,34 @@ properties  :
         required    : 
             - locator
         additionalProperties : false                      
-    apisrv     : 
+    apisrv     :
         type         : object
         description  : "API SERVER object definition"
         properties   :
-            locator  : 
+            locator  :
                 type       : object
-                properties : 
-                    host  : 
-                        type : string
-                    port : 
-                        oneOf :  
-                            - type : integer
-                              minimum: 0 
+                properties :
+                    host  :
+                        oneOf:
+                            - type: string
+                              maxLength: 253
+                              minLength: 1
                             - const : ~
-                required : 
+                    port :
+                        oneOf :
+                            - type : integer
+                              minimum: 0
+                            - const : ~
+                    service:
+                        oneOf:
+                            - type: string
+                              maxLength: 253
+                              minLength: 1
+                            - const : ~
+                required :
                     - host
-                additionalProperties : false                    
-        required : 
-            - locator
-        additionalProperties : false
+                    - service
+                additionalProperties : false
     envvars    : 
         oneOf       : 
           - const   : ~
@@ -109,6 +117,30 @@ properties  :
             items       : 
                 type        : object
                 uniqueItems : true
+
+    # Allow service endpoints to be specified as domain names, rather than IPs.
+    # Traffic can be routed through a reverse proxy or a web gateway by making
+    # these name servers resolve the domain names into the IP of the reverse 
+    # proxy and then, configuring the reverse proxy to forward to the appropriate 
+    # service. This is at a global level for now - primarily because we cannot 
+    # think of a use case for two containers on a production box wanting to use 
+    # different name servers. If and when someone demonstrates the scenario, we 
+    # can move this field down to the nodes section. To limit the current scope 
+    # of work, we do not support any of the other related parameters, such as
+    # dns-opt, dns-search and domain-name. Further, we feel we should explore
+    # ways to create an open specification that can accept all valid parameters
+    # and not just a chosen handful.
+    dns:
+        oneOf:
+          - const: ~
+          - type: array
+            description: "List of custom DNS servers"
+            items:
+                type: string
+                maxLength: 253
+                minLength: 1
+                uniqueItems: true
+
     nodes      : 
         type        : array
         description : "List of Node specifications managed by this SWOP entity"
@@ -170,16 +202,26 @@ properties  :
                                     - subpath
                                 additionalProperties : false
                       slhostip    :
-                          type    : string
-                          description : "Externally visible IPv4 Address or FDQN of the SL Container"
-                          maxLength   : 240
-                          minLength   : 2                          
+                          oneOf:
+                              - const: ~
+                              - type    : string
+                                description : "Externally visible IPv4 Address or FQDN of the SL Container"
+                                maxLength   : 240
+                                minLength   : 2                          
                       slport      :
                           oneOf : 
                               - const   : ~
                               - type    : integer 
                                 description : "FS Server port exposed by this SL NODE (default 30305)"
                                 minimum : 0
+                      slfsservice:
+                          oneOf:
+                              - const: ~
+                              - type: string
+                                description: "FQDN and optional port of the FS service for the SL Container"
+                                # https://stackoverflow.com/a/32294443.
+                                maxLength: 253
+                                minLength: 2
                       slhostname :
                           oneOf : 
                               - const   : ~
@@ -220,11 +262,26 @@ properties  :
                                 items       : 
                                     type        : object
                                     uniqueItems : true
+
+                      # In our practice, we are using labels only for the SPIFFE selector not envvars.
+                      sllabels:
+                          oneOf:
+                            - const: ~
+                            - type: object
+                              description: "Dictionary of labels for the Swarm Learning container"
+                              items:
+                                  uniqueItems: true
+                            - type: array
+                              description: "List of labels with empty values for the Swarm Learning container"
+                              items:
+                                  type: string
+                                  uniqueItems: true
+
                       usrhostname :
                           oneOf : 
                               - const   : ~
                               - type    : string
-                                description : "Externally visible IPv4 Address or FDQN of the USR Container"
+                                description : "Externally visible IPv4 Address or FQDN of the USR Container"
                                 maxLength   : 240
                                 minLength   : 2  
                       usrenvvars   : 
@@ -232,17 +289,65 @@ properties  :
                               - const   : ~
                               - type    : array
                                 description : "List of local environmental variables as K-V pair specific to USR Container.
-                                               This will take precedence over environmental variables specified in run task definition."
+                                               This will take precedence over global environmental variables specified in 
+                                               run task definition."
                                 items       : 
                                     type        : object
                                     uniqueItems : true
+
+                      usrlabels:
+                          oneOf:
+                            - const: ~
+                            - type: object
+                              description: "Dictionary of labels for the user ML container"
+                              items:
+                                  uniqueItems: true
+                            - type: array
+                              description: "List of labels with empty values for the user ML container"
+                              items:
+                                  type: string
+                                  uniqueItems: true
+
                       usrcontaineropts   : 
                           oneOf       : 
                               - const   : ~
                               - type    : array
-                                description : "List of K-V pairs passed directly to docker while starting USR container.
-                                               Key supported only 'gpus'. Refer below link to know how to specify the values. 
+                                description : |
+                                               "List of K-V pairs passed directly to docker while starting USR container.
+                                               These options are needed to use GPUs for user ML local training.
+                                               These options are specific to GPU vendors. Refer options as applicable to your GPU vendor."
+
+                                               1. Nvidia GPUs -   
+                                               "Only 'gpus' key is supported. Refer below link to know how to specify the values. 
                                                https://docs.docker.com/config/containers/resource_constraints/#gpu "
+                                               
+                                               2. AMD GPUs - 
+                                               "Keys supported are 'device', 'ipc', 'shm-size', 'group-add',
+                                               'cap-add', 'security-opt', 'privileged'.
+
+                                               Refer below link to know the options for AMD GPU access.
+                                               https://developer.amd.com/resources/rocm-learning-center/deep-learning/
+                                               
+                                               Required options varies for tensorflow and pytorch.
+                                               Tensorflow ====>> sudo docker run -it --network=host --device=/dev/kfd --device=/dev/dri 
+                                               --ipc=host --shm-size 16G --group-add video --cap-add=SYS_PTRACE 
+                                               --security-opt seccomp=unconfined -v $HOME/dockerx:/dockerx rocm/tensorflow:latest
+                                               PyTorch ====>> sudo docker run -it -v $HOME:/data --privileged --rm --device=/dev/kfd 
+                                               --device=/dev/dri --group-add video rocm/pytorch:rocm3.5_ubuntu16.04_py3.6_pytorch"
+
+                                               
+                                               Example for specifing values - 
+                                               - device : ["/dev/kfd", "/dev/dri"] # (list of str) -> Expose host devices to the container, 
+                                                                                     as a list of strings
+                                               - ipc : "host"                      # (str) -> Set the IPC mode for the container
+                                               - shm-size : "16G"                  # (str) -> Size of /dev/shm (e.g. 1G)
+                                               - group-add : ["video"]             # (list of str) -> List of additional group names 
+                                                                                     and/or IDs that the container process will run as.
+                                               - cap-add : ["SYS_PTRACE"]          # (list of str) -> Add kernel capabilities. 
+                                               - security-opt : ["seccomp=unconfined"] # (list of str) -> A list of string values to customize labels 
+                                                                                         for MLS systems, such as SELinux.
+                                               - privileged : True                 # (bool) -> Give extended privileges to this container.
+                                               
                                 items : 
                                     type : object
                                     uniqueItems : true
@@ -250,7 +355,6 @@ properties  :
                       - idx
                       - identity
                       - slhostname
-                      - slport 
                       - privatedata
                       - slenvvars
                       - usrhostname
@@ -269,5 +373,3 @@ required    :
     - envvars
     - nodes
 additionalProperties: false
-```
-
