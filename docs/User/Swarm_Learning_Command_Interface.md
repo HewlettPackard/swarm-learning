@@ -13,19 +13,20 @@ The subsequent sections provide details about SWCI-related commands, and are als
 A SWCI tool can control operations on multiple Swarm Learning framework instances. Each instance is encapsulated and represented as a context. At a given time, only one context is active. All SWCI commands work with the current active context (default context) and they do not take context as an explicit argument. Before running any SWCI command, users are required to explicitly create a context \(using the CREATE context command\) and activate it as follows:
 
 ```
-+----------------------------------------------------------------+
-| SWCI:13 > create context **testContext** sn.test.sw.net        |
-| API Server is UP!                                              |
-| CONTEXT CREATED : **testContext**                              |
-| SWCI:14 > SWITCH CONTEXT testContext                           |
-| DEFAULT CONTEXT SET TO : testContext                           |
-| SWCI:15 >                                                      |
-+----------------------------------------------------------------+
++------------------------------------------------------------------------+
+| SWCI:13 > CREATE CONTEXT **testContext** WITH IP sn.test.sw.net        |
+| API Server is UP!                                                      |
+| CONTEXT CREATED : **testContext**                                      |
+| SWCI:14 > SWITCH CONTEXT testContext                                   |
+| DEFAULT CONTEXT SET TO : testContext                                   |
+| SWCI:15 >                                                              |
++------------------------------------------------------------------------+
 ```
 
 |Command|Description and parameters|
 |-------|--------------------------|
-|`CREATE CONTEXT <contextName : string> <ip : string> [port : string]`|Creates a SWCI context.<br>-   `contextname`: A user given identifier for this context.<br>-   `IP`: IP address or FQDN of the API server \(Swarm Network node\) serving Swarm Learning APIs.<br>-   `port`\(optional\): The port number on which the API server is listening.<br>|
+|`CREATE CONTEXT <contextName : string> WITH IP <ip : string> [port : string]`|Creates a SWCI context.<br>-   `contextname`: A user given identifier for this context.<br>-   `ip`: IP address or FQDN of the API server \(Swarm Network node\) serving Swarm Learning APIs.<br>-   `port`\(optional\): The port number on which the API server is listening.<br>|
+|`CREATE CONTEXT <contextName : string> WITH SERVICE <service : string>`|Creates a SWCI context. This is used when using reverse proxy.<br>-   `contextname`: A user given identifier for this context.<br>-   `service`: FQDN for the API Service of the associated Swarm Network node. If the reverse proxy is configured to run on any nondefault port, it has to be passed along with the service string parameter with ':' separator." This is an optional port.<br>|
 |`SWITCH CONTEXT <contextName : string>`|Switches current SWCI context to a specified context.|
 |`LIST CONTEXTS`|Prints the list of contexts related to the current SWCI session.|
 |`GET CONTEXT INFO [contextName : string]`|Prints the context information of the current Context when `contextName` is not specified. If `contextName` is specified prints information for the specified context.<br>|
@@ -74,7 +75,8 @@ A SWCI tool can control operations on multiple Swarm Learning framework instance
 
 |Command|Description and parameters|
 |-------|--------------------------|
-|`WAIT FOR \<ip:string> \[port:string\] \[retries:string\]`|This command waits for the specified API server to accept connections.<br>-   `ip`: The IP address or FQDN of the API server \(SN node\) serving Swarm Learning APIs.<br>-   `port`: \(Optional\) The string representation of the port number on which the API Server is listening.<br>-   `retries`: \(Optional\). Default "retries" is 360 times \(30 mins\). This is the maximum number of times SWCI reattempts to connect after waiting for a 5 seconds timeout period.<br>|
+|`WAIT FOR IP \<ip:string> \[port:string\] \[retries:string\]`|This command waits for the specified API server to accept connections.<br>-   `ip`: The IP address or FQDN of the API server \(SN node\) serving Swarm Learning APIs.<br>-   `port`: \(Optional\) The string representation of the port number on which the API Server is listening.<br>-   `retries`: \(Optional\). Default "retries" is 360 times \(30 mins\). This is the maximum number of times SWCI reattempts to connect after waiting for a 5 seconds timeout period.<br>|
+|`WAIT FOR SERVICE \<service:string> \[retries:string\]`|This command waits for the specified API server to accept connections.<br>-   `service`: FQDN for the API Service of the associated Swarm Network node. If the Port number exists, it has to be passed along with the service string parameter with ':' separator. This is an optional port.<br>-    `retries`: \(Optional\). Default "retries" is 360 times \(30 mins\). This is the maximum number of times SWCI reattempts to connect after waiting for a 5 seconds timeout period.<br>|
 |`EXIT`|This command exits the SWCI session unconditionally.|
 |`EXIT ON FAILURE \[ON/OFF\]`|This command instructs SWCI to exit the current session when any of the subsequent commands fail. The default value is OFF.|
 |`SLEEP`|This command sleeps for a specified time before executing the subsequent commands.<br>&nbsp;<br>For example, in between a `WAIT FOR TASKRUNNER` and `RESET TASKRUNNER`, one can use a `SLEEP 10`, to give a grace time of 10 secs, before the `RESET` command cleans up the SL and user container.<br>&nbsp;<br>This would be required to allow the user ML code to save the model or do any inference of the model, after the Swarm training is over.<br>&nbsp;<br>For more information, see the example SWCI scripts in the `swarm-learning/examples/` directory.|
