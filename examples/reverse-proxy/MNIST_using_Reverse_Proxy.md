@@ -17,7 +17,7 @@ The following image illustrates a cluster setup for the Reverse Proxy with MNIST
 5.  This example assumes that the License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
 
-This example runs Reverse Proxy with MNIST[1](#fntarg_1) on the Swarm Learning platform. It uses TensorFlow as the backend. The code for this example is taken from[2](#fntarg_2) and modified to run on a Swarm Learning platform.
+This example runs Reverse Proxy with MNIST [1] on the Swarm Learning platform. It uses TensorFlow as the backend. The code for this example is taken from [2] and modified to run on a Swarm Learning platform.
 
 This example shows the MNIST using reverse proxy to mimic real world behaviour. This example uses BIND9 as the DNS server and NGINX as the reverse proxy server and builds both the docker images with suitable configurations. \(Please refer to the respective docker files\). This example has automated the end-to-end running of MNIST, and includes starting the BIND9 and NGINX containers for user convenience. For more information on arguments passed to the respective run scripts of swarm components, see `run-all` script.
 
@@ -58,9 +58,13 @@ This example shows the Swarm training of MNIST model using two ML nodes. ML node
 
 **Parent topic:**[Examples using reverse proxy](GUID-DD2A624E-30B8-4FCD-A23F-014AE0D76452.md)
 
-[1](#fnsrc_1) [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)
+[1]	Y. LeCun, C. Cortes and C. J. Burges, "THE MNIST DATABASE," [Online]. Available: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)  
 
-[2](#fnsrc_2) [https://www.tensorflow.org/tutorials/quickstart/beginner](https://www.tensorflow.org/tutorials/quickstart/beginner)
+[2] [https://www.tensorflow.org/tutorials/quickstart/beginner](https://www.tensorflow.org/tutorials/quickstart/beginner)
+
+[3] https://www.isc.org/bind/ and https://bind9.readthedocs.io/
+
+[4] https://www.nginx.com/ and https://nginx.org/en/docs/
 
 
 
