@@ -2,7 +2,7 @@
 
 A Reverse Proxy Server is a type of proxy server that presents behind the firewall in a private network and directs client requests to appropriate backend or origin servers. Reverse Proxy for Swarm Learning is used to minimize the number of network ports that must be opened for communication between various nodes. An Open port refers to a TCP or UDP port number that is configured to accept packets.
 
-The following illustration is the scenario of customer facing multi-organization:
+The following illustration is the multi-organization setup using reverse proxy:
 
 ![](GUID-8387004B-D71E-4C39-8036-4ECC81972D3F-high.png)
 
