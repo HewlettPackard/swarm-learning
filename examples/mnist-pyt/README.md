@@ -5,6 +5,7 @@ Refer following for example execution.
 
 [CPU based training](/cpu-based#-cpu-based-mnist-pyt)
 
+
 [GPU based with AMD GPUs](/gpu-based/amd)
 
 [GPU based with Nvidia GPUs](/gpu-based/nvidia)
