@@ -18,7 +18,7 @@ NOTE:HPE recommends that users must use their own certificates in actual product
 
 For details of running each example, see the below:
 
-### [MNIST](/examples/mnist/MNIST.md) 
+### [MNIST](/examples/mnist#-mnist) 
 This example demonstrates swarm learning use case on following setup. 
 - Based on 2 hosts  
 - Mnist dataset
