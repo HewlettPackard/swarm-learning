@@ -1,27 +1,11 @@
 ## Mnist PyTorch example 
 This example has branches to show case **CPU based** and **GPU based (amd, nvidia)** local training of machine learning application. 
 
+Refer following for example execution.
 
-### CPU based
+[CPU based training](/cpu-based#-cpu-based-mnist-pyt)
 
-Several examples of using Swarm Learning are provided with the package. 
+[GPU based with AMD GPUs](/gpu-based/amd)
 
+[GPU based with Nvidia GPUs](/gpu-based/nvidia)
 
-<blockquote>
-NOTE:HPE recommends that users must use their own certificates in actual production environment.
-
-</blockquote>
-
-
-### GPU based
-
-#### AMD GPU
-Several examples of using Swarm Learning are provided with the package. 
-
-#### NVIDIA GPU
-Several examples of using Swarm Learning are provided with the package. 
-
-<blockquote>
-NOTE:HPE recommends that users must use their own certificates in actual production environment.
-
-</blockquote>
