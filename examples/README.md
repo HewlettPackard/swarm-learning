@@ -22,14 +22,15 @@ For details of running each example, see the below:
 This example demonstrates swarm learning use case on following setup. 
 - Based on 2 hosts  
 - Mnist dataset
-- ML platform is Tensorflow platform
+- ML platform is Tensorflow 
 - SL-ML pairs are spawned using SWOP
         
 ### [MNIST-PYT](/examples/mnist-pyt/MNIST-PYT.md) 
 This example demonstrates swarm learning use case on following setup. 
-- Based on 2 hosts  
+Additionally this example has branches to show case **CPU based** and **GPU based (amd, nvidia)** local training of machine learning application. 
+- Based on single host
 - Mnist dataset
-- ML platform is Tensorflow platform
+- ML platform is PyTorch 
 - SL-ML pairs are spawned using SWOP
         
 ### [CIFAR-10](/examples/cifar10/CIFAR-10.md)
