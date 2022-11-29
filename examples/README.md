@@ -21,3 +21,5 @@ For details of running each example, see the below:
 -   [MNIST-PYT](/examples/mnist-pyt/MNIST-PYT.md)
 -   [CIFAR-10](/examples/cifar10/CIFAR-10.md)
 -   [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md)
+-   [BreakHis](/examples/breakhis)
+-   [Cancer prediction](/examples/cancer-pred#cancer-prediction)
