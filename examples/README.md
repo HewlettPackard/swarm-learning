@@ -25,7 +25,7 @@ This example demonstrates swarm learning use case on following setup.
 - ML platform is Tensorflow 
 - SL-ML pairs are spawned using SWOP
         
-### [MNIST-PYT](/examples/mnist-pyt/README.md) 
+### [MNIST-PYT](/examples/mnist-pyt#mnist-pytorch-example) 
 This example demonstrates swarm learning use case on following setup. 
 Additionally this example has branches to show case **CPU based** and **GPU based (amd, nvidia)** local training of machine learning application. 
 - Based on single host
