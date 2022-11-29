@@ -15,9 +15,49 @@ NOTE:HPE recommends that users must use their own certificates in actual product
 
 </blockquote>
 
+
 For details of running each example, see the below:
 
--   [MNIST](/examples/mnist/MNIST.md)
--   [MNIST-PYT](/examples/mnist-pyt/MNIST-PYT.md)
--   [CIFAR-10](/examples/cifar10/CIFAR-10.md)
--   [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md)
+### [MNIST](/examples/mnist/MNIST.md) 
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Mnist dataset
+- ML platform is Tensorflow 
+- SL-ML pairs are spawned using SWOP
+        
+### [MNIST-PYT](/examples/mnist-pyt#mnist-pytorch-example) 
+This example demonstrates swarm learning use case on following setup. 
+Additionally this example has branches to show case **CPU based** and **GPU based (amd, nvidia)** local training of machine learning application. 
+- Based on single host
+- Mnist dataset
+- ML platform is PyTorch 
+- SL-ML pairs are spawned using SWOP
+        
+### [CIFAR-10](/examples/cifar10/CIFAR-10.md)
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Mnist dataset
+- ML platform is Tensorflow platform
+- SL-ML pairs are spawned using SWOP
+        
+### [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md) 
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Mnist dataset
+- ML platform is Tensorflow platform
+- SL-ML pairs are spawned using SWOP
+        
+### [BreakHis](/examples/breakhis)
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Mnist dataset
+- ML platform is Tensorflow platform
+- SL-ML pairs are spawned using SWOP
+        
+### [Cancer prediction](/examples/cancer-pred#cancer-prediction) 
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Mnist dataset
+- ML platform is Tensorflow platform
+- SL-ML pairs are spawned using SWOP
+        
