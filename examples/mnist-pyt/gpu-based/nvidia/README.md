@@ -2,6 +2,12 @@
 
 This example runs MNIST-PYT[1](#) application with Nvidia GPU based local training on the Swarm Learning platform.
 
+When compared to CPU based mnist-pyt example following are the key differences in this example. 
+- User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host amd setup. Refer https://hub.docker.com/r/pytorch/pytorch for more details. 
+- SWOP options needs additional tags to access amd gpus. Refer Swop profile schema for more details. 
+- Run task command needs addtional agrument to be passed in. Refer task task under this example. 
+- USer ML application code also written to access nvidia gpus. 
+
 This example uses one training batch and one test batch. The files for both these batches are in an archive file, called `mnist.npz`.
 
 <blockquote>
