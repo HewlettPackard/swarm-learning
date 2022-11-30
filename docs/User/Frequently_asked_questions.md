@@ -64,6 +64,34 @@ If you are using SWOP to launch concurrent training, you need to have separate S
 
 SWCI is designed to work with several swarm networks at once. Therefore, you can create a context and switch to that context to execute commands. Each context identifies which SN the SWCI must connect to.
 
+## What are the supported SWCI commands?
+
+SWCI has a built-in inline help, that lists all supported commands and further one can see help for each command.
+
+For Example,
+
+```
+SWCI:0 > HELP
+    ASSIGN TASK
+    CD
+    CREATE CONTEXT
+    CREATE CONTRACT
+    …
+
+SWCI:1 > HELP CREATE CONTRACT
+    CREATE CONTRACT <TrainingContractName : string>
+Registers the specified SL Training Contract into the Swarm Learning Network.
+
+```
+## How to debug error with command “ASSIGN TASK TO TASKRUNNER”? 
+
+Use SWCI command “GET TASKRUNNER STATUS” to know the overall status of the TASK execution.
+
+One can also use “GET TASKRUNNER PEER STATUS” to display the status for the individual SWOP PEERs that are listening on this TASKRUNNER.
+
+-   For RUN\_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
+-   If there are failed PEERs, using its node UID, one can identify the container name/id from ‘LIST NODES’ command. With container name/id, user can debug the error with docker logs command.
+ 
 ## <a name="SECTION_IZQ_TFS_HSB"/> What network ports does Swarm Learning use? Can they be customized?
 
 Each SN node requires two network ports for incoming connections from other SN, SL, SWCI, and SWOP nodes.
