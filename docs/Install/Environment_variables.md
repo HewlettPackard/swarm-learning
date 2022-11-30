@@ -10,6 +10,7 @@ The environment variables are passed to containers or added to the environment v
 |`SN_ETH_PORT_EXT`|Sets an Ethernet port for Swarm Network node.|
 |`SN_I_AM_SENTINEL`| Sets a Swarm Network node to become the Sentinel node, only when it is set to true.<br> Default value: False<br> |
 |`SN_START_MINING`| Starts mining on non-sentinel nodes. \(Optional\)<br> Default value: False<br> |
+|`SL_MAKE_ME_ADMIN`| Determines whether an SL node can participate in leader election or not. \(Optional\)<br> Default value: True<br> If SL_MAKE_ME_ADMIN is set to ‘False’, the corresponding SL node will not participate in leader election. If user doesn’t want to make a slow node (with less compute power, network band width etc) as a leader, then this can be set to ‘False’. |
 |`SL_WAIT_FOR_FULL_QUORUM_SECONDS`|Sets the maximum time for an SL leader node to wait for full quorum after minPeers are ready for merge. This parameter lets you to maximize the number of peers participating in the merge process.<br>Default value: 30 secs|
 |`SWCI_TASK_MAX_WAIT_TIME`|Specifies a maximum timeout value for the completion of a task.<br>This value must be set in minutes, and the default is 120 mins (2 hours).
 |`SWCI_MODE`| Enables SWCIs web interface instead of command line interface. Allowed values are CLI and WEB.<br> Default value: CLI<br> |
