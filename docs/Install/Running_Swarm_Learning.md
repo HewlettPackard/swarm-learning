@@ -95,6 +95,7 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |`--ml-name <container name>`\(Optional parameter\)<br>|Name of the Machine Learning container.|
 |`--ml-v <host-path:container-path>`\(Optional parameter\)<br>|Bind mount a volume for the Machine Learning container.|
 |`--ml-e <environmental-variable-name=value>`\(Optional parameter\)<br>|To pass environmental variable to the Machine Learning container.|
+|`--ml-user <uid:gid> -`\(Optional parameter\)<br>|The access privilege with which the ML container needs to be spawned on the host.<br>If `--ml-user` is not provided, then ML container would be spawned with current host user’s `uid:gid`.<br>If only `uid` of the host user is provided, then ML container would be spawned with specified host user’s `uid` and primary `gid`.<br> If `uid:gid` of the host user is provided, then ML container would be spawned with specified host user’s `uid:gid`.|
 
 Also see:
 
