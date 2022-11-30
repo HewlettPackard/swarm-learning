@@ -38,7 +38,7 @@ The python3 program needs to import the SWCI class, and then use the below APIs.
 |`listTasks()`|This method displays the list of tasks that are registered into the Swarm Learning network.| |
 |`listTrainingContracts()`|This method displays the list of training contracts registered with Swarm Learning network.| |
 |`ls()`|This method displays the directory contents of the SWCI container.|`optStr=''`|
-|`plotTopology()`|This method displays the PNG object showing the current topology of the Swarm Learning network.| |
+|`plotTopology()`|This method displays the PNG object showing the current topology of the Swarm Learning network.<br> By default, it will display the Swarm Node type and Host IP on which the node is running.<br> User can pass additional attributes which they want to see on the plot. These additional attributes are: 'Port', 'ContainerName', 'UUID', 'parentUUID' and 'i-am-alive'.<br> **NOTE**: Color codes are hexadecimal triplets representing the colors red, green, and blue (#RRGGBB).|SNColour="#ADD8E6",<br> SWOPColor="#33FF33",<br> SLColor="#FFCCCB", <br> attrs=['ContainerName']|
 |`pwd()`|This method displays the present working directory of the SWCI container.| |
 |`registerTask()`|This method registers a task into the SN network and finalizes it, if the task is valid.|`yamlFileName, finalize=True`|
 |`resetTaskRunner()`|This method resets the state of the taskrunner contract to an uninitialized state.<br><strong>WARNING:</strong>This action cannot be undone, reset only completed Taskrunner contracts. Resetting the active taskrunner contract can result in unexpected behavior.|`trName='defaulttaskbb.taskdb.sml.hpe'`|
