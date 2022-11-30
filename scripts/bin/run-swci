@@ -64,16 +64,14 @@ progDir=$(realpath $(dirname "${0}"))
 
 # Source a bunch of code that is common to all our scripts.
 source "${progDir}/common"
+funcCallOrder=("Common" "Docker" "APLS" "UserID" "SpiffeID" "Component")
 
-funcCallOrder=("Common" "APLS" "UserID" "SpiffeID" "Component")
+# SWCI is an interactive program even when start-up scripts are present.
+# On usage on EXIT within startup script will exits the swci container.
+# If user wants to remove the contianer, then use it as docker argument
 
-# SWCI is an interactive program
-# even when start-up scripts are present
-# Users can override them, if needed
-rm="--rm"
-interactive="-i"
 
-# Used by printCommonUsage.
+# Used by onCommonBatchEnd and printCommonUsage.
 defaultImageName="${swarmDockerHub}/${swarmOrg}/${swciRepoName}"
 defaultImageTag="${swarmVer}"
 
@@ -113,12 +111,15 @@ processComponentBatchOpt()
 
 onTrainEnd()
 {
+    # By default, we remove the SWCI container after it exits.
+    ! hasItem dockerOpts "" "--rm" "q" &&       \
+        appendArrayVar "" dockerOpts "--rm=true"
     
     if [[ -n "${usrDir}" ]]
     then
         # check if the directory exists
         [[ ! -d "$(realpath "${usrDir}")" ]] && error "--usr-dir: ${usrDir}: bad path"
-        mounts+=(-v "$(realpath "${usrDir}"):${containerUsrDir}:rw")
+        appendArrayVar "" dockerOpts "--volume="$(realpath "${usrDir}")":${containerUsrDir}:rw"
     fi
     
     if [[ -n "${initScriptName}" ]]
@@ -129,7 +130,7 @@ onTrainEnd()
         [[ ! -f "${path}" ]] && \
             error "--init-script-name: ${initScriptName}: bad file"        
             
-        envvar+=(-e "SWCI_STARTUP_SCRIPT=${initScriptName}")
+        appendArrayVar "" dockerOpts "--env=SWCI_STARTUP_SCRIPT=${initScriptName}"
     fi 
 
     cmd+=("${unprocessedOpts[@]}")
