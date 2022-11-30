@@ -6,8 +6,8 @@
 
 # SWCI context setup
 EXIT ON FAILURE
-wait for ip 10.30.90.30
-create context test-mnist with ip 10.30.90.30
+wait for ip 172.1.1.1
+create context test-mnist with ip 172.1.1.1
 switch context test-mnist
 EXIT ON FAILURE OFF
 
