@@ -1,22 +1,22 @@
-# Frequently asked questions {#GUID-0F5ACBE9-AC3F-481E-902E-AFD628B6662E .reference}
+# <a name="GUID-0F5ACBE9-AC3F-481E-902E-AFD628B6662E"/> Frequently asked questions
 
-## What is Swarm Learning? {#GUID-424453EE-CB1A-4482-8EF8-3A0CA077F67B .section}
+## <a name="GUID-424453EE-CB1A-4482-8EF8-3A0CA077F67B"/> What is Swarm Learning?
 
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner.
 
-## What are the components of Swarm Learning? {#GUID-1811327E-194E-433C-8D7D-2EEF1FB2778C .section}
+## <a name="GUID-1811327E-194E-433C-8D7D-2EEF1FB2778C"/> What are the components of Swarm Learning?
 
 Swarm Learning has 4 types of components that form a network. They are Swarm Learning nodes, Swarm Network nodes, SWCI nodes, and SWOP nodes.
 
-## What is the License server node? {#GUID-BA02577F-B3EF-4D64-8C75-90E6A674CAA9 .section}
+## <a name="GUID-BA02577F-B3EF-4D64-8C75-90E6A674CAA9"/> What is the License server node?
 
 The License server \(APLS\) node is a special node running the HPE AutoPass license server. It is responsible for validating the licenses of the Swarm Learning framework. There is typically one instance of this node running in the Swarm.
 
-## What is the Sentinel node? {#SECTION_O5D_S2S_HSB .section}
+## <a name="SECTION_O5D_S2S_HSB"/> What is the Sentinel node?
 
 The Sentinel node is a special Swarm Network node. It is responsible for initializing the blockchain network and deploying the smart contracts on the blockchain. For this reason, the Sentinel node should be the very first Swarm Network node that is started in the Swarm Learning framework. Once the blockchain network has been initialized, there is no difference between the functioning of the Sentinel node and that of the other Swarm Network nodes.
 
-## How do you know if Swarm Network node started successfully? {#SECTION_ZKR_V2S_HSB .section}
+## <a name="SECTION_ZKR_V2S_HSB"/> How do you know if Swarm Network node started successfully?
 
 Look for following message after executing `run-sn` command to confirm successful starting of Swarm Network node. It might take a few minutes before this message appears.
 
@@ -24,7 +24,7 @@ Look for following message after executing `run-sn` command to confirm successfu
 
 This message does not show up if APLS server is not configured correctly.
 
-## How many SLs can connect with a SN? {#SECTION_L5P_RCK_1TB .section}
+## <a name="SECTION_L5P_RCK_1TB"/> How many SLs can connect with a SN?
 
 It depends on several factors like, the available system resources, the ML algorithm complexity, how often it does parameter merging and so on.
 
@@ -32,56 +32,27 @@ On a Proliant XL Gen 9 system with 8 Xeon CPUs and 32 GB memory HPE has tested a
 
 HPE recommends starting up to 4 SLs to 1 SN and scale it up slowly if needed.
 
-## How do you run Swarm Learning on GPU? {#SECTION_TQT_LFS_HSB .section}
+## <a name="SECTION_TQT_LFS_HSB"/> How do you run Swarm Learning on GPU?
 
-The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nodes can run on Nvidia GPUs by using the GPU version of your underlying ML platform \(Keras/PyTorch\) and following the GPU specific instructions of your ML platform. For more information on starting SL and ML nodes, see **HPE Swarm Learning Installation and Configuration Guide*.*
+The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nodes can run on Nvidia GPUs by using the GPU version of your underlying ML platform \(Keras/PyTorch\) and following the GPU specific instructions of your ML platform. For more information on starting SL and ML nodes, see *HPE Swarm Learning Installation and Configuration Guide*.
 
-For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SWOP profile. For more information, see [https://docs.docker.com/config/containers/resource\_constraints/\#gpu](https://docs.docker.com/config/containers/resource_constraints/#gpu).
+For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SWOP profile. For more information, see [https://docs.docker.com/config/containers/resource_constraints/#gpu](https://docs.docker.com/config/containers/resource_constraints/#gpu).
 
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
 
-## What all GPUs are supported ? {#SECTION_F32_J1Y_CTB .section}
+## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
 
 Currently SWOP framework is designed to start ML nodes on Nvidia GPUs. In the future other GPUs may be supported.
 
 You can set `--gpus` under `usrcontaineropts` section for the specific user container in the SWOP profile.
 
-## How can you determine if AMD GPUs are allocated for local training? {#SECTION_HCT_KF3_KVB .section}
-
-[https://pypi.org/project/pyamdgpuinfo/](https://pypi.org/project/pyamdgpuinfo/) - python package for AMD GPU information.
-
-`import pyamdgpuinfo`
-
-`n_devices = pyamdgpuinfo.detect_gpus()`
-
-`if (n_devices > 0) - means that AMD GPU devices are available on the host.`
-
-In PyTorch:
-
-[https://pytorch.org/docs/stable/generated/torch.cuda.is\_available.html](https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html)
-
-In TensorFlow:
-
-[https://www.tensorflow.org/api\_docs/python/tf/test/is\_gpu\_available](https://www.tensorflow.org/api_docs/python/tf/test/is_gpu_available)
-
-## What are the additional steps to be followed to enable GPU access for local training? {#SECTION_IMV_FLB_LVB .section}
-
-The additional steps to enable GPUs for local training are as follows:
-
-1.  Build the user container to enable GPU access in it. Use base image as tensorflow-gpu or Nvidia image with PyTorch installed on it as applicable to ML platform.
-
-2.  Update SWOP profile `usrcontaineropts` \(or\) provide run-scripts options as applicable to Nvidia or AMD.
-
-3.  Create application code to access GPU.
-
-
-## Can you have heterogeneous ML nodes, with some running on CPU and others on GPU? {#SECTION_NHW_PFS_HSB .section}
+## <a name="SECTION_NHW_PFS_HSB"/> Can you have heterogeneous ML nodes, with some running on CPU and others on GPU?
 
 Yes.
 
 Each ML node by default runs on CPU. If you want to run on GPUs, specify it in the `usrcontaineropts` section in the SWOP profile.
 
-## Can you run multiple concurrent Model Trainings in the same Swarm Network? {#SECTION_LXB_TLD_VSB .section}
+## <a name="SECTION_LXB_TLD_VSB"/> Can you run multiple concurrent Model Trainings in the same Swarm Network?
 
 Yes, it is supported only in the licensed version. You can even run one training session using Keras and another using PyTorch.
 
@@ -89,40 +60,11 @@ You need different training contracts specified in the ML programs via `Swarmcal
 
 If you are using SWOP to launch concurrent training, you need to have separate SWOP nodes each watching a different taskrunner, which is specified in their SWOP profiles.
 
-## When you start SWCI, you do not specify any IP/name for SN. How does it know which SN to connect to? {#SECTION_VH1_YND_VSB .section}
+## <a name="SECTION_VH1_YND_VSB"/> When you start SWCI, you do not specify any IP/name for SN. How does it know which SN to connect to?
 
 SWCI is designed to work with several swarm networks at once. Therefore, you can create a context and switch to that context to execute commands. Each context identifies which SN the SWCI must connect to.
 
-## What are the supported SWCI commands? {#GUID-BD97D826-519D-4483-9A5F-FB0D1FE4F290 .section}
-
-SWCI has a built-in inline help, that lists all supported commands and further one can see help for each command.
-
-For Example,
-
-```
-SWCI:0 > HELP
-    ASSIGN TASK
-    CD
-    CREATE CONTEXT
-    CREATE CONTRACT
-    …
-
-SWCI:1 > HELP CREATE CONTRACT
-    CREATE CONTRACT <TrainingContractName : string>
-Registers the specified SL Training Contract into the Swarm Learning Network.
-
-```
-
-## How to debug error with command “ASSIGN TASK TO TASKRUNNER”? {#GUID-966DE516-38CE-4EE2-983D-1BF955EC18BC .section}
-
-Use SWCI command “GET TASKRUNNER STATUS” to know the overall status of the TASK execution.
-
-One can also use “GET TASKRUNNER PEER STATUS” to display the status for the individual SWOP PEERs that are listening on this TASKRUNNER.
-
--   For RUN\_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
--   If there are failed PEERs, using its node UID, one can identify the container name/id from ‘LIST NODES’ command. With container name/id, user can debug the error with docker logs command.
-
-## What network ports does Swarm Learning use? Can they be customized? {#SECTION_IZQ_TFS_HSB .section}
+## <a name="SECTION_IZQ_TFS_HSB"/> What network ports does Swarm Learning use? Can they be customized?
 
 Each SN node requires two network ports for incoming connections from other SN, SL, SWCI, and SWOP nodes.
 
@@ -147,13 +89,13 @@ The port numbers can be customized by using the corresponding `swarm-learning/bi
 
 For configuring the license server API port, see *AutoPass License Server User Guide*.
 
-## What is the IP address used in the run scripts? {#SECTION_HH5_KNP_NSB .section}
+## <a name="SECTION_HH5_KNP_NSB"/> What is the IP address used in the run scripts?
 
 By default, Swarm Learning framework uses the host network to connect and communicate with its peers. In this case, the IP addresses represent the IP addresses or FQDN of the host systems on which the containers are run.
 
 Swarm Learning can also be configured to use a Docker bridge network. In this case, the IP addresses represent the IP addresses or FQDN of the containers themselves.
 
-## Where are the log files? {#SECTION_RVM_DGS_HSB .section}
+## <a name="SECTION_RVM_DGS_HSB"/> Where are the log files?
 
 The system log files are the docker logs. By default, the docker containers that run the SN, SL, ML, SWOP, and SWCI nodes are not removed after they exit. Log output produced by these containers can be retrieved using the docker logs command.
 
@@ -161,45 +103,49 @@ For a SL node, a subset of the log output is stored with the name `<program-name
 
 The ML program can produce additional log output. To do so, it should be modified to write this output to files in the model directory.
 
-## Do you need sudo/root privileges to run Swarm Learning? {#SECTION_ICX_GGS_HSB .section}
+## <a name="SECTION_ICX_GGS_HSB"/> Do you need sudo/root privileges to run Swarm Learning?
 
 `sudo` is not required to launch the container, if docker is configured to run as a non-root user. Refer Manage Docker as a non-root user If docker is not configured to run as a non-root user, the scripts will automatically prefix docker commands with `sudo`. If the user does not have `sudo` privileges, an error will result.
 
-**NOTE:** Effective user inside the docker container should be root.
+<blockquote>
+  
+NOTE: Effective user inside the docker container should be root.
 
-## Can each Swarm Learning node run a different ML program and parameters? {#SECTION_R2V_KGS_HSB .section}
+</blockquote>
+
+## <a name="SECTION_R2V_KGS_HSB"/> Can each Swarm Learning node run a different ML program and parameters?
 
 No. The program and parameters should be the same across all the Swarm Learning nodes.
 
-## How do you uninstall Swarm learning? {#SECTION_SVG_MGS_HSB .section}
+## <a name="SECTION_SVG_MGS_HSB"/> How do you uninstall Swarm learning?
 
 Use the docker log command to save any container log output that you want to preserve. Use a directory outside the Swarm Learning installation directory. Also, consider cleaning the model directories by removing unnecessary files and sub-directories.
 
 Use the `swarm-learning/bin/uninstall` script to uninstall the Swarm Learning package. This script does not accept any command line parameters. It should run on every node where Swarm Learning package is installed. While running, it stops all Swarm Learning components that are running on that host, removes the docker container images, and deletes the Swarm Learning installation directory.
 
-## Why is blockchain required? Can you use a different blockchain network? {#SECTION_IWC_RGS_HSB .section}
+## <a name="SECTION_IWC_RGS_HSB"/> Why is blockchain required? Can you use a different blockchain network?
 
 Swarm Learning uses a blockchain network primarily to provide a consistent system state to all the nodes without requiring any central coordinator.
 
 The current implementation runs an open-source version of Ethereum but, more platforms might be added in the future. At the time of initialization, the framework spawns its own blockchain network with a custom set of parameter values. Hence it cannot be replaced with any other blockchain network. This applies even when the blockchain platform is a supported one.
 
-## What are the supported machine learning platforms? {#SECTION_DX2_VGS_HSB .section}
+## <a name="SECTION_DX2_VGS_HSB"/> What are the supported machine learning platforms?
 
 Swarm Learning supports Python3 based Machine Learning models that uses PyTorch and Keras \(based on TensorFlow 2\).
 
-## What models work with swarm learning? {#SECTION_WGJ_WGS_HSB .section}
+## <a name="SECTION_WGJ_WGS_HSB"/> What models work with swarm learning?
 
 Currently, Swarm Learning works only with **parametric** machine learning models. For example, NN, CNN, RNN, LSTM, and many more. Its also supports Transfer Learning \(models which includes mix of trainable and non-trainable parameters\).
 
 Support for other ML models is part of Swarm roadmap.
 
-## What are the supported Python packages in ML node? {#SECTION_JNJ_YGS_HSB .section}
+## <a name="SECTION_JNJ_YGS_HSB"/> What are the supported Python packages in ML node?
 
 Any Python package can be used to build the ML container.
 
 If SWOP framework is used, packages must be specified in the build-task definition file.
 
-## What happens if a node runs slowly or drops out of the network? {#SECTION_PXX_LHS_HSB .section}
+## <a name="SECTION_PXX_LHS_HSB"/> What happens if a node runs slowly or drops out of the network?
 
 Swarm Learning has a configurable parameter called `min_peers`, which is the minimum number of nodes essential at each sync step for the model training to continue. The framework ensures that a node can contribute in a sync step only if it is up to date with the model derived from the previous sync step.
 
@@ -210,29 +156,30 @@ The scenario of a node running at a slower rate than the others or completely dr
 -   The number of remaining nodes is less than `min_peers`.
 
 
-In the first case where the number of remaining nodes is greater than or equal to min\_peers, the training will continue post the sync step with the remaining nodes. Once the dropped node rejoins the network, it will update its model to the latest one. It will then resume contributing to model training from the succeeding sync steps.
+In the first case where the number of remaining nodes is greater than or equal to min_peers, the training will continue post the sync step with the remaining nodes. Once the dropped node rejoins the network, it will update its model to the latest one. It will then resume contributing to model training from the succeeding sync steps.
 
 In case of a slow running node, however, the training will continue with contributions from the remaining nodes. The contributions from the slow node are merged periodically using a patented logic.
 
-In the case where the number of nodes remaining in the network is less than min\_peers, the training will pause at the sync step till the minimum number is met again. This can occur either when a dropped node rejoins the network or, when a slow node reaches the sync step.
+In the case where the number of nodes remaining in the network is less than min_peers, the training will pause at the sync step till the minimum number is met again. This can occur either when a dropped node rejoins the network or, when a slow node reaches the sync step.
 
-## Can I add new nodes into the network? {#SECTION_UFF_RHS_HSB .section}
+## <a name="SECTION_UFF_RHS_HSB"/> Can I add new nodes into the network?
 
 Yes. New nodes can be added in the network at any point in the training. Just like a dropped node, a new node will resume model training from the latest model derived from the last sync step.
 
-## What are the supported merge algorithms? Can I specify a custom merge algorithm? {#SECTION_FW4_SHS_HSB .section}
+## <a name="SECTION_FW4_SHS_HSB"/> What are the supported merge algorithms? Can I specify a custom merge algorithm?
 
 Swarm Learning uses averaging as the merge algorithm. Currently, users cannot specify the merge algorithm. This will be supported in a later release.
 
-## Before enabling Swarm Learning, how to confirm the standalone user application has no issues and runs? {#SECTION_VFP_B4D_C5B .section}
+## Before enabling Swarm Learning, how to confirm the standalone user application has no issues and runs?
 
 Run the user container with `SWARM_LOOPBACK` set to `TRUE`, this bypasses Swarm Learning to help you quickly develop, integrate, and test your model code with Swarm Learning package. If your code runs to completion and saves the local model it would indicate that the ML application may not have any issues.
 
-If `SWARM_LOOPBACK` is set to `TRUE`, all Swarm functionality is bypassed, except parameter validation.
+If `SWARM_LOOPBACK` is set to TRUE, all Swarm functionality is bypassed, except parameter validation.
 
-This can help you to verify and test integration of the model code with Swarm without spawning any Swarm Learning containers.
+This can help you to verify and test integration of the model code with Swarm without spawning any Swarm Learning
+containers.
 
-## How to run user container as non-root? {#SECTION_Q5P_SBB_G5B .section}
+## How to run user container as non-root?
 
 By default, when user ML container is run through SWOP or using the `run-sl` script, the user ML container is run with current user's UID and GID of the host machine. If the current user on the host is non-root, the user container also runs as non-root.
 
