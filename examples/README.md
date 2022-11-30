@@ -33,14 +33,14 @@ Additionally this example has branches to show case **CPU based** and **GPU base
 - ML platform is PyTorch 
 - SL-ML pairs are spawned using SWOP
         
-### [CIFAR-10](/examples/cifar10/CIFAR-10.md)
+### [CIFAR-10](/examples/cifar10#-cifar-10)
 This example demonstrates swarm learning use case on following setup. 
 - Based on 2 hosts  
 - Cifar dataset
 - ML platform is Tensorflow platform
 - SL-ML pairs are spawned using run-sl script
         
-### [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md) 
+### [Credit card fraud detection](/examples/fraud-detection#-credit-card-fraud-detection) 
 This example demonstrates swarm learning use case on following setup. 
 - Based on 1 host  
 - Credit card fruad detection dataset
