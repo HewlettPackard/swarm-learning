@@ -1,6 +1,6 @@
 # <a name="GUID-41298B6F-BF19-4873-A5AE-1DA0E1CFB358"/> CPU based MNIST-PYT
 
-This example runs MNIST-PYT[1](#) on the Swarm Learning platform. It uses PyTorch as the backend. The code for this example is modified to run on a Swarm Learning platform.
+This example runs MNIST-PYT[1](#) application with CPU based local training on the Swarm Learning platform. 
 
 This example uses one training batch and one test batch. The files for both these batches are in an archive file, called `mnist.npz`.
 
