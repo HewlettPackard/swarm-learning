@@ -6,7 +6,7 @@ The following illustration is the multi-organization setup using reverse proxy:
 
 ![](GUID-8387004B-D71E-4C39-8036-4ECC81972D3F-high.png)
 
-Swarm Learning currently communicates between machines by enabling a different set of pre-defined ports on each machine. For example, SN-API-PORT, SL-FS-PORT, SN-P2P-PORT \(aka opening\), and so on. Enabling all of these ports between all machines is a time-consuming process. Moreover, opening many ports may make the system more vulnerable to security attacks.
+Swarm Learning currently communicates between host machines by enabling (aka opening) a different set of pre-defined ports on each machine. For example, SN-API-PORT, SL-FS-PORT, and SN-P2P-PORT. Enabling all of these ports between all host machines may be a time-consuming process. Moreover, opening many ports may make the system more vulnerable to security attacks.
 
 SN serves as the hub for all major communications among the Swarm nodes. Using a Reverse Proxy will convert tunnel all port-based communications through a single default https port of 443. Currently, SN P2P service still uses 30303 port and not the https port, hence the SN P2P service must also be opened for each SN node. Rather than externalizing ports, we create services and manage them with unique fully qualified domain names. The routing mechanism is managed through reverse proxy (for example, NGINX). Reverse Proxy approach will avoid the need of opening up multiple SN-API-PORT & SN-P2P-PORTs.
 
