@@ -20,5 +20,5 @@ All reverse proxy-based examples are in the `examples/reverse-proxy` folder. NGI
 4. Bind9 container created from these examples has a built-in function called "add-dns" to add the mapping into the running DNS bind9 container.
 5. On the other hand, routing/tunneling of requests using a reverse proxy is managed by running the NGINX as a docker container.
 6. Routing configuration in NGINX is managed by using `nginx.conf` file, it is volume mounted before the start of the Nginx container.
-7. These examples run the container with `pre-configured nginx.conf` files and the IP addresses used in this configuration file are the IPs adjacent to the Bind9 container. Hence for these examples, it is recommended to keep these local IPs available.
+7. These examples run the container with pre-configured `nginx.conf` files and the IP addresses used in this configuration file are the IPs adjacent to the Bind9 container. Hence for these examples, it is recommended to keep these local IPs available.
 8. If the user wants to use custom IP addresses, then they have to alter their `nginx.conf` according to their needs and start the NGINX container.
