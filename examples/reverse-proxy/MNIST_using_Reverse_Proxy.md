@@ -39,7 +39,7 @@ This example shows the Swarm training of MNIST model using two ML nodes. ML node
     .\examples\reverse-proxy\run-all 172.1.1.1 4m
     ```
 
-    First argument `APLS IP` in this command is a mandatory parameter. Second argument `wait time for sn` if not passed, by default it will wait for 5 minutes. This `wait time for sn` argument is similar to sleep, where `m` denotes minutes.
+    First argument `APLS IP` in this command is a mandatory parameter. Second argument `wait time for sn` if not passed, by default it will wait for 5 minutes. This `wait time for sn` argument is similar to sleep, where `m` denotes minutes. This script waits for SN node to initialize fully within m minutes, before proceeding with the next steps.
 
     This script will take care of starting BIND9 container, NGINX container and rest all of the swarm containers in the sequential manner. All the run-script commands will now take FQDN's as service parameter arguments instead of ports.
 
