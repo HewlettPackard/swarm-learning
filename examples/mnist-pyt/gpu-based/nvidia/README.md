@@ -3,10 +3,10 @@
 This example runs MNIST-PYT[1](#) application with Nvidia GPU based local training on the Swarm Learning platform.
 
 When compared to CPU based mnist-pyt example following are the key differences in this example. 
-- User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host nvidia setup. Refer https://hub.docker.com/r/pytorch/pytorch for more details. 
-- SWOP options needs additional tags to access amd gpus. Refer Swop profile schema for more details. 
-- Run task command needs addtional agrument to be passed in. Refer task task under this example. 
-- USer ML application code also written to access nvidia gpus. 
+- User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host NVIDIA gpu setup. Refer https://hub.docker.com/r/pytorch/pytorch for more details. 
+- SWOP options needs additional tags to access NVIDIA gpus. Refer Swop profile schema for more details. 
+- Run task command needs addtional agrument to be passed in. Refer run task under this example. 
+- User ML application code needs changes to access NVIDIA gpus. 
 
 This example uses one training batch and one test batch. The files for both these batches are in an archive file, called `mnist.npz`.
 
@@ -142,7 +142,7 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 ```
 <blockquote>
    NOTE: `-e SWOP_KEEP_CONTAINERS=True` is an optional argument, by default it would be `False`. 
-   SWOP_KEEP_CONTAINERS set True so that SWOP doesn't remove stopped SL and ML conatiners. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
+   SWOP_KEEP_CONTAINERS is set to True so that SWOP doesn't remove stopped SL and ML containers. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
 </blockquote>
 
 
@@ -179,10 +179,9 @@ SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm
  
  
 
-### run-sl command ###
+### Running using `run-sl` command ###
 
-In place of using swop and swci, execute run-sl command like below to start user and ml conatiners. Refer run-sl documentation and docker options from swop profile for more details.
-User image needs to be build through docker build. 
+In place of using swop and swci, execute `run-sl` command like below to start user and ml conatiners. Refer `run-sl` documentation and NVIDIA gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=16.16.185.84 \
 --sn-ip=16.16.185.84 --sn-api-port=30304 --sl-fs-port=16000 \
