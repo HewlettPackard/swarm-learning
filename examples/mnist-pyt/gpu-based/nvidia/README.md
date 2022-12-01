@@ -182,8 +182,8 @@ Final Swarm model is saved inside each user’s private `scratch` directory that
 
 In place of using swop and swci, execute `run-sl` command like below to start user and ml conatiners. Refer `run-sl` documentation and NVIDIA gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
 ```
-./scripts/bin/run-sl --name=sl1 --host-ip=16.16.185.84 \
---sn-ip=16.16.185.84 --sn-api-port=30304 --sl-fs-port=16000 \
+./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
+--sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
 --key=workspace/mnist-pyt/cert/sl-1-key.pem \
 --cert=workspace/mnist-pyt/cert/sl-1-cert.pem \
 --capath=workspace/mnist-pyt/cert/ca/capath \
@@ -197,7 +197,7 @@ In place of using swop and swci, execute `run-sl` command like below to start us
 --ml-e MAX_EPOCHS=100 \
 --ml-e MIN_PEERS=2 \
 --ml-gpus="all" \
---apls-ip=16.16.185.84
+--apls-ip=172.1.1.1
 ```
 
 
