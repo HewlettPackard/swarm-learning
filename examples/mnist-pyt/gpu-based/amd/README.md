@@ -4,10 +4,10 @@ This example runs MNIST-PYT[1](#) application with AMD GPU based local training 
 
 
 When compared to CPU based mnist-pyt example following are the key differences in this example. 
-- User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host amd setup. Refer https://hub.docker.com/r/rocm/pytorch for more details. 
-- SWOP options needs additional tags to access amd gpus. Refer Swop profile schema for more details. 
-- Run task command needs addtional agrument to be passed in. Refer task task under this example. 
-- USer ML application code also written to access amd gpus. 
+- User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host AMD setup. Refer https://hub.docker.com/r/rocm/pytorch for more details. 
+- SWOP options needs additional tags to access AMD gpus. Refer Swop profile schema for more details. 
+- Run task command needs addtional agrument to be passed in. Refer run task yaml under this example. 
+- User ML application code needs changes to access AMD gpus. 
 
 
 This example uses one training batch and one test batch. The files for both these batches are in an archive file, called `mnist.npz`.
@@ -177,10 +177,9 @@ SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm
 12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
 
-### run-sl command ###
+### Running using `run-sl` command ###
 
-In place of using swop and swci, execute run-sl command like below to start user and ml conatiners. Refer run-sl documentation and docker options from swop profile for more details.
-User image needs to be build through docker build. 
+In place of using swop and swci, execute `run-sl` command like below to start user and ml conatiners. Refer `run-sl` documentation and AMD gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=16.16.186.122 \
 --sn-ip=16.16.186.122 --sn-api-port=30304 --sl-fs-port=16000 \
