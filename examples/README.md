@@ -37,27 +37,27 @@ Additionally this example has branches to show case **CPU based** and **GPU base
 This example demonstrates swarm learning use case on following setup. 
 - Based on 2 hosts  
 - Cifar dataset
-- ML platform is Tensorflow platform
+- ML platform is Tensorflow
 - SL-ML pairs are spawned using run-sl script
         
 ### [Credit card fraud detection](/examples/fraud-detection#-credit-card-fraud-detection) 
 This example demonstrates swarm learning use case on following setup. 
 - Based on 1 host  
 - Credit card fruad detection dataset
-- ML platform is Tensorflow platform
+- ML platform is Tensorflow
 - SL-ML pairs are spawned using SWOP
         
 ### [BreakHis](/examples/breakhis)
 This example demonstrates swarm learning use case on following setup. 
 - Based on 2 hosts  
 - BreakHis dataset
-- ML platform is Tensorflow platform
+- ML platform is Tensorflow
 - SL-ML pairs are spawned using run-sl script
         
 ### [Cancer prediction](/examples/cancer-pred#cancer-prediction) 
 This example demonstrates swarm learning use case on following setup. 
 - Based on 2 hosts  
 - Cancer prediction dataset
-- ML platform is Tensorflow platform
+- ML platform is Tensorflow
 - SL-ML pairs are spawned using run-sl script
         
