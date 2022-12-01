@@ -81,7 +81,7 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |`--sn-api-port <port number>`|Host port for the API Server of the associated Swarm Network node|30304|
 |`--sn-api-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SN API Service of associated SN node. Here, Port number is optional.| |
 |`--sl-fs-port <port number>`|Host port for this Swarm Learning node's File Server.|30305|
-|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SL FS Service of associated SL node. Here, Port number is optional.| |
+|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name and optional port for this Swarm Learning node's file service.|None |
 
 
 ## <a name="SECTION_R43_RBD_JSB"/> User machine learning container parameters
