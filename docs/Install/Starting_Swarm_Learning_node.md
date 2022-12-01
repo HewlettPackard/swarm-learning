@@ -20,5 +20,5 @@ NOTE:
 |`--sn-api-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SN API Service of associated SN node. Here, Port number is optional.| |
 |`--sn-docker-name <container name>`|Docker container name for the associated Swarm Network node.|None|
 |`--sl-fs-port`|The host port for this Swarm Learning node's File Server.|None|
-|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SL FS Service of associated SL node. Here, Port number is optional.| |
+|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name and optional port for this Swarm Learning node's file service.|None |
 
