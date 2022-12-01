@@ -181,8 +181,8 @@ Final Swarm model is saved inside each user’s private `scratch` directory that
 
 In place of using swop and swci, execute `run-sl` command like below to start user and ml conatiners. Refer `run-sl` documentation and AMD gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
 ```
-./scripts/bin/run-sl --name=sl1 --host-ip=16.16.186.122 \
---sn-ip=16.16.186.122 --sn-api-port=30304 --sl-fs-port=16000 \
+./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
+--sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
 --key=workspace/mnist-pyt/cert/sl-1-key.pem \
 --cert=workspace/mnist-pyt/cert/sl-1-cert.pem \
 --capath=workspace/mnist-pyt/cert/ca/capath \
@@ -201,7 +201,7 @@ In place of using swop and swci, execute `run-sl` command like below to start us
 --ml-device=/dev/dri \
 --ml-group-add video \
 --ml-user=0:0 \
---apls-ip=16.16.186.122
+--apls-ip=172.1.1.1
 ```
 
      
