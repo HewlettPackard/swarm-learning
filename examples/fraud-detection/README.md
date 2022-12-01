@@ -119,8 +119,13 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
 --key=workspace/fraud-detection/cert/swop-1-key.pem \
 --cert=workspace/fraud-detection/cert/swop-1-cert.pem \
 --capath=workspace/fraud-detection/cert/ca/capath \
+-e SWOP_KEEP_CONTAINERS=True \
 -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
+<blockquote>
+   NOTE: `-e SWOP_KEEP_CONTAINERS=True` is an optional argument, by default it would be `False`. 
+   SWOP_KEEP_CONTAINERS is set to True so that SWOP doesn't remove stopped SL and ML containers. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
+</blockquote>
 
 10. Run SWCI node \(SWCI1\). It creates, finalizes and assigns below task to task-framework for sequential execution:
 
@@ -150,7 +155,7 @@ NOTE: If required, according to environment, modify SN IP in <code>workspace/fra
 SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
 ```
 
-Final Swarm model is saved inside each user’s private `scratch` directory, which is `workspace/fraud-detection/user<id>/data-and-scratch/scratch` on both the hosts. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continues to run.
+Final Swarm model is saved inside each user’s private `scratch` directory, which is `workspace/fraud-detection/user<id>/data-and-scratch/scratch`. All the dynamically spawned SL and ML containers exits after Swarm training if `SWOP_KEEP_CONTAINERS` is not set, otherwise SL and ML containers needs to be removed manually. The SN and SWOP nodes continues to run.
 
 12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and remove Docker network (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
