@@ -21,4 +21,10 @@ NOTE:
 |`--sn-docker-name <container name>`|Docker container name for the associated Swarm Network node.|None|
 |`--sl-fs-port`|The host port for this Swarm Learning node's File Server.|None|
 |`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SL FS Service of associated SL node. Here, Port number is optional.| |
-
+|`--device`|Expose host devices to the container, as a list of strings.|None|
+|`--ipc`|Sets the IPC mode for the container.|None|
+|`--shm-size`|Size of `/dev/shm` (for example, 1G).|None|
+|`--group-add`|List of additional group names and/or IDs that the container process will run as.|None|
+|`--cap-add`|Add kernel capabilities.|None|
+|`--security-opt`|A list of string values to customize labels for MLS systems, such as SELinux.|None|
+|`--privileged`|Provides extended privileges to this container.|None|
