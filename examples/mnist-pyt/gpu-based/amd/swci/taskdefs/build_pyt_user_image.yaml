@@ -5,7 +5,7 @@ Name: build_pyt_user_image
 TaskType: MAKE_USER_CONTAINER
 Author: HPESwarm
 Prereq: ROOTTASK
-Outcome: user-image-pyt1.5
+Outcome: user-image-amd-pyt
 Body:
     BuildContext: sl-cli-lib
     BuildType: INLINE
