@@ -81,7 +81,7 @@ trap "exit 1" SIGUSR1 SIGUSR2
 swarmVer="1.2.0"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
-swarmOrg="hpe/swarm-learning"
+swarmOrg="hpe_eval/swarm-learning"
 
 slRepoName="sl"
 snRepoName="sn"
@@ -803,7 +803,7 @@ onDockerBatchEnd()
     # The below code is to replicate the fix given for 1.1.0 release
     # This conditional logic keeps additional safety measure to run ml container with
     # primary group id of the "user id" passed. If group id is not passed along with the user id in the
-    # --user argument then container will run with 0 as group id which is not right approach
+    # --ml-user argument then container will run with 0 as group id which is not right approach
     # So, We explicitly add primary group id to the argument when not passed by user.
 
     if [[ ${sidecarPrefix} == "ml-" ]] && hasItem "dockerOpts" "${sidecarPrefix}" "--user" "q"
@@ -1186,10 +1186,9 @@ dockerRun()
         dockerOptsVar+=("--volumes-from=${containerID}")
     
     # The below code is to replicate the fix given for 1.1.0 release
-    # This logic checks if user argument is not passed to ml container then
-    # it defaults userVar variable to current "host machine" user id and primary group id.
-    # When --user argument is not passed explicitly, This ensures to run ml 
-    # container with the current "host machine" user id and primary group id.
+    # This logic checks if user argument (--ml-user) is not passed to ml 
+    # container explicitly, then it defaults or runs the ml container with 
+    # current "host machine" user id and primary group id.
     ! hasItem "dockerOpts" "${sidecarPrefix}" "--user" "q" &&  \
     [[ ${sidecarPrefix} == "ml-" ]] && \
         dockerOptsVar+=("--user=$(id -u):$(id -g)")
