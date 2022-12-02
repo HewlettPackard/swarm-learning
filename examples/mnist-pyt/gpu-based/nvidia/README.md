@@ -32,8 +32,6 @@ The following image illustrates a cluster setup for the MNIST example:![Four nod
 -   This example assumes that License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
 
-## TBD - UPDATE profile, init files - Remove HOST IPs and PROXIES ##
-
 ## <a name="SECTION_G1M_4RZ_LSB"/> Running the MNIST-PYT example
 
 1.  Navigate to `swarm-learning` folder (that is, parent to examples directory).
@@ -180,7 +178,7 @@ Final Swarm model is saved inside each user’s private `scratch` directory that
 
 ### Running using `run-sl` command ###
 
-In place of using swop and swci, execute `run-sl` command like below to start user and ml conatiners. Refer `run-sl` documentation and NVIDIA gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
+In place of using swop and swci, execute `run-sl` command like below to start user and ml containers. Refer `run-sl` documentation and NVIDIA gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
 --sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
