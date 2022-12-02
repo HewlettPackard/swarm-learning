@@ -43,7 +43,7 @@ This example demonstrates swarm learning use case on following setup.
 ### [Credit card fraud detection](/examples/fraud-detection#-credit-card-fraud-detection) 
 This example demonstrates swarm learning use case on following setup. 
 - Based on 1 host  
-- Credit card fruad detection dataset
+- Credit card fraud detection dataset
 - ML platform is Tensorflow
 - SL-ML pairs are spawned using SWOP
         
