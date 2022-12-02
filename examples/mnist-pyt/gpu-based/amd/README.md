@@ -34,8 +34,6 @@ The following image illustrates a cluster setup for the MNIST example:![Four nod
 -   This example assumes that License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
 
-## TBD - UPDATE profile, init files - Remove HOST IPs and PROXIES ##
-
 ## <a name="SECTION_G1M_4RZ_LSB"/> Running the MNIST-PYT example
 
 1.  Navigate to `swarm-learning` folder (that is, parent to examples directory).
