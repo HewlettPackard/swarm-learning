@@ -179,7 +179,7 @@ Final Swarm model is saved inside each user’s private `scratch` directory that
 
 ### Running using `run-sl` command ###
 
-In place of using swop and swci, execute `run-sl` command like below to start user and ml conatiners. Refer `run-sl` documentation and AMD gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
+In place of using swop and swci, execute `run-sl` command like below to start user and ml containers. Refer `run-sl` documentation and AMD gpu specific docker options from swop profile for more details. User image needs to be built through docker build. 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
 --sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
