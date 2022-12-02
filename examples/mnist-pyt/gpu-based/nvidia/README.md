@@ -5,7 +5,7 @@ This example runs MNIST-PYT[1](#) application with Nvidia GPU based local traini
 When compared to CPU based mnist-pyt example following are the key differences in this example. 
 - User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host NVIDIA gpu setup. Refer https://hub.docker.com/r/pytorch/pytorch for more details. 
 - SWOP options needs additional tags to access NVIDIA gpus. Refer Swop profile schema for more details. 
-- Run task command needs addtional agrument to be passed in. Refer run task under this example. 
+- Run task command needs additional agruments to be passed in. Refer run task under this example. 
 - User ML application code needs changes to access NVIDIA gpus. 
 
 This example uses one training batch and one test batch. The files for both these batches are in an archive file, called `mnist.npz`.
