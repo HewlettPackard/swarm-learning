@@ -4,5 +4,5 @@ You can transform any Keras \(with TensorFlow 2 backend\) or PyTorch based ML pr
 
 Your ML program algorithm can be any parametrized supervised learning model. It can be fully trainable model or a partially trainable model when using transfer learning.
 
-![User ML Program](GUID-F6074FD2-45F5-4D06-AE7D-DE4623D37680-high.png)
+<img src="GUID-F6074FD2-45F5-4D06-AE7D-DE4623D37680-high.png" width="80%" height="120%">
 
