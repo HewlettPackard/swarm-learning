@@ -38,6 +38,8 @@ The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nod
 
 For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SWOP profile. For more information, see [https://docs.docker.com/config/containers/resource_constraints/#gpu](https://docs.docker.com/config/containers/resource_constraints/#gpu).
 
+For AMD GPUs, you can set `usercontaineropts` section of the SWOP profile. For more information, see SWOP profile schema.
+
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
 
 ## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
@@ -45,6 +47,26 @@ If you are starting the SL and ML nodes by using the `run-sl` script, then the G
 Currently SWOP framework is designed to start ML nodes on Nvidia GPUs. In the future other GPUs may be supported.
 
 You can set `--gpus` under `usrcontaineropts` section for the specific user container in the SWOP profile.
+
+## How can you determine if AMD GPUs are allocated for local training?
+
+You can check for Cuda/Gpu availability from your application code.
+
+**PyTorch:**<br>
+torch.cuda.is_available()<br>
+https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html
+
+**In TensorFlow:**<br>
+tensorflow.test.is_gpu_available()<br>
+https://www.tensorflow.org/api_docs/python/tf/test/is_gpu_available
+
+## What are the additional steps to be followed to enable GPU access for local training?
+
+The additional steps to enable GPUs for local training are as follows:<br> </br>
+    1. Build the user container to enable GPU access in it. Use base image as tensorflow-gpu or Nvidia image with PyTorch
+    installed on it as applicable to ML platform.<br> </br>
+    2. Update SWOP profile `usrcontaineropts` (or) provide run-scripts options as applicable to Nvidia or AMD.<br> </br>
+    3. Create application code to access GPU.
 
 ## <a name="SECTION_NHW_PFS_HSB"/> Can you have heterogeneous ML nodes, with some running on CPU and others on GPU?
 
