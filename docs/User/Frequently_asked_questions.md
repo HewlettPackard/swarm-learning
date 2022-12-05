@@ -111,7 +111,7 @@ Use SWCI command “GET TASKRUNNER STATUS” to know the overall status of the T
 
 One can also use “GET TASKRUNNER PEER STATUS” to display the status for the individual SWOP PEERs that are listening on this TASKRUNNER.
 
--   For RUN\_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
+-   For RUN_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
 -   If there are failed PEERs, using its node UID, one can identify the container name/id from ‘LIST NODES’ command. With container name/id, user can debug the error with docker logs command.
  
 ## <a name="SECTION_IZQ_TFS_HSB"/> What network ports does Swarm Learning use? Can they be customized?
