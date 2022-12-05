@@ -37,16 +37,14 @@ HPE recommends starting up to 4 SLs to 1 SN and scale it up slowly if needed.
 The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nodes can run on Nvidia GPUs by using the GPU version of your underlying ML platform \(Keras/PyTorch\) and following the GPU specific instructions of your ML platform. For more information on starting SL and ML nodes, see *HPE Swarm Learning Installation and Configuration Guide*.
 
 For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SWOP profile. For more information, see [https://docs.docker.com/config/containers/resource_constraints/#gpu](https://docs.docker.com/config/containers/resource_constraints/#gpu).
-
-For AMD GPUs, you can set `usercontaineropts` section of the SWOP profile. For more information, see SWOP profile schema.
-
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
+
+For AMD GPUs, you can set `usercontaineropts` and/or `usrenvvars` section of the SWOP profile. For more information, see [SWOP profile schema](/docs/User/SWOP_profile_schema.md).
+If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate parameters as specified in the [User machine learning container parameters](/docs/Install/Running_Swarm_Learning.md).
 
 ## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
 
 Currently SWOP framework is designed to start ML nodes on Nvidia GPUs and AMD GPUs. In the future other GPUs may be supported.
-
-You can set `--gpus` under `usrcontaineropts` section for the specific user container in the SWOP profile.
 
 ## How can you determine if AMD GPUs are allocated for local training?
 
