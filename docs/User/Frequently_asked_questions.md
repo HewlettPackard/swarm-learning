@@ -44,7 +44,7 @@ If you are starting the SL and ML nodes by using the `run-sl` script, then the G
 
 ## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
 
-Currently SWOP framework is designed to start ML nodes on Nvidia GPUs. In the future other GPUs may be supported.
+Currently SWOP framework is designed to start ML nodes on Nvidia GPUs and AMD GPUs. In the future other GPUs may be supported.
 
 You can set `--gpus` under `usrcontaineropts` section for the specific user container in the SWOP profile.
 
