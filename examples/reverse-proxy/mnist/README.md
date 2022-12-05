@@ -4,7 +4,7 @@ This is single host MNIST example using reverse proxy service parameters with 1 
 
 The following image illustrates a cluster setup for the Reverse Proxy with MNIST example:
 
-![](/docs/User/GUID-D9C8F73B-BAFB-41E2-9B70-02C628836B96-high.png)
+<img width="60%" height="80%" src="/docs/User/GUID-D9C8F73B-BAFB-41E2-9B70-02C628836B96-high.png">
 
 1.  This example uses a SN node. This node is named as **sn-1** and is the Sentinel Node. **sn-1** runs on host 172.1.1.1.
 
