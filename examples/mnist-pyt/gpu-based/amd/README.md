@@ -6,7 +6,7 @@ This example runs MNIST-PYT[1](#) application with AMD GPU based local training 
 When compared to CPU based mnist-pyt example following are the key differences in this example. 
 - User image build uses rocm/pytorch image as base image. Base image needs to be selected such that it support the host AMD setup. Refer https://hub.docker.com/r/rocm/pytorch for more details. 
 - SWOP options needs additional tags to access AMD gpus. Refer Swop profile schema for more details. 
-- Run task command needs additional agruments to be passed in. Refer run task yaml under this example. 
+- Run task command needs additional arguments to be passed in. Refer run task yaml under this example. 
 - User ML application code needs changes to access AMD gpus. 
 
 
