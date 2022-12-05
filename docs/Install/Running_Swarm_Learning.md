@@ -61,10 +61,7 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |`-v, --volume host-path:container-path`|Bind mount a volume.| |
 |`-w, --workdir container-path`|Working directory inside the container.| |
 |`--dns`|The IP address of the custom DNS server. If there are more than one custom DNS servers, then for each DNS, repeat the same argument with different IP address.| |
-|`--rm`|Same as `--no-keep`. Request Docker to automatically remove the container when it exits.| |
-|`--no-rm`|Same as `--keep`. Request Docker to preserve the container after it exits.| |
-|`--keep`|Same as `--no-rm`. Request Docker to preserve the container after it exits.| |
-|`--no-keep`|Same as `--rm`. Request Docker to automatically remove the container when it exits.| |
+|`--rm`|Request Docker to automatically remove the container when it exits.| |
 |`-h, --help`|This \(helpful\) message.| |
 |`--primary-apls-ip <IP address or DNS name>`|The IP address on which the primary Autopass License Server is serving license requests.|None|
 |`--secondary-apls-ip <IP address or DNS name>`|The IP address on which the secondary Autopass License Server is serving license requests.|None|
@@ -95,6 +92,15 @@ NOTE: These options do not apply to the `swarm-learning/bin/stop-swarm` script. 
 |`--ml-name <container name>`\(Optional parameter\)<br>|Name of the Machine Learning container.|
 |`--ml-v <host-path:container-path>`\(Optional parameter\)<br>|Bind mount a volume for the Machine Learning container.|
 |`--ml-e <environmental-variable-name=value>`\(Optional parameter\)<br>|To pass environmental variable to the Machine Learning container.|
+|`--ml-user <uid:gid> -`\(Optional parameter\)<br>|The access privilege with which the ML container needs to be spawned on the host.<br>If `--ml-user` is not provided, then ML container would be spawned with current host user’s `uid:gid`.<br>If only `uid` of the host user is provided, then ML container would be spawned with specified host user’s `uid` and primary `gid`.<br> If `uid:gid` of the host user is provided, then ML container would be spawned with specified host user’s `uid:gid`.|
+|**For AMD GPUs, one may need to use the following parameters:**|Refer for more details: https://developer.amd.com/resources/rocm-learning-center/deep-learning/| 
+|`--ml-device`|Expose host devices to the container, as a list of strings.|None|
+|`--ml-ipc`|Sets the IPC mode for the container.|None|
+|`--ml-shm-size`|Size of `/dev/shm` (for example, 1G).|None|
+|`--ml-group-add`|List of additional group names and/or IDs that the container process will run as.|None|
+|`--ml-cap-add`|Add kernel capabilities.|None|
+|`--ml-security-opt`|A list of string values to customize labels for MLS systems, such as SELinux.|None|
+|`--ml-privileged`|Provides extended privileges to this container.|None|
 
 Also see:
 
