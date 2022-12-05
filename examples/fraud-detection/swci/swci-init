@@ -6,8 +6,8 @@
 
 # SWCI context setup
 EXIT ON FAILURE
-wait for sn1
-create context test-fd sn1
+wait for ip sn1
+create context test-fd with ip sn1
 switch context test-fd
 EXIT ON FAILURE OFF
 
