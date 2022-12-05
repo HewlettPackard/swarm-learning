@@ -13,7 +13,8 @@ Depending on the type of Swarm Learning components that are running on a host, s
 -   \(Optional\). An SWCI API server port that is used by the SWCI node to run a REST based API service. By default, port 30306 is used.
 
 <blockquote>
-    NOTE: If you use different ports other than the default port, you must open those ports accordingly. For instance, in our MNIST example, we are using ports     16000 and 18000 for the SL File server ports, which must be opened.
+    NOTE: If you use different ports other than the default port, you must open those ports accordingly. For instance, in our MNIST example, we are using ports     16000 and 18000 for the SL File server ports, which must be opened.<br>
+    If you use a reverse proxy, you need to expose only the SN peer-to-peer port (30303) for each SN node.
 
 </blockquote>
 
