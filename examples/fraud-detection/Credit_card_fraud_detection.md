@@ -17,7 +17,7 @@ This example shows the Swarm training of the credit card fraud detection model u
 
 The following image illustrates a cluster setup that uses only one host:
 
-![Credit Card Fraud Detection](/docs/User/GUID-BE2185B8-5C3B-4BD3-91FF-9ABC77D0720C-high.png)
+<img width="80%" height="100%" src="/docs/User/GUID-BE2185B8-5C3B-4BD3-91FF-9ABC77D0720C-high.png">
 
 -   This example uses one SN node. The names of the docker containers representing this node is SN1. SN1 is also the Sentinel Node. SN1 runs on the host 172.1.1.1.
 

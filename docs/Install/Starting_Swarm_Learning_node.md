@@ -20,7 +20,7 @@ NOTE:
 |`--sn-api-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SN API Service of associated SN node. Here, Port number is optional.| |
 |`--sn-docker-name <container name>`|Docker container name for the associated Swarm Network node.|None|
 |`--sl-fs-port`|The host port for this Swarm Learning node's File Server.|None|
-|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name for the SL FS Service of associated SL node. Here, Port number is optional.| |
+|`--sl-fs-service <fqdn>:<port number>`|Fully Qualified Domain Name and optional port for this Swarm Learning node's file service.|None |
 |`--device`|Expose host devices to the container, as a list of strings.|None|
 |`--ipc`|Sets the IPC mode for the container.|None|
 |`--shm-size`|Size of `/dev/shm` (for example, 1G).|None|
@@ -28,3 +28,6 @@ NOTE:
 |`--cap-add`|Add kernel capabilities.|None|
 |`--security-opt`|A list of string values to customize labels for MLS systems, such as SELinux.|None|
 |`--privileged`|Provides extended privileges to this container.|None|
+
+
+

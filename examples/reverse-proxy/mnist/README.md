@@ -4,7 +4,7 @@ This is single host MNIST example using reverse proxy service parameters with 1 
 
 The following image illustrates a cluster setup for the Reverse Proxy with MNIST example:
 
-![](/docs/User/GUID-D9C8F73B-BAFB-41E2-9B70-02C628836B96-high.png)
+<img width="60%" height="80%" src="/docs/User/GUID-D9C8F73B-BAFB-41E2-9B70-02C628836B96-high.png">
 
 1.  This example uses a SN node. This node is named as **sn-1** and is the Sentinel Node. **sn-1** runs on host 172.1.1.1.
 
@@ -39,7 +39,7 @@ This example shows the Swarm training of MNIST model using two ML nodes. ML node
     .\examples\reverse-proxy\run-all 172.1.1.1 4m
     ```
 
-    First argument `APLS IP` in this command is a mandatory parameter. Second argument `wait time for sn` if not passed, by default it will wait for 5 minutes. This `wait time for sn` argument is similar to sleep, where `m` denotes minutes.
+    First argument `APLS IP` in this command is a mandatory parameter. Second argument `wait time for sn` if not passed, by default it will wait for 5 minutes. This `wait time for sn` argument is similar to sleep, where `m` denotes minutes. This script waits for SN node to initialize fully within m minutes, before proceeding with the next steps.
 
     This script will take care of starting BIND9 container, NGINX container and rest all of the swarm containers in the sequential manner. All the run-script commands will now take FQDN's as service parameter arguments instead of ports.
 
