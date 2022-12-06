@@ -34,10 +34,12 @@ Error code: 6002, as shown in the following screenshot occurs when Swarm Learnin
    `docker login hub.myenterpriselicense.hpe.com –u <YOUR-HPE-PASSPORT-EMAIL> -p hpe_eval`
 - Pull the signed Swarm Learning images from HPEs Docker Trust Registry (DTR):
    ```
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:<latest Swarm Learning Version (for example, 1.2.0)>
+   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:<latest Swarm Learning Version>
    docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sl:<latest Swarm Learning Version>
    docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/swci:<latest Swarm Learning Version>
    docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swop:<latest Swarm Learning Version>
+   
+   For eg: docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.2.0
    ```
 - Copy the tar file and Docker images to the air-gaped systems.
 
