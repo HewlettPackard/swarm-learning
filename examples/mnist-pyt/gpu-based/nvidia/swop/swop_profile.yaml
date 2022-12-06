@@ -57,6 +57,8 @@ nodes :
             mType : BIND
         slenvvars : null
         usrenvvars : null
+        usrcontaineropts : 
+            - gpus : "all"
     - slnodedef :
         idx : 1
         identity :
@@ -87,3 +89,69 @@ nodes :
             mType : BIND
         slenvvars : null
         usrenvvars : null
+        usrcontaineropts : 
+            - gpus : "device=<GPU UUID>"
+    - slnodedef :
+        idx : 2
+        identity :
+            - attribute :
+                aType : KEY
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-key.pem"
+                tgt : "/swarm-cert/sl-3-key.pem"
+                subPath : null
+            - attribute :
+                aType : CERT
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-cert.pem"
+                tgt : "/swarm-cert/sl-3-cert.pem"
+                subPath : null
+            - attribute :
+                aType : CAPATH
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/ca/capath"
+                tgt : "/swarm-cert/capath"
+                subPath : null
+        slhostname : sl3
+        slhostip   : 172.1.1.1
+        slport : 18000
+        usrhostname : user3
+        privatedata :
+            src: "<CURRENT-PATH>/workspace/mnist-pyt/user3/data-and-scratch"
+            mType : BIND
+        slenvvars : null
+        usrenvvars : null
+        usrcontaineropts : 
+            - gpus : "device=3,5"
+    - slnodedef :
+        idx : 3
+        identity :
+            - attribute :
+                aType : KEY
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-key.pem"
+                tgt : "/swarm-cert/sl-4-key.pem"
+                subPath : null
+            - attribute :
+                aType : CERT
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-cert.pem"
+                tgt : "/swarm-cert/sl-4-cert.pem"
+                subPath : null
+            - attribute :
+                aType : CAPATH
+                mType : BIND
+                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/ca/capath"
+                tgt : "/swarm-cert/capath"
+                subPath : null
+        slhostname : sl4
+        slhostip   : 172.1.1.1
+        slport : 19000
+        usrhostname : user4
+        privatedata :
+            src: "<CURRENT-PATH>/workspace/mnist-pyt/user4/data-and-scratch"
+            mType : BIND
+        slenvvars : null
+        usrenvvars : null
+        usrcontaineropts : 
+            - gpus : "all"

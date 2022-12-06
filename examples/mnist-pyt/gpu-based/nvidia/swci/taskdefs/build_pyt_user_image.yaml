@@ -1,0 +1,18 @@
+######################################################################
+# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+######################################################################
+Name: build_pyt_user_image
+TaskType: MAKE_USER_CONTAINER
+Author: HPESwarm
+Prereq: ROOTTASK
+Outcome: user-image-nvidia-pyt
+Body:
+    BuildContext: sl-cli-lib
+    BuildType: INLINE
+    BuildSteps:
+    - FROM pytorch/pytorch:1.13.0-cuda11.6-cudnn8-runtime
+    - RUN pip install --upgrade pip
+    - RUN mkdir -p /tmp/hpe-swarmcli-pkg
+    - COPY swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl  /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+    - RUN pip install /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+

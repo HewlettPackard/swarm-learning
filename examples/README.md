@@ -15,9 +15,49 @@ NOTE:HPE recommends that users must use their own certificates in actual product
 
 </blockquote>
 
+
 For details of running each example, see the below:
 
--   [MNIST](/examples/mnist/MNIST.md)
--   [MNIST-PYT](/examples/mnist-pyt/MNIST-PYT.md)
--   [CIFAR-10](/examples/cifar10/CIFAR-10.md)
--   [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md)
+### [MNIST](/examples/mnist#-mnist) 
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Mnist dataset
+- ML platform is Tensorflow 
+- SL-ML pairs are spawned using SWOP
+        
+### [MNIST-PYT](/examples/mnist-pyt#mnist-pytorch-example) 
+This example demonstrates swarm learning use case on following setup. 
+Additionally this example has branches to show case **CPU based** and **GPU based (amd, nvidia)** local training of machine learning application. 
+- Based on single host
+- Mnist dataset
+- ML platform is PyTorch 
+- SL-ML pairs are spawned using SWOP
+        
+### [CIFAR-10](/examples/cifar10#-cifar-10)
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Cifar dataset
+- ML platform is Tensorflow
+- SL-ML pairs are spawned using run-sl script
+        
+### [Credit card fraud detection](/examples/fraud-detection#-credit-card-fraud-detection) 
+This example demonstrates swarm learning use case on following setup. 
+- Based on 1 host  
+- Credit card fraud detection dataset
+- ML platform is Tensorflow
+- SL-ML pairs are spawned using SWOP
+        
+### [BreakHis](/examples/breakhis)
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- BreakHis dataset
+- ML platform is Tensorflow
+- SL-ML pairs are spawned using run-sl script
+        
+### [Cancer prediction](/examples/cancer-pred#cancer-prediction) 
+This example demonstrates swarm learning use case on following setup. 
+- Based on 2 hosts  
+- Cancer prediction dataset
+- ML platform is Tensorflow
+- SL-ML pairs are spawned using run-sl script
+        
