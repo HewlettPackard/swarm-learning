@@ -144,9 +144,14 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --usr-dir=workspace/mnist/swop --profile-file-name=swop1_profile.yaml \
 --key=workspace/mnist/cert/swop-1-key.pem \
 --cert=workspace/mnist/cert/swop-1-cert.pem \
---capath=workspace/mnist/cert/ca/capath -e http_proxy= -e \
-https_proxy= --apls-ip=172.1.1.1
+--capath=workspace/mnist/cert/ca/capath \
+-e SWOP_KEEP_CONTAINERS=True \
+-e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
+<blockquote>
+   NOTE: `-e SWOP_KEEP_CONTAINERS=True` is an optional argument, by default it would be `False`. 
+   SWOP_KEEP_CONTAINERS is set to True so that SWOP doesn't remove stopped SL and ML containers. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
+</blockquote>
 
    On host-2, run SWOP node (SWOP2).
 
@@ -159,9 +164,15 @@ https_proxy= --apls-ip=172.1.1.1
    --usr-dir=workspace/mnist/swop --profile-file-name=swop2_profile.yaml \
    --key=workspace/mnist/cert/swop-2-key.pem \
    --cert=workspace/mnist/cert/swop-2-cert.pem \
-   --capath=workspace/mnist/cert/ca/capath -e http_proxy= -e \
-   https_proxy= --apls-ip=172.1.1.1
+   --capath=workspace/mnist/cert/ca/capath \
+   -e SWOP_KEEP_CONTAINERS=True \
+   -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
    ```
+<blockquote>
+   NOTE: `-e SWOP_KEEP_CONTAINERS=True` is an optional argument, by default it would be `False`. 
+   SWOP_KEEP_CONTAINERS is set to True so that SWOP doesn't remove stopped SL and ML containers. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
+</blockquote>
+   
 
 10. On host-1, run SWCI node. It creates, finalizes, and assigns two tasks sequentially for execution:
 
