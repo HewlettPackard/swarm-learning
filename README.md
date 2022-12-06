@@ -6,7 +6,7 @@ Swarm Learning is a decentralized, privacy-preserving Machine Learning framework
 
 ![Swarm_components_architecture](./docs/User/GUID-E80D248E-E754-498E-99D6-67508092F779-high.png)
 
-Swarm Learning framework is made up of various components known as nodes, such as Swarm Learning (SL) nodes, Swarm Network (SN) nodes, Swarm Learning Command Interface (SWCI) nodes, and Swarm Operator (SWOP) nodes. Each node of Swarm Learning is modularized and runs in a separate container. The nodes in this illustration represent different Swarm Learning functionality rather than physical server nodes.
+Swarm Learning framework is made up of various components known as nodes, such as Swarm Learning (SL) nodes, Swarm Network (SN) nodes, Swarm Learning Command Interface (SWCI) nodes, and Swarm Operator (SWOP) nodes. Each node of Swarm Learning is modularized and runs in a separate container. The **nodes represent different Swarm Learning _functionality_ and not physical server nodes**.
 
 -   SL nodes run the core of Swarm Learning. An SL node works in collaboration with all the other SL nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. SL nodes act as an interface between the user model application and other Swarm Learning components. SL nodes take care of distributing and merging model weights in a secured way.
 
@@ -59,15 +59,15 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
 </blockquote>
 
 ## Getting Started 
-  - [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
-  - Clone this repository on all machines where you want to run Swarm Learning.<br> <br>
-    **NOTE**: The suggested default location is to clone it under `/opt/hpe`. It will create a `swarm-learning` folder and copy the files under it. If you clone it in a different location, please make sure to give the same location when running the installer UI, under the `Swarm Installation location` text box - as `<clone-location>/swarm-learning`. For the default case, the UI screen would have `/opt/hpe/swarm-learning` pre-populated. <br>
-    **Caution**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
-  - [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
-  - [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
-  - Execute [MNIST example](/examples/mnist/MNIST.md) 
-  - [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
-  - [Troubleshooting](/docs/User/Troubleshooting.md)
+  1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
+  2. Clone this repository on all machines where you want to run Swarm Learning.<br> <br>
+    **NOTE**: The suggested default location is to clone it under `/opt/hpe`. It will create a `swarm-learning` folder and copy the files under it. If you clone it in a different location, please make sure to give the same location when running the installer UI, for the `Swarm Installation location` text box as "`<clone-location>/swarm-learning`". For the default case, the UI screen would have `/opt/hpe/swarm-learning` pre-populated. <br>
+    **CAUTION**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
+  3. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
+  4. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
+  5. Execute [MNIST example](/examples/mnist/MNIST.md) 
+  6. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  7. [Troubleshooting](/docs/User/Troubleshooting.md)
 
 ## Documentation
 
