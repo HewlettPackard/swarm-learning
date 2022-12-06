@@ -34,7 +34,7 @@ HPE recommends starting up to 4 SLs to 1 SN and scale it up slowly if needed.
 
 ## <a name="SECTION_TQT_LFS_HSB"/> How do you run Swarm Learning on GPU?
 
-The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nodes can run on Nvidia GPUs by using the GPU version of your underlying ML platform \(Keras/PyTorch\) and following the GPU specific instructions of your ML platform. For more information on starting SL and ML nodes, see *HPE Swarm Learning Installation and Configuration Guide*.
+The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nodes can run on GPUs by using the GPU version of your ML platform \(Keras/PyTorch\) and following the GPU specific instructions of your ML platform. For more information on [starting SL and ML nodes](/docs/Install/Running_Swarm_Learning.md).
 
 For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SWOP profile. For more information, see [https://docs.docker.com/config/containers/resource_constraints/#gpu](https://docs.docker.com/config/containers/resource_constraints/#gpu).
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
