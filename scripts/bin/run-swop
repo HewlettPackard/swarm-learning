@@ -46,9 +46,9 @@ progDir=$(realpath $(dirname "${0}"))
 # Source a bunch of code that is common to all our scripts.
 source "${progDir}/common"
 
-funcCallOrder=("Common" "APLS" "UserID" "SpiffeID" "Component")
+funcCallOrder=("Common" "Docker" "APLS" "UserID" "SpiffeID" "Component")
 
-# Used by printCommonUsage.
+# Used by onCommonBatchEnd and printCommonUsage.
 defaultImageName="${swarmDockerHub}/${swarmOrg}/${swopRepoName}"
 defaultImageTag="${swarmVer}"
 
@@ -76,7 +76,27 @@ printComponentUsage()
     printf -- "\tnumeric user id of the user \n"
     printf -- "\tthe user id to be used for SWOP user\n"
     printf -- "\tDefault: invoking user id\n\n" 
-    
+
+    printf -- " NOTE: \n"
+    printf -- " Usage of all the below SN related options --sn-ip, --sn-api-port \n"
+    printf -- " and --sn-api-service are conditionally mandatory. Options specified \n"
+    printf -- " in swop profile takes precedence over these options in run swop script \n"
+    printf -- " Specifying these options either in swop profile or as run swop arguments is mandatory. \n\n"
+
+    printf -- "--sn-ip <IP address or DNS name>\n"
+    printf -- "\tThe IP address or DNS name of the host system on which the\n"
+    printf -- "\tSwarm Network node with which this Swarm Learning node must.\n"
+    printf -- "\tassociate, is running.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sn-api-port <port number>\n"
+    printf -- "\tHost port for the API Server of the associated Swarm Network node.\n"
+    printf -- "\tDefault: None\n\n"
+
+    printf -- "--sn-api-service <Fully Qualified Domain Name[:port]>\n"
+    printf -- "\tFQDN and optional port for the API Service of the associated Swarm Network node.\n"
+    printf -- "\tDefault: None\n\n"
+
     return 0
 }
 
@@ -91,12 +111,18 @@ processComponentBatchOpt()
     case "${opt}" in
         --usr-dir) checkAndAssign "${opt}" "${optarg}";;            
         --profile-file-name) checkAndAssign "${opt}" "${optarg}";;
-        --docker-group-id) checkAndAssign "${opt}" "${optarg}"
+        --docker-group-id) 
+            checkAndAssign "${opt}" "${optarg}"
             re='^[0-9]+$'
-            [[ ! "${optarg}" =~ ${re} ]] && error "${opt}: ${optarg}: bad docker group-id";;
-        --swop-uid) checkAndAssign "${opt}" "${optarg}"
+            [[ ! "${optarg}" =~ ${re} ]] && error "${opt}: ${optarg}: bad docker group-id"
+            ;;
+        --swop-uid) 
+            checkAndAssign "${opt}" "${optarg}"
             re='^[0-9]+$'
-            [[ ! "${optarg}" =~ ${re} ]] && error "${opt}: ${optarg}: bad user id";;
+            [[ ! "${optarg}" =~ ${re} ]] && error "${opt}: ${optarg}: bad user id"
+            ;;
+        --sn-@(api-@(port|service)|ip))
+            checkAndAssign "${opt}" "${optarg}";;
         *) unprocessedOpts+=("${origParam}"); nShift=1;;
     esac
 
@@ -115,8 +141,11 @@ onTrainEnd()
     # check if profile file exists
     [[ ! -f "${usrDir}/${profileFileName}" ]] && error "--profile-file-name: ${profileFileName}: bad profile file"
 
-    [[ -n "$(realpath "${usrDir}")" ]] && mounts+=(-v ""$(realpath "${usrDir}")":${containerUsrDir}:rw")
-    mounts+=(-v "${containerDockerSock}:${containerDockerSock}:rw")
+    [[ -n "$(realpath "${usrDir}")" ]] && appendArrayVar "" dockerOpts            \
+        "--volume="$(realpath "${usrDir}")":${containerUsrDir}:rw"
+    
+    appendArrayVar "" dockerOpts "--volume=${containerDockerSock}:${containerDockerSock}:rw"
+
     # If not passed assign the invoking user as the SWOP_UID
     [[ -z "${swopUid}" ]] && swopUid=$(id -u)
     # Default the group id of the user running the container to the current user group id.
@@ -126,11 +155,20 @@ onTrainEnd()
 
     # If not passed, get the docker group id using getent group docker command
     [[ -z "${dockerGroupId}" ]] && dockerGroupId=$(getent group docker | cut -d':' -f3)
-    
-    envvar+=(-e "SWOP_UID=${swopUid}")
-    envvar+=(-e "SWOP_GID=${userGroupId}")
-    envvar+=(-e "SWOP_DOCKER_GID=${dockerGroupId}")
-    envvar+=(-e "SWOP_PROFILE=${profileFileName}")
+
+
+    appendArrayVar "" dockerOpts                    \
+        "--env=SWOP_UID=${swopUid}"                 \
+        "--env=SWOP_GID=${userGroupId}"             \
+        "--env=SWOP_DOCKER_GID=${dockerGroupId}"    \
+        "--env=SWOP_PROFILE=${profileFileName}"
+
+    [[ -n "${snIp}" ]] &&           \
+        appendArrayVar "" dockerOpts "--env=SN_NODE_IP=${snIp}"
+    [[ -n "${snApiPort}" ]] &&      \
+        appendArrayVar "" dockerOpts "--env=SN_API_SERVER_PORT=${snApiPort}"
+    [[ -n "${snApiService}" ]] &&   \
+        appendArrayVar "" dockerOpts "--env=SN_API_SERVICE=${snApiService}"
 
     cmd+=("${unprocessedOpts[@]}")
     unprocessedOpts=()

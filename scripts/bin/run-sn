@@ -76,11 +76,12 @@ progDir=$(realpath $(dirname "${0}"))
 # Source a bunch of code that is common to all our scripts.
 source "${progDir}/common"
 
-funcCallOrder=("Common" "APLS" "UserID" "SpiffeID" "Component")
+funcCallOrder=("Common" "Docker" "APLS" "UserID" "SpiffeID" "Component")
 
-# Used by printCommonUsage.
+# Used by onCommonBatchEnd and printCommonUsage.
 defaultImageName="${swarmDockerHub}/${swarmOrg}/${snRepoName}"
 defaultImageTag="${swarmVer}"
+
 
 internalP2PPort=30303
 defaultAPIPort=30304
@@ -110,13 +111,25 @@ printComponentUsage()
     printf -- "\tHost port for the Sentinel Swarm Network node's API Server.\n"
     printf -- "\tDefault: None\n\n"
 
+    printf -- "--sentinel-api-service <Fully Qualified Domain Name[:port]>\n"
+    printf -- "\tFQDN and optional port for the Sentinel Swarm Network node's API Service.\n"
+    printf -- "\tDefault: None\n\n"
+
     printf -- "--sn-api-port <port number>\n"
     printf -- "\tHost port for this Swarm Network node's API Server.\n"
     printf -- "\tDefault: 30304\n\n"
 
+    printf -- "--sn-api-service <Fully Qualified Domain Name[:port]>\n"
+    printf -- "\tFQDN and optional port for this Swarm Network node's API Service.\n"
+    printf -- "\tDefault: None\n\n"
+
     printf -- "--sn-p2p-port <port number>\n"
     printf -- "\tHost port for this Swarm Network node's P2P communications.\n"
     printf -- "\tDefault: 30303\n\n"
+
+    printf -- "--sn-p2p-service <Fully Qualified Domain Name[:port]>\n"
+    printf -- "\tFQDN and optional port for this Swarm Network node's P2P Service.\n"
+    printf -- "\tDefault: None\n\n"
 
     return 0
 }
@@ -132,9 +145,8 @@ processComponentBatchOpt()
     case "${opt}" in
         --@(host|sentinel)-ip) checkAndAssign "${opt}" "${optarg}";;
         --sentinel) checkAndAssign "${opt}" "1"; nShift=1;;
-        --sentinel-api-port) checkAndAssign "${opt}" "${optarg}";;
-        --sn-@(api|p2p)-port) checkAndAssign "${opt}" "${optarg}";;
-
+        --sentinel-api-@(port|service)) checkAndAssign "${opt}" "${optarg}";;
+        --sn-@(api|p2p)-@(port|service)) checkAndAssign "${opt}" "${optarg}";;
         *) unprocessedOpts+=("${origParam}"); nShift=1;;
     esac
 
@@ -144,34 +156,53 @@ processComponentBatchOpt()
 
 onTrainEnd()
 {
-    [[ -z "${hostIp}" ]] && error "mandatory parameter --host-ip not specified"
-    [[ -z "${sentinel}" && -z "${sentinelIp}" ]] && \
+    # If both the services are passed then HostIp is not a 
+    # mandatory parameter. If only one port used as service
+    # and other port as port itself then HostIp is required
+    [[ -z "${hostIp}" && -z "${snApiService}" ]] && \
+        error "mandatory parameter --host-ip not specified"
+    [[ -z "${hostIp}" && -z "${snP2pService}" ]] && \
+        error "mandatory parameter --host-ip not specified"
+
+    # For a sentinel node that is running as service, instead of sentinelIp
+    # sentinelApiService is required to run a non-sentinel node.
+    [[ -z "${sentinel}" && -z "${sentinelIp}" && -z "${sentinelApiService}" ]] && \
         error "either --sentinel or --sentinel-ip must be specified"
 
     if [[ -n "${hostIp}" ]]
     then
-        envvar+=(-e "THIS_NODE_IP=${hostIp}")
-    fi
-
-    [[ -n "${sentinelIp}" ]] && envvar+=(-e "SENTINEL_NODE_IP=${sentinelIp}")
-    [[ -n "${sentinelApiPort}" ]] && \
-        envvar+=(-e "SENTINEL_API_SERVER_PORT=${sentinelApiPort}")
-    if [[ -n "${snApiPort}" ]]
-    then
-        envvar+=(-e "API_SERVER_PORT=${snApiPort}")
-        ports+=(-p "${snApiPort}:${snApiPort}")
+        appendArrayVar "" dockerOpts "--env=THIS_NODE_IP=${hostIp}"
     fi
     
-    if [[ -n "${sentinel}" ]]
+    [[ -n "${sentinel}" ]] && appendArrayVar "" dockerOpts              \
+        "--env=SN_I_AM_SENTINEL=${sentinel}"
+
+    [[ -n "${sentinelIp}" ]] && appendArrayVar "" dockerOpts            \
+        "--env=SENTINEL_NODE_IP=${sentinelIp}"
+
+    [[ -n "${sentinelApiPort}" ]] && appendArrayVar "" dockerOpts       \
+        "--env=SENTINEL_API_SERVER_PORT=${sentinelApiPort}"
+
+    [[ -n "${sentinelApiService}" ]] && appendArrayVar "" dockerOpts    \
+        "--env=SENTINEL_API_SERVICE=${sentinelApiService}"
+
+    if [[ -n "${snApiPort}" ]]
     then
-        envvar+=(-e "SN_I_AM_SENTINEL=${sentinel}")
+        appendArrayVar "" dockerOpts "--env=SN_API_SERVER_PORT=${snApiPort}"
+        appendArrayVar "" dockerOpts "--publish=${snApiPort}:${snApiPort}"
     fi
+
+    [[ -n "${snApiService}" ]] && appendArrayVar "" dockerOpts          \
+        "--env=SN_API_SERVICE=${snApiService}"
 
     if [[ -n "${snP2pPort}" ]]
     then
-        envvar+=(-e "SN_ETH_PORT_EXT=${snP2pPort}")
-        ports+=(-p "${snP2pPort}:${internalP2PPort}")
+        appendArrayVar "" dockerOpts "--env=SN_ETH_PORT_EXT=${snP2pPort}"
+        appendArrayVar "" dockerOpts "--publish=${snP2pPort}:${internalP2PPort}"
     fi
+
+    [[ -n "${snP2pService}" ]] && appendArrayVar "" dockerOpts          \
+        "--env=SN_ETH_P2P_SERVICE=${snP2pService}"
 
     cmd+=("${unprocessedOpts[@]}")
     unprocessedOpts=()
