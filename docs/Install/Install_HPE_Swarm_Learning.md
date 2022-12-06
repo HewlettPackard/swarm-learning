@@ -28,7 +28,7 @@ run one of the Swarm Learning installer based on your platform (Linux, Windows, 
      :    If enabled, displays the detail message on the CLI during the installation.<br> To enable, use the command, `-logs verbose`.
 
      **-version**
-     :    This option defines the version of docker images that must be installed. The default value is 1.1.0.<br> Example, `-version 0.3.0`
+     :    This option defines the version of docker images that must be installed. The default value is the latest current version of Swarm Learning.<br> Example, `-version 0.3.0`
 
      **-timeoutDuration**
      :    Defines installer timeout duration for individual installation tasks. The default value is 300 seconds.<br> Example, `-timeoutDuration 600`

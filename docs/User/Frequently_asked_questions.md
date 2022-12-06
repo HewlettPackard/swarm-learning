@@ -37,14 +37,34 @@ HPE recommends starting up to 4 SLs to 1 SN and scale it up slowly if needed.
 The SL, SN, SWOP, and SWCI nodes utilize only the CPUs. However, the user ML nodes can run on Nvidia GPUs by using the GPU version of your underlying ML platform \(Keras/PyTorch\) and following the GPU specific instructions of your ML platform. For more information on starting SL and ML nodes, see *HPE Swarm Learning Installation and Configuration Guide*.
 
 For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SWOP profile. For more information, see [https://docs.docker.com/config/containers/resource_constraints/#gpu](https://docs.docker.com/config/containers/resource_constraints/#gpu).
-
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
+
+For AMD GPUs, you can set `usercontaineropts` and/or `usrenvvars` section of the SWOP profile. For more information, see [SWOP profile schema](/docs/User/SWOP_profile_schema.md).
+If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate parameters as specified in the [User machine learning container parameters](/docs/Install/Running_Swarm_Learning.md).
 
 ## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
 
-Currently SWOP framework is designed to start ML nodes on Nvidia GPUs. In the future other GPUs may be supported.
+Currently SWOP framework is designed to start ML nodes on Nvidia GPUs and AMD GPUs. In the future other GPUs may be supported.
 
-You can set `--gpus` under `usrcontaineropts` section for the specific user container in the SWOP profile.
+## How can you determine if AMD GPUs are allocated for local training?
+
+You can check for Cuda/Gpu availability from your application code.
+
+**PyTorch:**<br>
+torch.cuda.is_available()<br>
+https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html
+
+**In TensorFlow:**<br>
+tensorflow.test.is_gpu_available()<br>
+https://www.tensorflow.org/api_docs/python/tf/test/is_gpu_available
+
+## What are the additional steps to be followed to enable GPU access for local training?
+
+The additional steps to enable GPUs for local training are as follows:<br> </br>
+    1. Build the user container to enable GPU access in it. Use base image as tensorflow-gpu or Nvidia image with PyTorch
+    installed on it as applicable to ML platform.<br> </br>
+    2. Update SWOP profile `usrcontaineropts` (or) provide run-scripts options as applicable to Nvidia or AMD.<br> </br>
+    3. Create application code to access GPU.
 
 ## <a name="SECTION_NHW_PFS_HSB"/> Can you have heterogeneous ML nodes, with some running on CPU and others on GPU?
 
@@ -64,6 +84,34 @@ If you are using SWOP to launch concurrent training, you need to have separate S
 
 SWCI is designed to work with several swarm networks at once. Therefore, you can create a context and switch to that context to execute commands. Each context identifies which SN the SWCI must connect to.
 
+## What are the supported SWCI commands?
+
+SWCI has a built-in inline help, that lists all supported commands and further one can see help for each command.
+
+For Example,
+
+```
+SWCI:0 > HELP
+    ASSIGN TASK
+    CD
+    CREATE CONTEXT
+    CREATE CONTRACT
+    …
+
+SWCI:1 > HELP CREATE CONTRACT
+    CREATE CONTRACT <TrainingContractName : string>
+Registers the specified SL Training Contract into the Swarm Learning Network.
+
+```
+## How to debug error with command “ASSIGN TASK TO TASKRUNNER”? 
+
+Use SWCI command “GET TASKRUNNER STATUS” to know the overall status of the TASK execution.
+
+One can also use “GET TASKRUNNER PEER STATUS” to display the status for the individual SWOP PEERs that are listening on this TASKRUNNER.
+
+-   For RUN_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
+-   If there are failed PEERs, using its node UID, one can identify the container name/id from ‘LIST NODES’ command. With container name/id, user can debug the error with docker logs command.
+ 
 ## <a name="SECTION_IZQ_TFS_HSB"/> What network ports does Swarm Learning use? Can they be customized?
 
 Each SN node requires two network ports for incoming connections from other SN, SL, SWCI, and SWOP nodes.

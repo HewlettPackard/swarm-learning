@@ -1,6 +1,6 @@
 # <a name="GUID-41298B6F-BF19-4873-A5AE-1DA0E1CFB358"/> MNIST-PYT
 
-This example runs MNIST-PYT[1](#) on the Swarm Learning platform. It uses PyTorch as the backend. The code for this example is modified to run on a Swarm Learning platform.
+This example runs MNIST-PYT [[1](https://yann.lecun.com/exdb/mnist/)] on the Swarm Learning platform. It uses PyTorch as the backend. The code for this example is modified to run on a Swarm Learning platform.
 
 This example uses one training batch and one test batch. The files for both these batches are in an archive file, called `mnist.npz`.
 
@@ -14,7 +14,7 @@ The Machine Learning program, after conversion to Swarm Learning for the PyTorch
 
 This example shows the Swarm training of MNIST model using four ML nodes. ML nodes along with SL nodes are automatically spawned by SWOP nodes running on two different hosts. Swarm training is initiated by SWCI node and orchestrated by two SN nodes running in different hosts. This example also shows how private data, private scratch area and shared model can be mounted to ML nodes for Swarm training.
 
-The following image illustrates a cluster setup for the MNIST example:![Four cluster setup](/docs/User/GUID-DC68E962-E2A0-47C5-9345-0A7448C42AD6-high.png)
+The following image illustrates a cluster setup for the MNIST example:<img width="80%" height="100%" src="/docs/User/GUID-DC68E962-E2A0-47C5-9345-0A7448C42AD6-high.png">
 
 -   This example uses two SN nodes. The names of the docker containers representing these two nodes are SN1 and SN2. SN1 is the Sentinel Node. SN1 runs on host 172.1.1.1 and SN2 runs on host 172.2.2.2.
 
