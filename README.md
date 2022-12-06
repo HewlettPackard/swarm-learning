@@ -3,8 +3,7 @@
 #### Product version: 1.2.0
 
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
-
-![Swarm_components_architecture](./docs/User/GUID-E80D248E-E754-498E-99D6-67508092F779-high.png)
+<img width="65%" height="65%" src="/docs/User/GUID-E80D248E-E754-498E-99D6-67508092F779-high.png">
 
 Swarm Learning framework is made up of various components known as nodes, such as Swarm Learning (SL) nodes, Swarm Network (SN) nodes, Swarm Learning Command Interface (SWCI) nodes, and Swarm Operator (SWOP) nodes. Each node of Swarm Learning is modularized and runs in a separate container. The **nodes represent different Swarm Learning _functionality_ and not physical server nodes**.
 
