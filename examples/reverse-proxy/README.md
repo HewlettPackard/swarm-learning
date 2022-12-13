@@ -4,7 +4,7 @@
 
 1.  Reverse proxy examples use NGINX and BIND9 as custom Docker images to build it. Both of these images use Ubuntu 22.04 as the base image, along with some image-specific apt-get packages. Make sure these packages and images are downloaded properly while running the scripts within these examples.
 
-2.  Before running these examples, make sure APLS is already running.
+2.  Before running these examples, make sure APLS is already running. Also, ensure wheel file with its symbolic link are placed under the `lib` directory.
 
 
 **NOTE:**
