@@ -1,0 +1,22 @@
+######################################################################
+## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+######################################################################
+
+
+FROM ubuntu:22.04
+
+
+RUN apt-get update              \
+ && apt-get install             \
+    ca-certificates             \
+    curl                        \
+    gnupg2                      \
+    lsb-release                 \
+    nginx                       \
+    nginx-extras                \
+    ubuntu-keyring              \
+    --no-install-recommends -y
+
+
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]
