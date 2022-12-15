@@ -52,10 +52,10 @@ SNo | FQDN | IP with Port |
 2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `wait time for sn`.
 
     ``` {#CODEBLOCK_LQT_DNY_NVB}
-    .\examples\reverse-proxy\run-all 172.1.1.1 172.1.1.1 4m
+    .\examples\reverse-proxy\run-all 172.1.1.1 172.1.1.1
     ```
 
-    First argument `APLS IP` to this script is a mandatory parameter. In the above command this argument is passed as current host ip assuming apls is running on the same host. Second argument is the current host ip and is used for the nginx and dns configurations. Third argument `snWaitTime` if not passed, by default it will wait for 5 minutes. This `snWaitTime` argument is similar to sleep, where `m` means minutes. This script waits for SN node to initialize fully within m minutes, before proceeding with the next steps.
+    First argument `APLS_IP` is the ip address of the APLS and is a mandatory parameter. In the above command this argument is passed as current host ip assuming apls is running on the same host. Second argument `Host_IP` is the ip address of the current host and is used for the nginx and dns configurations.
 
     This script will take care of starting BIND9 container, NGINX container and rest all of the swarm containers in a sequential manner. All of the run commands will now take FQDN's as its service parameter arguments instead of ip and ports.
 
