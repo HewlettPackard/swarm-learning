@@ -200,7 +200,7 @@ do
     isUp=`curl -sk --cert ${workingDir}/cert/sn-1-cert.pem --key ${workingDir}/cert/sn-1-key.pem "https://${Host_IP}:30304/is_up"`
     if [[ ${retries} -gt 20 ]] 
     then
-        echo "Exiting: Failed to start SN API service within the time limit of 5 minutes" 
+        echo "Exiting: Failed to start SN API service within the time limit of 10 minutes" 
         exit 1;
     fi 
     if [[ ${isUp} != "OK" ]]
