@@ -3,6 +3,8 @@
 
 2. Install the Swarm Learning product using the Web UI installer.  Refer [Web UI installation](/docs/Install/HPE_Swarm_Learning_installation.md)
 
+3. After Web UI completes its installation, verify if swarm-learning wheel file and its symbolic link are placed under the `lib` directory.
+
 
 ## Swarm Learning Examples
 
