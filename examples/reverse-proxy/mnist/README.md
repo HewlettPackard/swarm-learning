@@ -49,10 +49,10 @@ SNo | FQDN | IP with Port |
     cd swarm-learning
     ```
 
-2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `wait time for sn`.
+2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `Host IP`.
 
     ``` {#CODEBLOCK_LQT_DNY_NVB}
-    .\examples\reverse-proxy\run-all 172.1.1.1 172.1.1.1
+    .\examples\reverse-proxy\mnist\run-all 172.1.1.1 172.1.1.1
     ```
 
     First argument `APLS_IP` is the ip address of the APLS and is a mandatory parameter. In the above command this argument is passed as current host ip assuming apls is running on the same host. Second argument `Host_IP` is the ip address of the current host and is used for the nginx and dns configurations.
@@ -72,7 +72,7 @@ SNo | FQDN | IP with Port |
 4.  On host-1, to clean up, run the `scripts/bin/stop-swarm` script on the host system to stop and remove the swarm container nodes of the previous run. If needed, take a backup of the container logs. As this example builds and starts Bind9 and Nginx, please remove their respective images and containers. Finally, remove docker volume (`sl-cli-lib`) and delete the `workspace` directory..
 
 
-**Parent topic:**[Examples using reverse proxy](GUID-DD2A624E-30B8-4FCD-A23F-014AE0D76452.md)
+**Parent topic:**[Examples using reverse proxy](../README.md)
 
 [1]	Y. LeCun, C. Cortes and C. J. Burges, "THE MNIST DATABASE," [Online]. Available: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)  
 
