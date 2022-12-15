@@ -21,9 +21,6 @@ Host_IP=$2
 [[ -z "$2" ]] && { echo "IP address of the Host 1 is empty" ; exit 1; }
 echo "HOST 1 IP: "${Host_IP}
 
-# Checks for the wait time of sn. If not passed by default it waits for 5 minutes 
-[[ -n "${3}" ]] && snWaitTime=${3} || snWaitTime="5m"
-
 
 if [[ -f "$(pwd)/scripts/bin/common" ]]
 then
@@ -194,7 +191,30 @@ echo "#################### Starting SN ####################"
     --cert=${workingDir}/cert/sn-1-cert.pem             \
     --capath=${workingDir}/cert/ca/capath
 [[ $? -ne 0 ]] && exit 1
-sleep ${snWaitTime}
+
+# wait for SN API service to start
+retries=1
+isUp=''
+while [[ ${isUp} != "OK" ]]
+do
+    isUp=`curl -sk --cert ${workingDir}/cert/sn-1-cert.pem --key ${workingDir}/cert/sn-1-key.pem "https://${Host_IP}:30304/is_up"`
+    if [[ ${retries} -gt 20 ]] 
+    then
+        echo "Exiting: Failed to start SN API service within the time limit of 5 minutes" 
+        exit 1;
+    fi 
+    if [[ ${isUp} != "OK" ]]
+    then
+        echo "Waiting for the SN API service to start ....."
+        retries=$((retries+1)) 
+        sleep 30 
+    fi
+done
+
+if [[ ${isUp} == "OK" ]]
+then
+    echo "SN API service is Started"
+fi
 
 echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \
