@@ -18,8 +18,8 @@ APLS_IP=$1
 echo "APLS IP: "${APLS_IP}
 
 Host_IP=$2
-[[ -z "$2" ]] && { echo "IP address of the Host 1 is empty" ; exit 1; }
-echo "HOST 1 IP: "${Host_IP}
+[[ -z "$2" ]] && { echo "IP address of the Host is empty" ; exit 1; }
+echo "HOST IP: "${Host_IP}
 
 
 if [[ -f "$(pwd)/scripts/bin/common" ]]
