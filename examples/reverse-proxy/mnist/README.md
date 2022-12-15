@@ -6,26 +6,42 @@ The following image illustrates a cluster setup for the Reverse Proxy with MNIST
 
 <img width="60%" height="80%" src="/docs/User/GUID-D9C8F73B-BAFB-41E2-9B70-02C628836B96-high.png">
 
-1.  This example uses a SN node. This node is named as **sn-1** and is the Sentinel Node. **sn-1** runs on host 172.1.1.1.
+1.  This example uses a SN node. This is a sentinel node and is named as **sn-1** that runs on host 172.1.1.1.
 
 2.  SL and ML nodes are automatically spawned by SWOP node during training.
 
-3.  This example uses a SWOP node that connects to SN node. The name of the docker container representing this SWOP node is **swop-1**. **swop-1** runs on host 172.1.1.1.
+3.  This example uses a SWOP node that connects to SN node. The name of the docker container representing this SWOP node is **swop-1**. This container also runs on host 172.1.1.1.
 
-4.  Training is initiated by SWCI node \(**swci-1**\) that runs on host 172.1.1.1.
+4.  Training is initiated by SWCI node \(**swci-1**\) that also runs on host 172.1.1.1.
 
-5.  This example assumes that the License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
+5.  This example assumes License Server already running on the same host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
 
-This example runs Reverse Proxy with MNIST [1] on the Swarm Learning platform. It uses TensorFlow as the backend. The code for this example is taken from [2] and modified to run on a Swarm Learning platform.
+This example runs Reverse Proxy with MNIST [1] on the Swarm Learning platform with an ML program that uses TensorFlow as the backend. The ML code for this example is taken from [2] and modified to run on a Swarm Learning platform.
 
-This example shows the MNIST using reverse proxy to mimic real world behaviour. This example uses BIND9 as the DNS server and NGINX as the reverse proxy server and builds both the docker images with suitable configurations. \(Please refer to the respective docker files\). This example has automated the end-to-end running of MNIST, and includes starting the BIND9 and NGINX containers for user convenience. For more information on arguments passed to the respective run scripts of swarm components, see `run-all` script.
+As this example runs the MNIST example using reverse proxy, to mimic real-world behavior this example uses BIND9 as the DNS server and NGINX as the reverse proxy server. This example initially builds both the docker images and starts the respective containers with suitable configurations. \(Please refer to the respective docker files\). For user convenience, this example has end to end automated the flow of running mnist example that includes starting of the BIND9 and NGINX containers. Please refer to `run-all` script to know the arguments passed to the respective run scripts of swarm components.
 
-This example uses one training batch and one test batch. Both batch files are stored in an archive file called `mnist.npz`. The Machine Learning program, after conversion to Swarm Learning for the TensorFlow-based Keras platform, is in `examples/reverse-proxy/mnist/model` and the TensorFlow-based file name is `mnist tf.py`.
+This example uses one training batch and one test batch. The files for both these batches are in an archive file, called mnist.npz. The Machine Learning program, after conversion to Swarm Learning for the TensorFlow-based Keras platform, is in `examples/reverse-proxy/mnist/model`. The TensorFlow-based file is called `mnist_tf.py`.
 
-This example shows the Swarm training of MNIST model using two ML nodes. ML nodes are automatically spawned by SWOP node. Swarm training is initiated by SWCI node and orchestrated by a SN node. This example also shows how private data and shared model can be mounted to ML nodes for Swarm training. For more information, see the profile files and task definition files placed under `examples/reverse-proxy/mnist/swop` and `examples/reverse-proxy/mnist/swci` folders, respectively.
+This example shows the Swarm training of MNIST model using two Machine Learning (ML) nodes. Machine Learning nodes are automatically spawned by Swarm Operators (SWOP) node. Swarm training is initiated by Swarm Command Interface (SWCI) node and orchestrated by a Swarm Network (SN) node. This example also shows how private data and shared model can be mounted to Machine Learning nodes for Swarm training. For details, see the profile files and task definition files placed under `examples/reverse-proxy/mnist/swop` and `examples/reverse-proxy/mnist/swci` folders respectively.
 
-## Running the MNIST example
+## IP mapping with FQDNs in Bind9 Container
+SNo | FQDN | IP Address |
+--- | --- | --- | 
+1 | api.sn-1.swarm | 172.1.1.1 | 
+2 | p2p.sn-1.swarm | 172.1.1.1 | 
+3 | fs.sl-1.swarm | 172.1.1.1 | 
+4 | fs.sl-2.swarm | 172.1.1.1 | 
+
+## NGINX Configuration
+SNo | FQDN | IP with Port |
+--- | --- | --- | 
+1 | api.sn-1.swarm | 172.1.1.1:30304 | 
+2 | p2p.sn-1.swarm | 172.1.1.1:30303 | 
+3 | fs.sl-1.swarm | 172.1.1.1:40001 | 
+4 | fs.sl-2.swarm | 172.1.1.1:40002 | 
+
+## Running the MNIST example using Reverse Proxy
 
 1.  On host-1, navigate to swarm-learning folder.
 
@@ -36,12 +52,12 @@ This example shows the Swarm training of MNIST model using two ML nodes. ML node
 2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `wait time for sn`.
 
     ``` {#CODEBLOCK_LQT_DNY_NVB}
-    .\examples\reverse-proxy\run-all 172.1.1.1 4m
+    .\examples\reverse-proxy\run-all 172.1.1.1 172.1.1.1
     ```
 
-    First argument `APLS IP` in this command is a mandatory parameter. Second argument `wait time for sn` if not passed, by default it will wait for 5 minutes. This `wait time for sn` argument is similar to sleep, where `m` denotes minutes. This script waits for SN node to initialize fully within m minutes, before proceeding with the next steps.
+    First argument `APLS_IP` is the ip address of the APLS and is a mandatory parameter. In the above command this argument is passed as current host ip assuming apls is running on the same host. Second argument `Host_IP` is the ip address of the current host and is used for the nginx and dns configurations.
 
-    This script will take care of starting BIND9 container, NGINX container and rest all of the swarm containers in the sequential manner. All the run-script commands will now take FQDN's as service parameter arguments instead of ports.
+    This script will take care of starting BIND9 container, NGINX container and rest all of the swarm containers in a sequential manner. All of the run commands will now take FQDN's as its service parameter arguments instead of ip and ports.
 
     **NOTE:** SN-P2P-PORT still needs 30303 port in the host machine, where SN container runs.
 
@@ -51,9 +67,9 @@ This example shows the Swarm training of MNIST model using two ML nodes. ML node
     SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
     ```
 
-    The final Swarm model is saved inside `workspace/reverse-proxy/mnist/model` directory on host-1. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continue to run.
+    The final Swarm model is saved inside `workspace/reverse-proxy/mnist/model` directory on host-1. All the dynamically spawned SL and ML nodes exits after Swarm training.
 
-4.  On host-1, to clean-up, run the `scripts/bin/stop-swarm` script to stop and remove the swarm container nodes of the previous run. If required, backup the container logs. This example builds and starts BIND9 and NGINX, so remove their respective images and containers. Then, remove docker volume \(`sl-cli-lib`\) and delete the `workspace` directory.
+4.  On host-1, to clean up, run the `scripts/bin/stop-swarm` script on the host system to stop and remove the swarm container nodes of the previous run. If needed, take a backup of the container logs. As this example builds and starts Bind9 and Nginx, please remove their respective images and containers. Finally, remove docker volume (`sl-cli-lib`) and delete the `workspace` directory..
 
 
 **Parent topic:**[Examples using reverse proxy](GUID-DD2A624E-30B8-4FCD-A23F-014AE0D76452.md)
