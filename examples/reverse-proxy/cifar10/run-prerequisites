@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+######################################################################
+## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+######################################################################
+
+HOST_IDX=$1
+[[ -z "$1" ]] && { echo "Host Index is empty" ; exit 1; }
+echo "Host Index: "${HOST_IDX}
+
+# Create a workspace to run this example
+workingDir=$(pwd)/workspace/reverse-proxy/cifar10
+mkdir -p ${workingDir}
+reverseProxyCifarDir=$(pwd)/examples/reverse-proxy/cifar10
+
+# Copy files into the worksapce
+cp -r ${reverseProxyCifarDir}/swci ${reverseProxyCifarDir}/swop ${workingDir}/
+cp -r ${reverseProxyCifarDir}/model $(pwd)/examples/utils/gen-cert ${workingDir}/
+
+# Copy run task file to tmp location. To keep the path same between the hosts.
+mkdir -p /tmp/reverse-proxy/cifar10/model
+cp ${reverseProxyCifarDir}/model/cifar10.py /tmp/reverse-proxy/cifar10/model/cifar10.py
+#cp -r ${reverseProxyCifarDir}/model/ /tmp/reverse-proxy/cifar10/
+
+# Generates self-signed certificates on the workspace. 
+generateCertificates()
+{
+    "./workspace/reverse-proxy/cifar10/gen-cert"      \
+    -e reverse-proxy/cifar10                          \
+    -i ${HOST_IDX}
+}
+
+# Creates volume sl-cli-lib and moves the whl file in to it.
+moveWhlToVolume()
+{
+    docker volume rm sl-cli-lib
+    docker volume create sl-cli-lib
+    docker container create --name helper -v sl-cli-lib:/data hello-world
+    docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
+    docker rm helper
+}
+if [[ -f "$(pwd)/lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl" ]]
+then
+    echo "Wheel file found in the desired location."
+else
+    echo "Error: It is required to keep the whl file and its symbolic link in the lib folder of this base(swarm-learning) directory."
+    exit 1; 
+fi
+moveWhlToVolume
+generateCertificates

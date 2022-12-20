@@ -1,0 +1,63 @@
+######################################################################
+## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+######################################################################
+
+# Assumption : SWOP is already running
+
+# SWCI context setup
+EXIT ON FAILURE
+wait for service api.sn-1.swarm
+create context example with service api.sn-1.swarm
+switch context example
+EXIT ON FAILURE OFF
+
+#Change to the directory where we are mounting the host
+cd /platform/swarm/usr
+
+# Create and finalize build task
+EXIT ON FAILURE
+create task from taskdefs/user_env_tf_build_task.yaml
+finalize task user_env_tf_build_task
+get task info user_env_tf_build_task
+get task body user_env_tf_build_task
+list tasks
+EXIT ON FAILURE OFF
+
+# Assign build task to taskrunner
+EXIT ON FAILURE
+reset taskrunner defaulttaskbb.taskdb.sml.hpe
+assign task user_env_tf_build_task TO defaulttaskbb.taskdb.sml.hpe WITH 2 PEERS
+wait for taskrunner defaulttaskbb.taskdb.sml.hpe
+EXIT ON FAILURE OFF
+
+# Build task was already run. Now build and run swarm run tasks
+
+# Create and finalize swarm run task
+EXIT ON FAILURE
+create task from taskdefs/swarm_cifar10_task.yaml
+finalize task swarm_cifar10_task
+get task info swarm_cifar10_task
+get task body swarm_cifar10_task
+list tasks
+EXIT ON FAILURE OFF
+
+# Assign run task
+EXIT ON FAILURE
+reset TASKRUNNER defaulttaskbb.taskdb.sml.hpe
+ASSIGN TASK swarm_cifar10_task TO defaulttaskbb.taskdb.sml.hpe WITH 4 PEERS
+WAIT FOR TASKRUNNER defaulttaskbb.taskdb.sml.hpe
+# Grace period for ML container to save the model,
+# before the below reset command cleans up the ML and SL Containers.
+sleep 60
+reset taskrunner defaulttaskbb.taskdb.sml.hpe
+EXIT ON FAILURE OFF
+
+
+# List and reset training contract
+EXIT ON FAILURE
+LIST CONTRACTS
+reset contract defaultbb.cqdb.sml.hpe
+EXIT ON FAILURE OFF
+
+# Exit
+EXIT
