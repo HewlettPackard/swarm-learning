@@ -48,7 +48,7 @@ ASSIGN TASK swarm_cifar10_task TO defaulttaskbb.taskdb.sml.hpe WITH 4 PEERS
 WAIT FOR TASKRUNNER defaulttaskbb.taskdb.sml.hpe
 # Grace period for ML container to save the model,
 # before the below reset command cleans up the ML and SL Containers.
-sleep 15
+sleep 60
 reset taskrunner defaulttaskbb.taskdb.sml.hpe
 EXIT ON FAILURE OFF
 
