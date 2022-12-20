@@ -17,7 +17,7 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
 - host-1: 172.1.1.1
 - host-2: 172.2.2.2  
 
-|<img width="60%" height="50%" src="../../figs/reverse-proxy-cifar-setup.png">|
+|<img width="60%" height="50%" src="/docs/User/GUID-DC68E962-E2A0-47C5-9345-0A7448C42AD6-high.png">|
 |:--:|
 |<b>Figure 1: Cluster setup for the Reverse Proxy with CIFAR-10 example</b>|
 
