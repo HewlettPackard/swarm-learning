@@ -5,23 +5,44 @@
 ######################################################################
 
 
-## run a 1-SN, 2-SL and 1-SWOP and 1-SWCI :
+## runs 1-SN, 1-SL, 1-SWOP and 1-SWCI with:
 ##  a. sn-1 api: service
 ##  b. sn-1 p2p: service
 ##  c. sl-1 fs: service
-##  d. sl-2 fs: service
 
 # All examples assumes APLS is already running. User needs to pass this IP accordingly
-
 APLS_IP=$1
 [[ -z "$1" ]] && { echo "APLS IP is empty" ; exit 1; }
 echo "APLS IP: "${APLS_IP}
 
-Host_IP=$2
-[[ -z "$2" ]] && { echo "IP address of the Host is empty" ; exit 1; }
-echo "HOST IP: "${Host_IP}
+Host_1_IP=$2
+[[ -z "$2" ]] && { echo "IP address of the Host 1 is empty" ; exit 1; }
+echo "HOST 1 IP: "${Host_1_IP}
+
+Host_2_IP=$3
+[[ -z "$3" ]] && { echo "IP address of the Host 2 is empty" ; exit 1; }
+echo "HOST 2 IP: "${Host_2_IP}
+
+# This is the DNS IP of the host machine. In this example, all swarm contianers including ML container
+# will use Bind9 as its only DNS server for name resolution. Especially, when we have usecase like cifar 
+# (refer cifar.py file from the model directory of this example) wherein tensorflow downloads the data from 
+# the internet using tensorflow.keras.datasets.cifar10.load_data() method. We need to use host machine's DNS 
+# server for proper name resolution for this external call that downloads the data. Hence, we pass this argument
+# to start ML container to use both Bind9 DNS IP as well as Host Machines DNS IP.  
+Host_1_DNS_IP=$4
+[[ -z "$4" ]] && { echo "DNS IP of the current host is empty" ; exit 1; }
+echo "DNS IP of the current host : "${Host_1_DNS_IP}
+echo "SL and ML contianers will now use the both Bind9 contianer IP and current host DNS IP as its DNS IP's for name resolution."
 
 
+# User logged in the another host. If not passed it will be default user. 
+[[ -n "${5}" ]] && Host_2_USER=${5} || Host_2_USER=""
+
+# Directory path of this repository on the another host. If not passed script assumes default installation directory of swarm. 
+[[ -n "${6}" ]] && Host_2_INSTALL_DIR=${6} || Host_2_INSTALL_DIR="/opt/hpe/swarm-learning"
+
+
+# This step will also ensure if in correct directory
 if [[ -f "$(pwd)/scripts/bin/common" ]]
 then
     # Pulling swarm images version without using entire common file.
@@ -32,35 +53,53 @@ else
     exit 1; 
 fi
 
-if [[ -f "$(pwd)/lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl" ]]
-then
-    echo "Wheel file found in the desired location."
-else
-    echo "It is required to keep the whl file and its symbolic link in the lib folder of this base(swarm-learning) directory."
-    exit 1; 
-fi
-
-
+#Run Pre-requisites
+./examples/reverse-proxy/cifar10/run-prerequisites 1
 
 reverseProxyDir=$(pwd)/examples/reverse-proxy
-reverseProxyMnistDir=$(pwd)/examples/reverse-proxy/mnist
-workingDir=$(pwd)/workspace/reverse-proxy/mnist
+reverseProxyCifarDir=$(pwd)/examples/reverse-proxy/cifar10
+workingDir=$(pwd)/workspace/reverse-proxy/cifar10
 
-mkdir -p ${workingDir}
-cp -r ${reverseProxyMnistDir}/swci ${reverseProxyMnistDir}/swop ${workingDir}/
-cp -r ${reverseProxyMnistDir}/app-data ${reverseProxyMnistDir}/model ${workingDir}/
-cp -r $(pwd)/examples/utils/gen-cert ${workingDir}/
+# Check if file exists  
+Host_2_Cert_Path="${Host_2_INSTALL_DIR}"/workspace/reverse-proxy/cifar10/cert/ca/capath/ca-2-cert.pem
 
-# Download the mnist data to the reverse proxy's mnist workspace
-curl https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -o ${workingDir}/app-data/mnist.npz
 
-# Generates self-signed certificates on the workspace. 
-generateCertificates()
-{
-    "./workspace/reverse-proxy/mnist/gen-cert"      \
-    -e reverse-proxy/mnist                          \
-    -i 1
-}
+# Wait and Transfer certificates between hosts
+Host2CertExists="false"
+while [ "${Host2CertExists}" = "false" ]
+do
+    echo "Waiting for the user to start 'run-on-host-2' script on host 2 machine"
+    sleep 30
+    # Checking if certificate is available on host-2
+    if [[ "${Host_2_USER}" = "" ]]
+    then
+        ssh ${Host_2_IP} [[ -f "${Host_2_Cert_Path}" ]]
+    else
+        ssh ${Host_2_USER}@${Host_2_IP} [[ -f "${Host_2_Cert_Path}" ]]
+    fi
+    # Checking if ssh command went through successfully
+    if [[ $? -eq 0 ]]
+    then
+        Host2CertExists="true"
+    fi
+
+    echo "Host2CertExists:"${Host2CertExists}
+    # If certificate on the host-2 exists, then copy the file from host 2 to host 1 ca path 
+    if [ "$Host2CertExists" = "true" ]
+    then
+        if [[ "${Host_2_USER}" = "" ]]
+        then
+            scp ${Host_2_IP}:${Host_2_Cert_Path} "${workingDir}"/cert/ca/capath
+        else
+            scp ${Host_2_USER}@${Host_2_IP}:${Host_2_Cert_Path} "${workingDir}"/cert/ca/capath
+        fi
+        # Checking if SCP command went through successfully
+        if [[ $? -eq 0 ]]
+        then
+            echo "Certificate transfer completed."
+        fi
+    fi
+done
 
 build()
 {
@@ -89,21 +128,26 @@ build()
 }
 
 
-# Alters the nginx.conf file according to the requirements of this mnist example
+# Alters the nginx.conf file according to the requirements of this cifar10 example.
 # Registers the IP addresses to specific FQDN names within BIND9 (DNS Server)
 registerIP()
 {
-    sed -f - "${reverseProxyMnistDir}/nginx.conf" > "${workingDir}/nginx.conf" << _EOF
-s/<sn-1-ip>/${Host_IP}/g
-s/<sl-1-ip>/${Host_IP}/g
-s/<sl-2-ip>/${Host_IP}/g
+    sed -f - "${reverseProxyCifarDir}/nginx-on-host-1.conf" > "${workingDir}/nginx.conf" << _EOF
+s/<sn-1-ip>/${Host_1_IP}/g
+s/<sl-1-ip>/${Host_1_IP}/g
+s/<sl-2-ip>/${Host_1_IP}/g
 _EOF
 
     # Services.
-    docker exec "${1}" add-dns -d api.sn-1.swarm -i ${Host_IP}
-    docker exec "${1}" add-dns -d p2p.sn-1.swarm -i ${Host_IP}
-    docker exec "${1}" add-dns -d fs.sl-1.swarm -i ${Host_IP}
-    docker exec "${1}" add-dns -d fs.sl-2.swarm -i ${Host_IP}
+    docker exec "${1}" add-dns -d api.sn-1.swarm -i ${Host_1_IP}
+    docker exec "${1}" add-dns -d p2p.sn-1.swarm -i ${Host_1_IP}
+    docker exec "${1}" add-dns -d fs.sl-1.swarm -i ${Host_1_IP}
+    docker exec "${1}" add-dns -d fs.sl-2.swarm -i ${Host_1_IP}
+
+    docker exec "${1}" add-dns -d api.sn-2.swarm -i ${Host_2_IP}
+    docker exec "${1}" add-dns -d p2p.sn-2.swarm -i ${Host_2_IP}
+    docker exec "${1}" add-dns -d fs.sl-3.swarm -i ${Host_2_IP}
+    docker exec "${1}" add-dns -d fs.sl-4.swarm -i ${Host_2_IP}
     return 0
 }
 
@@ -141,40 +185,29 @@ setNoProxy()
     return 0
 }
 
-# Creates volume sl-cli-lib and moves the whl file in to it.
-moveWhlToVolume()
-{
-    docker volume rm sl-cli-lib
-    docker volume create sl-cli-lib
-    docker container create --name helper -v sl-cli-lib:/data hello-world
-    docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
-    docker rm helper
-}
-
-build
 setNoProxy
+build
 startBind9Server
-moveWhlToVolume
 
-
-# Get the container IP of the BIND9 server
+# Here we assume no other user creates any conflicting containers
 BIND9_IP=$(docker exec swarm-bind9 hostname -I | cut -d' ' -f1)
-
-# Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
-# Also Modifies the <CURRENT-PATH> in swarm_mnist_task file
-sed -i "s+<CURRENT-PATH>+$(pwd)+g" "${workingDir}"/swop/swop*_profile.yaml "${workingDir}"/swci/taskdefs/swarm_mnist_task.yaml
-sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop*_profile.yaml
-sed -i "s+<DNS>+${BIND9_IP}+g" "${workingDir}"/swop/swop*_profile.yaml
 
 registerIP swarm-bind9
 startNginx
-generateCertificates
+
+
+# Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
+# Also Modifies the <CURRENT-PATH> in swarm_cifar10_task file
+sed -i "s+<CURRENT-PATH>+$(pwd)+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<Bind9-IP>+${BIND9_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<Host-DNS-IP>+${Host_1_DNS_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
 
 # Start Swarm components.
 # --dns is the DNS IP to which the container will interact to resolve ip addresses
 # --sn-api-service and sn-p2p-service are the FQDN names used within reverse proxy
 # to overcome the usage of ports.
-echo "#################### Starting SN ####################"
+echo "############### Starting Sentinel SN ##################"
 "./scripts/bin/run-sn"                                  \
     -d                                                  \
     --name=sn-1                                         \
@@ -182,9 +215,9 @@ echo "#################### Starting SN ####################"
     --dns=${BIND9_IP}                                   \
     --sn-api-service=api.sn-1.swarm                     \
     --sn-p2p-service=p2p.sn-1.swarm:30303               \
-    --sentinel                                          \
     -p 30303:30303                                      \
     -p 30304:30304                                      \
+    --sentinel                                          \
     --apls-ip=${APLS_IP}                                \
     -e no_proxy="${no_proxy}"                           \
     --key=${workingDir}/cert/sn-1-key.pem               \
@@ -192,20 +225,20 @@ echo "#################### Starting SN ####################"
     --capath=${workingDir}/cert/ca/capath
 [[ $? -ne 0 ]] && exit 1
 
-# wait for SN API service to start
+# wait for Sentinel API service to start
 retries=1
 isUp=''
 while [[ ${isUp} != "OK" ]]
 do
-    isUp=`curl -sk --cert ${workingDir}/cert/sn-1-cert.pem --key ${workingDir}/cert/sn-1-key.pem "https://${Host_IP}:30304/is_up"`
+    isUp=`curl -sk --cert ${workingDir}/cert/sn-1-cert.pem --key ${workingDir}/cert/sn-1-key.pem "https://${Host_1_IP}:30304/is_up"`
     if [[ ${retries} -gt 20 ]] 
     then
-        echo "Exiting: Failed to start SN API service within the time limit of 10 minutes" 
+        echo "Exiting: Failed to start Sentinel API service within the time limit of 10 minutes" 
         exit 1;
     fi 
     if [[ ${isUp} != "OK" ]]
     then
-        echo "Waiting for the SN API service to start ....."
+        echo "Waiting for the Sentinel API service to start ....."
         retries=$((retries+1)) 
         sleep 30 
     fi
@@ -213,8 +246,9 @@ done
 
 if [[ ${isUp} == "OK" ]]
 then
-    echo "SN API service is Started"
+    echo "Sentinel API service is Started"
 fi
+
 
 echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \
@@ -231,7 +265,8 @@ echo "#################### Starting SWOP ####################"
     --profile-file-name=swop1_profile.yaml              \
     --key=${workingDir}/cert/swop-1-key.pem             \
     --cert=${workingDir}/cert/swop-1-cert.pem           \
-    --capath=${workingDir}/cert/ca/capath          
+    --capath=${workingDir}/cert/ca/capath
+ 
 
 echo "#################### Starting SWCI ####################"
 "./scripts/bin/run-swci"                                \
@@ -247,4 +282,4 @@ echo "#################### Starting SWCI ####################"
     --init-script-name=swci-init                        \
     --key=${workingDir}/cert/swci-1-key.pem             \
     --cert=${workingDir}/cert/swci-1-cert.pem           \
-    --capath=${workingDir}/cert/ca/capath              
+    --capath=${workingDir}/cert/ca/capath
