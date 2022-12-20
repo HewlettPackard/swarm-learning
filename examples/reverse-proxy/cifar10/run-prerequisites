@@ -43,7 +43,7 @@ if [[ -f "$(pwd)/lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl" ]]
 then
     echo "Wheel file found in the desired location."
 else
-    echo "It is required to keep the whl file and its symbolic link in the lib folder of this base(swarm-learning) directory."
+    echo "Error: It is required to keep the whl file and its symbolic link in the lib folder of this base(swarm-learning) directory."
     exit 1; 
 fi
 moveWhlToVolume

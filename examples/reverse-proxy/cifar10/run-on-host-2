@@ -55,6 +55,11 @@ fi
 
 #Run Pre-requisites
 ./examples/reverse-proxy/cifar10/run-prerequisites 2
+# Check the outcome of pre-requisite script and proceed
+if [[ $? -ne 0 ]]
+then
+    exit 1;
+fi
 
 reverseProxyDir=$(pwd)/examples/reverse-proxy
 reverseProxyCifarDir=$(pwd)/examples/reverse-proxy/cifar10
