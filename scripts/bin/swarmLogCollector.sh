@@ -1,12 +1,12 @@
 #!/bin/bash
 ######################################################################
-## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2023 Hewlett Packard Enterprise Development LP
 ######################################################################
 ######################################################################
 # SWARM LEARNING SCRIPT TO TAKE LOGS.
-# The backup includes
+# The tar acrhive includes
 #   => Output of swarmLogCollector.sh script [OS info, nvidia-smi, docker ps -a] 
-#	=> Logs from all Swarm artifacts: [SN, SWOP, SWCI, SL, ML]
+#	=>  Docker logs from all Swarm artifacts: [SN, SWOP, SWCI, SL, ML]
 #########################################################################
 set -x #Debug ON
 
