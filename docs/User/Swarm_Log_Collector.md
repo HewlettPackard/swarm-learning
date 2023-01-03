@@ -1,13 +1,15 @@
-# Log backup from user system
+# Swarm Learning log collector
 
-This script is to collects logs and basic system informations, if the user face any issues while running the examples. Please note that the script will take backup only from the current node. So if the user running a multi node example, need to run the script in each node.
+This script is to collect logs and basic system information and create a tar archive file, that can be sent to HPE for troubleshooting any Swarm Learning related issues.
 
-The backup includes:
+Please note that the script will collect the logs only from the current host. So if the user is running Swarm Learning on multiple hosts, he needs to run the script on each host machine.
+
+The tar archive includes:
 
       - OS details
       - nvidia details [if user running examples with GPU]
       - Running and exited docker information
-      - docker logs and inspect of all artifacts [SN SWOP SL ML]
+      - docker logs and docker inspect of all artifacts [SN SWOP SL ML]
 
 Syntax:
 
@@ -25,7 +27,7 @@ Example:
 ```
  ./swarmLogBackup.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/" > out.log
 ```
-## Running script if using SL for running example:
+## Running script if using run-sl script for running example:
 
 ```
 ./swarmLogBackup.sh "<DOCKER_HUB>" "mlimage=<ml image name>" > out.log
