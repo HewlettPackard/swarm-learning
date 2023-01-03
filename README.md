@@ -81,6 +81,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
   - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
   - [Examples](/examples/README.md)
+  - [Swarm Learning Log Collection](/docs/User/Swarm_Log_Collector.md)
   
 ## References
 
