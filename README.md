@@ -94,7 +94,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
 ## Getting in touch 
   Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  
   or  
-  Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel 
+  Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel.
   
 ## Contributing
   Refer to [Contributing](CONTRIBUTING.md) for more information.
