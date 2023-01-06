@@ -42,28 +42,25 @@ Example:
 
 1. Issue description
 
-      What is the Issue
-      
-      Occurrence - consistent or rare
-      
-      Commands used for starting containers
-      
-      Details of ML platform used
+```
+      What is the Issue:      
+      Occurrence - consistent or rare:      
+      Commands used for starting containers:      
+      Details of ML platform used:
+```
 
 2. Quick Checklist: Respond [Yes/No]
 
+```
       APLS server web GUI shows available Licenses?
-      
       If Multiple systems are used, can each system access every other system?
-      
       Is Password-less SSH configuration setup for all the systems?
-
+```
 3. Additional notes
-
-      Are you running documented example without any modification?
-      
+```
+      Are you running documented example without any modification?      
       Add any additional information about use case or any notes which supports for issue investigation:
-      
+```      
 4. If running examples with GPU, use gpu diagnostics messages in application code.
    Like cuda_available, or any python packages which helps to print GPU statistics.
 
