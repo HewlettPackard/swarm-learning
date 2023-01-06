@@ -1,6 +1,6 @@
 # Swarm Learning log collector
 
-This script is to collect logs and basic system information and create a tar archive file, that can be sent to HPE for troubleshooting any Swarm Learning related issues.
+Run this script to collect logs and basic system information and create a tar archive file, that can be sent to HPE for troubleshooting any Swarm Learning related issues.
 
 Please note that the script will collect the logs only from the current host. So if the user is running Swarm Learning on multiple hosts, he needs to run the script on each host machine.
 
@@ -14,41 +14,59 @@ The tar archive includes:
 Syntax:
 
 ```
-./swarmLogBackup.sh [OPTIONS] > out.log
+./swarmLogCollector.sh [OPTIONS] > out.log
 ```
 
-## Running script if using SWOP for running example:
+##  Run the below command if you are using SWOP:
 
 ```
- ./swarmLogBackup.sh "<DOCKER_HUB>" "workspace=<swarm-learning workspace/exampleFolder>" > out.log
+ ./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<swarm-learning workspace/exampleFolder>" > out.log
 ```
 Example:
 
 ```
- ./swarmLogBackup.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/" > out.log
+ ./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/" > out.log
 ```
-## Running script if using run-sl script for running example:
+## Run the below command if you are using run-sl script:
 
 ```
-./swarmLogBackup.sh "<DOCKER_HUB>" "mlimage=<ml image name>" > out.log
+./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ml image name>" > out.log
 ```
 Example:
 
 ```
-./swarmLogBackup.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop" > out.log
+./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop" > out.log
 ```
 
-## Please provide the below outputs for better debuggability [Not mandatory]
+## Additional information to provide:
 
-1. If running examples with GPU, use gpu diagnostics messages in application code.
+1. Issue description
+
+      What is the Issue:
+      Occurrence - consistent or rare:
+      Commands used for starting containers:
+      details of ML platform used:
+
+2. Quick Checklist: Respond [Yes/No]
+
+      APLS server web GUI shows available Licenses?
+      If Multiple systems are used, can each system access every other system?
+      Is Password-less SSH configuration setup for all the systems?
+
+3. Additional notes
+
+      Are you running documented example without any modification?
+      Add any additional information about use case or any notes which supports for issue investigation:
+      
+4. If running examples with GPU, use gpu diagnostics messages in application code.
    Like cuda_available, or any python packages which helps to print GPU statistics.
 
-2. Provide firewall related info by running the respective commands based on OS
+5. Provide firewall related info by running the respective commands based on OS
    For example the below command will provide the firewall details in ubuntu OS.
  
    ```
    sudo ufw status 
    ```
 
-3. Run example with "SWARM_LOOPBACK": "True", to confirm user application has no issues. Follow below link to do the same:
+6. Run example with "SWARM_LOOPBACK": "True", to confirm user application has no issues. Follow below link to do the same:
    https://github.com/HewlettPackard/swarm-learning/blob/master/docs/User/Frequently_asked_questions.md#before-enabling-swarm-learning-how-to-confirm-the-standalone-user-application-has-no-issues-and-runs
