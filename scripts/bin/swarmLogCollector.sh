@@ -4,7 +4,7 @@
 ######################################################################
 ######################################################################
 # SWARM LEARNING SCRIPT TO TAKE LOGS.
-# The tar acrhive includes
+# The tar archive includes
 #   => Output of swarmLogCollector.sh script [OS info, nvidia-smi, docker ps -a] 
 #	=>  Docker logs from all Swarm artifacts: [SN, SWOP, SWCI, SL, ML]
 #########################################################################
@@ -17,7 +17,7 @@ if [ -z "$1" ]
     exit 1
 fi
 
-#Checking docker hub passed as argument. If not, exiting
+#docker hub or ml image path passed as argument. If not, exiting
 if [ -z "$2" ]
   then
     echo `date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
@@ -76,6 +76,12 @@ id
 
 echo "OS details:"
 lsb_release -a
+
+echo "Docker Version Details:"
+docker version
+
+echo "Docker Info:"
+docker info
 
 echo "Running and exited dockers details:"
 docker ps -a
@@ -136,5 +142,9 @@ do
 	docker inspect ${mls_array[index]} > "$LOG_DIR"/ml_inspect_$index.log
 done
 ########### END TAKING USER LOGS######################
+
+echo "Python Libraries"
+pip list
+
 cp out.log  "$LOG_DIR"/out.log
 tar -czvf "$LOG_DIR.tar.gz" "$LOG_DIR"
