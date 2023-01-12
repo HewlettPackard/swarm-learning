@@ -14,28 +14,28 @@ The tar archive includes:
 Syntax:
 
 ```
-./swarmLogCollector.sh [OPTIONS] > out.log
+./swarmLogCollector.sh [OPTIONS] 
 ```
 
 ##  Run the below command if you are using SWOP:
 
 ```
- ./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<swarm-learning workspace/exampleFolder>" > out.log
+ ./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<swarm-learning workspace/exampleFolder>" 
 ```
 Example:
 
 ```
- ./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/" > out.log
+ ./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/" 
 ```
 ## Run the below command if you are using run-sl script:
 
 ```
-./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ml image name>" > out.log
+./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ml image name>" 
 ```
 Example:
 
 ```
-./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop" > out.log
+./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop" 
 ```
 
 ## Additional information to provide:
