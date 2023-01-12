@@ -10,6 +10,19 @@
 #########################################################################
 set -x #Debug ON
 
+hostname=$(hostname)
+dt=$(date +%Y%m%d%H%M%S)
+
+LOG_DIR="swarm_logs_$hostname_$dt"
+
+#Creating dir for saving logs 
+mkdir -m 777 "$LOG_DIR"
+
+exec > "$LOG_DIR"/out.log                                                                       
+exec 2>&1
+
+echo "LOG COLLECTION STARTED:"`date`
+echo "============================"
 #Checking docker hub passed as argument. If not, exiting
 if [ -z "$1" ]
   then
@@ -23,14 +36,6 @@ if [ -z "$2" ]
     echo `date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
     exit 1
 fi
-
-hostname=$(hostname)
-dt=$(date +%Y%m%d%H%M%S)
-
-LOG_DIR="swarm_logs_$hostname_$dt"
-
-#Creating dir for saving logs 
-mkdir -m 777 "$LOG_DIR"
 
 #Checking user using SWOP or SL to run the command.
 IFS='=' read -ra parse_ml_or_swop <<< $2
@@ -90,61 +95,84 @@ echo "NVIDIA DETAILS"
 nvidia-smi
 
 DOCKER_HUB=$1
-TAG=$(docker images | grep $DOCKER_HUB/sn  | awk '{print $2}')
 
-#Looping through images and checking all images exists. 
-for image in swop swci sn sl
- do
-    if [[ "$(docker images -q $DOCKER_HUB/$image:$TAG 2> /dev/null)" == "" ]]; then
-        echo `date`"-ERROR: $DOCKER_HUB/$image:$TAG not exists"
-	else
-	    echo `date`"-INFO: $DOCKER_HUB/$image:$TAG exists.."		
-    fi		
- done
+# If user has multiple version of swarm, this will reurn a array.
+TAGS=$(docker images | grep $DOCKER_HUB/sn  | awk '{print $2}')
+tags_array=($TAGS)
+
+#Looping through images and checking all images exists.
+for TAG in "${!TAGS[@]}"
+do
+	for image in swop swci sn sl
+	 do
+		if [[ "$(docker images -q $DOCKER_HUB/$image:${tags_array[TAG]} 2> /dev/null)" == "" ]]; then
+			echo `date`"-ERROR: $DOCKER_HUB/$image:${tags_array[TAG]} not exists"
+		else
+			echo `date`"-INFO: $DOCKER_HUB/$image:${tags_array[TAG]} exists.."		
+		fi		
+	 done
+done
 
 ########### BEGING TAKING SNs LOGS######################
-SNs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sn:$TAG)
-sns_array=($SNs)
-for index in "${!sns_array[@]}"
-  do
-	docker logs ${sns_array[index]} > "$LOG_DIR"/sn_$index.log 
-	docker inspect ${sns_array[index]} > "$LOG_DIR"/sn_inspect_$index.log
-  done
+#Looping through all tags and collecting logs. 
+#Only active container will have logs.
+for TAG in "${!TAGS[@]}"
+do
+	SNs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sn:${tags_array[TAG]})
+	sns_array=($SNs)
+	for index in "${!sns_array[@]}"
+	do
+		docker logs ${sns_array[index]} > "$LOG_DIR"/sn_${tags_array[TAG]}_$index.log 
+		docker inspect ${sns_array[index]} > "$LOG_DIR"/sn_inspect_${tags_array[TAG]}_$index.log
+	done
+done
 ########### END TAKING SNs LOGS######################
 
 ########### BEGIN TAKING SWOPs LOGS######################
-SWOPs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/swop:$TAG)
-swops_array=($SWOPs)
-for index in "${!swops_array[@]}"
-  do
-	docker logs ${swops_array[index]}  > "$LOG_DIR"/swop_$index.log
-	docker inspect ${swops_array[index]} > "$LOG_DIR"/swop_inspect_$index.log
-  done
+for TAG in "${!TAGS[@]}"
+do
+	SWOPs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/swop:${tags_array[TAG]})
+	swops_array=($SWOPs)
+	for index in "${!swops_array[@]}"
+	do
+		docker logs ${swops_array[index]}  > "$LOG_DIR"/swop_${tags_array[TAG]}_$index.log
+		docker inspect ${swops_array[index]} > "$LOG_DIR"/swop_inspect_${tags_array[TAG]}_$index.log
+	done
+done
 ########### END TAKING SWOPs LOGS######################
 
 ########### BEGIN TAKING SLs LOGS######################
-SLs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sl:$TAG)
-sls_array=($SLs)
-for index in "${!sls_array[@]}"
+for TAG in "${!TAGS[@]}"
 do
-	docker logs ${sls_array[index]}  > "$LOG_DIR"/sl_$index.log 
-	docker inspect ${sls_array[index]} > "$LOG_DIR"/sl_inspect_$index.log
+	SLs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sl:${tags_array[TAG]})
+	sls_array=($SLs)
+	for index in "${!sls_array[@]}"
+	do
+		docker logs ${sls_array[index]}  > "$LOG_DIR"/sl_${tags_array[TAG]}_$index.log 
+		docker inspect ${sls_array[index]} > "$LOG_DIR"/sl_inspect_${tags_array[TAG]}_$index.log
+	done
 done
 ########### TAKING SNs LOGS######################
 
 ########### BEGIN TAKING USER LOGS######################
-MLs=$(docker ps -a -q  --filter ancestor=$USER_CONTAINERS)
-mls_array=($MLs)
-for index in "${!mls_array[@]}"
+for TAG in "${!TAGS[@]}"
 do
-    echo "INFO: capturing log for ${mls_array[index]}"
-    docker logs ${mls_array[index]}  > "$LOG_DIR"/user_$index.log
-	docker inspect ${mls_array[index]} > "$LOG_DIR"/ml_inspect_$index.log
+	MLs=$(docker ps -a -q  --filter ancestor=$USER_CONTAINERS)
+	mls_array=($MLs)
+	for index in "${!mls_array[@]}"
+	do
+		echo "INFO: capturing log for ${mls_array[index]}"
+		docker logs ${mls_array[index]}  > "$LOG_DIR"/user_$index.log
+		docker inspect ${mls_array[index]} > "$LOG_DIR"/ml_inspect_$index.log
+	done
 done
 ########### END TAKING USER LOGS######################
 
 echo "Python Libraries"
 pip list
 
-cp out.log  "$LOG_DIR"/out.log
+#cp out.log  "$LOG_DIR"/out.log
 tar -czvf "$LOG_DIR.tar.gz" "$LOG_DIR"
+
+echo "LOG COLLECTION DONE:"`date`
+echo "========================="
