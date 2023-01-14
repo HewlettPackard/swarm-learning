@@ -122,7 +122,9 @@ This will run the test script using GPU index 0, specifying the path to the pret
 ## Contact
 For any queries, please contact:<br>
     - [Abhishek Mishra](mailto:abhishek@gmail.com)<br>
-    - [Joy Jefferson](mailto:joy.jefferson10@gmail.com)
+    - [Joy Jefferson](mailto:joy.jefferson10@gmail.com)<br>
+    - [Pradish Kapur](mailto:pradish.k1812@gmail.com)<br>
+    - [Kiran Kannur](mailto:kiran.kannur72@gmail.com)
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details
