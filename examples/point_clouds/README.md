@@ -115,7 +115,7 @@ The config file in the src code can be used to change the number of epochs after
 ## Model Testing
 1. The model can be tested on the test dataset by running the `test.py` file in the `model/src` folder:
     ```bash
-    python test.py --gpu_idx 0 --pretrained_path <path>\workspace\point_clouds\model\checkpoints\complexer_yolo\azure\Model_complexer_yolo_epoch_35.pth --show_image
+    python test.py --gpu_idx 0 --pretrained_path <path>\workspace\point_clouds\model\checkpoints\complexer_yolo\azure\Model_complexer_yolo_epoch_<num>.pth --show_image
     ```
 This will run the test script using GPU index 0, specifying the path to the pretrained model, and showing the image output.
 
