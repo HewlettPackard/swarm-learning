@@ -1,0 +1,16 @@
+######################################################################
+# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+######################################################################
+### Dependent python packages for user's model training ###
+
+easydict==1.9
+opencv-python
+opencv-contrib-python-headless
+numpy==1.18.3
+tensorboard==2.2.1
+scikit-learn==0.22.2
+matplotlib
+pandas
+sklearn
+protobuf==3.15.6
+Shapely
