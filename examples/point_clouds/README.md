@@ -17,6 +17,23 @@ Learning.
 
 Note: This project utilizes Azure VMs and Swarm to run distributed machine learning training on point cloud data.
 
+The below image illustrates the setup for this following example
+<img src="./model/docs/4_Node_SD.png">
+
+The model used is [complex yolo v4 model](https://github.com/maudzung/Complex-YOLOv4-Pytorch) using pytorch and the dataset used is the kitti 3d dataset which is publicly available.For more details on model refer [paper](https://arxiv.org/pdf/1803.06199.pdf)
+
+
+
+## Data Preparation
+Download the 3D KITTI detection dataset from [here](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d).
+
+The downloaded data includes:
+
+- Velodyne point clouds _**(29 GB)**_: input data to the Complex-YOLO model
+- Training labels of object data set _**(5 MB)**_: input label to the Complex-YOLO model
+- Camera calibration matrices of object data set _**(16 MB)**_: for visualization of predictions
+- Left color images of object data set _**(12 GB)**_: for visualization of predictions
+
 ## Setup
 1. Create two hosts/workspace folders on Azure VM 1 and add the code in each folder:
     ```bash
