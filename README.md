@@ -84,6 +84,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   
 ## References
 
+  - [Docker](swarm-learning/docs/docker.md)
   - [Papers](docs/papers-and-articles.md)
   - [Videos](docs/videos.md)
   - [URLs](docs/URL.md)
