@@ -10,19 +10,6 @@
 #########################################################################
 set -x #Debug ON
 
-hostname=$(hostname)
-dt=$(date +%Y%m%d%H%M%S)
-
-LOG_DIR="swarm_logs_$hostname_$dt"
-
-#Creating dir for saving logs 
-mkdir -m 777 "$LOG_DIR"
-
-exec > "$LOG_DIR"/out.log                                                                       
-exec 2>&1
-
-echo "LOG COLLECTION STARTED:"`date`
-echo "============================"
 #Checking docker hub passed as argument. If not, exiting
 if [ -z "$1" ]
   then
@@ -36,6 +23,20 @@ if [ -z "$2" ]
     echo `date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
     exit 1
 fi
+
+hostname=$(hostname)
+dt=$(date +%Y%m%d%H%M%S)
+
+LOG_DIR="swarm_logs_$hostname_$dt"
+
+#Creating dir for saving logs 
+mkdir -m 777 "$LOG_DIR"
+
+exec > "$LOG_DIR"/out.log                                                                       
+exec 2>&1
+
+echo "LOG COLLECTION STARTED:"`date`
+echo "============================"
 
 #Checking user using SWOP or SL to run the command.
 IFS='=' read -ra parse_ml_or_swop <<< $2
@@ -94,7 +95,7 @@ docker ps -a
 echo "NVIDIA DETAILS"
 nvidia-smi
 
-DOCKER_HUB=$1
+DOCKER_HUB="hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning"
 
 # If user has multiple version of swarm, this will reurn a array.
 TAGS=$(docker images | grep $DOCKER_HUB/sn  | awk '{print $2}')
