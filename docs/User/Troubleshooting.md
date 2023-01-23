@@ -74,3 +74,8 @@ Please remove below directories and re-try pull images: <br> </br>
 ~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn/
 ~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/swop/
 ~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sl/
+
+## 6. Warning in BuildTask - “SWOPBuildTask: Failed to instantiate docker client”
+
+It may be an issue with permissions for /var/run/docker.sock <br> </br>
+Change permissions of /var/run/docker.sock with ‘sudo chmod 666 /var/run/docker.sock’
