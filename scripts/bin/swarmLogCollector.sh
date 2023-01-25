@@ -10,18 +10,24 @@
 #########################################################################
 set -x #Debug ON
 
+#Method to exit log collection if user did not pass arguments properly.
+exitLogCollection(){
+  echo $1
+  exit 1
+}
+
 #Checking docker hub passed as argument. If not, exiting
 if [ -z "$1" ]
   then
-    echo `date`"-ERROR: DOCKER HUB ARGUMENT IS EMPTY..Exiting!!"
-    exit 1
+    msg=`date`"-ERROR: DOCKER HUB ARGUMENT IS EMPTY..Exiting!!" 
+    exitLogCollection $msg
 fi
 
-#docker hub or ml image path passed as argument. If not, exiting
+#Checking absolute installation path or ml image path passed as argument. If not, exiting
 if [ -z "$2" ]
   then
-    echo `date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
-    exit 1
+    msg=`date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
+    exitLogCollection $msg
 fi
 
 hostname=$(hostname)
@@ -31,12 +37,6 @@ LOG_DIR="swarm_logs_$hostname_$dt"
 
 #Creating dir for saving logs 
 mkdir -m 777 "$LOG_DIR"
-
-exec > "$LOG_DIR"/out.log                                                                       
-exec 2>&1
-
-echo "LOG COLLECTION STARTED:"`date`
-echo "============================"
 
 #Checking user using SWOP or SL to run the command.
 IFS='=' read -ra parse_ml_or_swop <<< $2
@@ -52,9 +52,15 @@ elif [ "${parse_ml_or_swop[0]}" == "workspace" ] ; then
   cp $WORKSPACE/swci/taskdefs/*.yaml "$LOG_DIR"/
   cp $WORKSPACE/swop/*.yaml "$LOG_DIR"/  
 else
-  echo `date`"-ERROR: Either mlimage or workspace should be passed..Exiting!!"
-  exit 1
+  msg=`date`"-ERROR: Either mlimage or workspace should be passed..Exiting!!"
+  exitLogCollection $msg
 fi
+
+exec > "$LOG_DIR"/out.log                                                                       
+exec 2>&1
+
+echo "LOG COLLECTION STARTED:"`date`
+echo "============================"
 
 # Checking the user image exists or not 
 echo "User Container is: $USER_CONTAINERS"
@@ -95,7 +101,7 @@ docker ps -a
 echo "NVIDIA DETAILS"
 nvidia-smi
 
-DOCKER_HUB="hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning"
+DOCKER_HUB=$1
 
 # If user has multiple version of swarm, this will reurn a array.
 TAGS=$(docker images | grep $DOCKER_HUB/sn  | awk '{print $2}')
@@ -117,6 +123,7 @@ done
 ########### BEGING TAKING SNs LOGS######################
 #Looping through all tags and collecting logs. 
 #Only active container will have logs.
+isSNExist=0 # To check whether SN container exists 
 for TAG in "${!TAGS[@]}"
 do
 	SNs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sn:${tags_array[TAG]})
@@ -125,11 +132,17 @@ do
 	do
 		docker logs ${sns_array[index]} > "$LOG_DIR"/sn_${tags_array[TAG]}_$index.log 
 		docker inspect ${sns_array[index]} > "$LOG_DIR"/sn_inspect_${tags_array[TAG]}_$index.log
+		isSNExist=1
 	done
 done
+
+if [ "$isSNExist" == 0 ] ; then
+    echo `date`"-ERROR: No active SN container exists in this host!!"
+fi
 ########### END TAKING SNs LOGS######################
 
 ########### BEGIN TAKING SWOPs LOGS######################
+isSWOPExist=0 # To check whether SWOP container exists 
 for TAG in "${!TAGS[@]}"
 do
 	SWOPs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/swop:${tags_array[TAG]})
@@ -138,11 +151,16 @@ do
 	do
 		docker logs ${swops_array[index]}  > "$LOG_DIR"/swop_${tags_array[TAG]}_$index.log
 		docker inspect ${swops_array[index]} > "$LOG_DIR"/swop_inspect_${tags_array[TAG]}_$index.log
+		isSWOPExist=1
 	done
 done
+if [ "$isSWOPExist" == 0 ] ; then
+    echo `date`"-ERROR: No active SWOP container exists in this host!!"
+fi
 ########### END TAKING SWOPs LOGS######################
 
 ########### BEGIN TAKING SLs LOGS######################
+isSLExist=0 # To check whether SL container exists 
 for TAG in "${!TAGS[@]}"
 do
 	SLs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sl:${tags_array[TAG]})
@@ -151,11 +169,16 @@ do
 	do
 		docker logs ${sls_array[index]}  > "$LOG_DIR"/sl_${tags_array[TAG]}_$index.log 
 		docker inspect ${sls_array[index]} > "$LOG_DIR"/sl_inspect_${tags_array[TAG]}_$index.log
+		isSLExist=1
 	done
 done
+if [ "$isSLExist" == 0 ] ; then
+    echo `date`"-ERROR: No active SL container exists in this host!!"
+fi
 ########### TAKING SNs LOGS######################
 
 ########### BEGIN TAKING USER LOGS######################
+isMLExist=0 # To check whether ML container exists 
 for TAG in "${!TAGS[@]}"
 do
 	MLs=$(docker ps -a -q  --filter ancestor=$USER_CONTAINERS)
@@ -165,8 +188,12 @@ do
 		echo "INFO: capturing log for ${mls_array[index]}"
 		docker logs ${mls_array[index]}  > "$LOG_DIR"/user_$index.log
 		docker inspect ${mls_array[index]} > "$LOG_DIR"/ml_inspect_$index.log
+		isMLExist=1
 	done
 done
+if [ "$isMLExist" == 0 ] ; then
+    echo `date`"-ERROR: No active ML container exists in this host!!"
+fi
 ########### END TAKING USER LOGS######################
 
 echo "Python Libraries"
