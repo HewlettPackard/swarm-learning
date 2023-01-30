@@ -8,26 +8,37 @@
 #   => Output of swarmLogCollector.sh script [OS info, nvidia-smi, docker ps -a] 
 #	=>  Docker logs from all Swarm artifacts: [SN, SWOP, SWCI, SL, ML]
 #########################################################################
-set -x #Debug ON
+#set -x #Debug ON
 
 #Method to exit log collection if user did not pass arguments properly.
 exitLogCollection(){
-  echo $1
+  echo -e "$@"
   exit 1
 }
+
+usage='\nUSAGE:\n
+if using SWOP:\n
+./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<swarm-learning/workspace/exampleFolder>"\n
+if using run-sl:\n
+./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ML Image Name>"\n
+
+EXAMPLES:\n
+./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/"\n
+
+./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop"\n'
 
 #Checking docker hub passed as argument. If not, exiting
 if [ -z "$1" ]
   then
     msg=`date`"-ERROR: DOCKER HUB ARGUMENT IS EMPTY..Exiting!!" 
-    exitLogCollection $msg
+    exitLogCollection $msg $usage
 fi
 
 #Checking absolute installation path or ml image path passed as argument. If not, exiting
 if [ -z "$2" ]
   then
     msg=`date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
-    exitLogCollection $msg
+    exitLogCollection $msg $usage
 fi
 
 hostname=$(hostname)
@@ -53,23 +64,23 @@ elif [ "${parse_ml_or_swop[0]}" == "workspace" ] ; then
   cp $WORKSPACE/swop/*.yaml "$LOG_DIR"/  
 else
   msg=`date`"-ERROR: Either mlimage or workspace should be passed..Exiting!!"
-  exitLogCollection $msg
+  exitLogCollection $msg $usage
 fi
 
 exec > "$LOG_DIR"/out.log                                                                       
 exec 2>&1
 
-echo "LOG COLLECTION STARTED:"`date`
-echo "============================"
+echo `date`":LOG COLLECTION STARTED:"
+echo -e "\n================================================\n"
 
 # Checking the user image exists or not 
 echo "User Container is: $USER_CONTAINERS"
 if [[ "$(docker images -q $USER_CONTAINERS:latest 2> /dev/null)" == "" ]]; then
-  echo `date`"-ERROR: $USER_CONTAINERS:latest not exists"
+  echo -e `date`"-ERROR: $USER_CONTAINERS:latest not exists\n"
 fi
 
 #Capturing output of "id"
-echo "id:"
+echo -e "User permission for docker Sudo:\n"
 id 
 #Getting OS info
 # This command will work in ubuntu and RHEL
@@ -86,19 +97,19 @@ id
 # Release:        8.5
 # Codename:       Ootpa
 
-echo "OS details:"
+echo -e "\nOS details:\n"
 lsb_release -a
 
-echo "Docker Version Details:"
+echo -e "\nDocker Version Details:\n"
 docker version
 
-echo "Docker Info:"
+echo -e "\nDocker Info:\n"
 docker info
 
-echo "Running and exited dockers details:"
+echo -e "Running and exited dockers details:\n"
 docker ps -a
 
-echo "NVIDIA DETAILS"
+echo -e "NVIDIA DETAILS\n"
 nvidia-smi
 
 DOCKER_HUB=$1
@@ -196,11 +207,11 @@ if [ "$isMLExist" == 0 ] ; then
 fi
 ########### END TAKING USER LOGS######################
 
-echo "Python Libraries"
+echo -e "Python Libraries:\n"
 pip list
 
 #cp out.log  "$LOG_DIR"/out.log
 tar -czvf "$LOG_DIR.tar.gz" "$LOG_DIR"
 
-echo "LOG COLLECTION DONE:"`date`
-echo "========================="
+echo `date`":LOG COLLECTION DONE"
+echo "============================================="
