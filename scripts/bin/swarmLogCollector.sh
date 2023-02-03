@@ -18,7 +18,7 @@ exitLogCollection(){
 
 usage='\nUSAGE:\n
 if using SWOP:\n
-./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<swarm-learning/workspace/exampleFolder>"\n
+./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<path to example folder>"\n
 if using run-sl:\n
 ./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ML Image Name>"\n
 
@@ -30,14 +30,14 @@ EXAMPLES:\n
 #Checking docker hub passed as argument. If not, exiting
 if [ -z "$1" ]
   then
-    msg=`date`"-ERROR: DOCKER HUB ARGUMENT IS EMPTY..Exiting!!" 
+    msg=`date`"\nERROR: DOCKER HUB ARGUMENT IS EMPTY..Exiting!!" 
     exitLogCollection $msg $usage
 fi
 
 #Checking absolute installation path or ml image path passed as argument. If not, exiting
 if [ -z "$2" ]
   then
-    msg=`date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
+    msg=`date`"\nERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
     exitLogCollection $msg $usage
 fi
 
@@ -63,14 +63,14 @@ elif [ "${parse_ml_or_swop[0]}" == "workspace" ] ; then
   cp $WORKSPACE/swci/taskdefs/*.yaml "$LOG_DIR"/
   cp $WORKSPACE/swop/*.yaml "$LOG_DIR"/  
 else
-  msg=`date`"-ERROR: Either mlimage or workspace should be passed..Exiting!!"
+  msg=`date`"\nERROR: Either mlimage or workspace should be passed..Exiting!!"
   exitLogCollection $msg $usage
 fi
 
 exec > "$LOG_DIR"/out.log                                                                       
 exec 2>&1
 
-echo `date`":LOG COLLECTION STARTED:"
+echo `date`" : LOG COLLECTION STARTED:"
 echo -e "\n================================================\n"
 
 # Checking the user image exists or not 
@@ -131,7 +131,7 @@ do
 	 done
 done
 
-########### BEGING TAKING SNs LOGS######################
+########### BEGIN TAKING SNs LOGS######################
 #Looping through all tags and collecting logs. 
 #Only active container will have logs.
 isSNExist=0 # To check whether SN container exists 
@@ -213,5 +213,5 @@ pip list
 #cp out.log  "$LOG_DIR"/out.log
 tar -czvf "$LOG_DIR.tar.gz" "$LOG_DIR"
 
-echo `date`":LOG COLLECTION DONE"
+echo `date`" : LOG COLLECTION DONE"
 echo "============================================="
