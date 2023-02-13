@@ -37,7 +37,7 @@ fi
 #Checking absolute installation path or ml image path passed as argument. If not, exiting
 if [ -z "$2" ]
   then
-    msg=`date`"\nERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
+    msg=`date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
     exitLogCollection $msg $usage
 fi
 
@@ -63,7 +63,7 @@ elif [ "${parse_ml_or_swop[0]}" == "workspace" ] ; then
   cp $WORKSPACE/swci/taskdefs/*.yaml "$LOG_DIR"/
   cp $WORKSPACE/swop/*.yaml "$LOG_DIR"/  
 else
-  msg=`date`"\nERROR: Either mlimage or workspace should be passed..Exiting!!"
+  msg=`date`"-ERROR: Either mlimage or workspace should be passed..Exiting!!"
   exitLogCollection $msg $usage
 fi
 
