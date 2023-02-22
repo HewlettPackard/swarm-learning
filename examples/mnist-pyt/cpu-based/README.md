@@ -14,7 +14,9 @@ The Machine Learning program, after conversion to Swarm Learning for the PyTorch
 
 This example shows the Swarm training of MNIST model using four ML nodes. ML nodes along with SL nodes are automatically spawned by SWOP nodes - all running on a single host. Swarm training gets initiated by the SWCI node and orchestrated by one SN node running on the same host. This example also shows how private data, private scratch area and shared model can be mounted to ML nodes for Swarm training.
 
-The following image illustrates a cluster setup for the MNIST example:![Four cluster setup](/docs/User/GUID-DC68E962-E2A0-47C5-9345-0A7448C42AD6-high.png)
+The following image illustrates a cluster setup for the MNIST example:
+
+<img width="80%" height="100%" src="/docs/User/GUID-BE2185B8-5C3B-4BD3-91FF-9ABC77D0720C-high.png">
 
 
 -   This example uses one SN node. The names of the docker containers representing this node is SN1. SN1 is also the Sentinel Node. SN1 runs on the host 172.1.1.1.
