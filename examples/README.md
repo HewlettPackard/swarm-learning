@@ -69,3 +69,9 @@ These examples demonstrates Swarm learning using a Reverse proxy server. [For de
 - ML platform is Tensorflow
 - SL-ML pairs are spawned using SWOP
         
+### [3D Point-Cloud detection ](/examples/point_clouds)
+This example demonstrates Swarm learning use case on following setup. 
+- Based on 4 hosts  
+- kitti 3d object detection dataset
+- ML platform is Pytorch
+- SL-ML pairs are spawned using run-sl script
