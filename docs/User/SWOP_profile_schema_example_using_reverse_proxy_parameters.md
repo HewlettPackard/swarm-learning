@@ -1,4 +1,4 @@
-# SWOP profile schema example using reverse proxy parameters {#GUID-B84A4C8B-93E9-479E-99FF-45D6BB6D5D60 .concept}
+# SWOP profile schema example using reverse proxy parameters
 
 ``` {#CODEBLOCK_JWF_42V_PVB}
 ######################################################################
