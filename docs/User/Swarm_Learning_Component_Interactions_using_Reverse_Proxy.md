@@ -4,7 +4,7 @@ A Reverse Proxy Server is a type of proxy server that presents behind the firewa
 
 The following illustration is the multi-organization setup using reverse proxy:
 
-<img src="GUID-8387004B-D71E-4C39-8036-4ECC81972D3F-high.PNG" width="80%" height="120%">
+<img src="GUID-8387004B-D71E-4C39-8036-4ECC81972D3F-high.png" width="80%" height="120%">
 
 Swarm Learning currently communicates between host machines by enabling (aka opening) a different set of pre-defined ports on each machine. For example, SN-API-PORT, SL-FS-PORT, and SN-P2P-PORT. Enabling all of these ports between all host machines may be a time-consuming process. Moreover, opening many ports may make the system more vulnerable to security attacks.
 
