@@ -61,15 +61,31 @@ mv workspace/fraud-detection/data-and-scratch workspace/fraud-detection/user4/
 ```
 ./workspace/fraud-detection/gen-cert -e fraud-detection -i 1
 ```
+5.  Create a docker network for SN, SWOP, SWCI, SL, and user containers running on the same host.
 
-5.  Search and replace all occurrences of `<CURRENT-PATH>` tag in `swarm_fd_task.yaml` and `swop1_profile.yaml` files with `$(pwd)`.
+    ``` {#CODEBLOCK_BHW_CQ3_YWB}
+    docker network create host-1-net
+    ```
+
+6.  Declare and assign values to the variables like `APLS_IP`, `SN_IP`, `HOST_IP` and `SN_API_PORT`. For example,
+
+    ``` {#CODEBLOCK_RFL_5BK_XWB}
+    APLS_IP=172.1.1.1
+    HOST_IP=172.1.1.1
+    SN_IP=172.1.1.1
+    SN_API_PORT=30304
+    ```
+
+    **NOTE:** You must use the appropriate values as per your Swarm network.
+    
+7.  Search and replace all occurrences of `<CURRENT-PATH>` tag in `swarm_fd_task.yaml` and `swop1_profile.yaml` files with `$(pwd)`.
 
     ```
     sed -i "s+<CURRENT-PATH>+$(pwd)+g" workspace/fraud-detection/swop/swop*_profile.yaml workspace/fraud-detection/swci/taskdefs/swarm_fd_task.yaml
     
     ```
 
-6.  Create a docker volume and copy Swarm Learning wheel file.
+8.  Create a docker volume and copy Swarm Learning wheel file.
 
 ```
 docker volume rm sl-cli-lib
@@ -80,14 +96,14 @@ docker rm helper
 
 ```
 
-7.  Create a docker network for SN, SWOP, SWCI, SL, and user containers running on the same host.
+9.  Create a docker network for SN, SWOP, SWCI, SL, and user containers running on the same host.
 
 ```
 docker network create host-1-net
 
 ```
 
-8.  Run Swarm Network node \(SN1\) - sentinel node.
+10.  Run Swarm Network node \(SN1\) - sentinel node.
 
 ```
 ./scripts/bin/run-sn -d --rm --name=sn1 \
@@ -104,7 +120,7 @@ Use the Docker logs command to monitor the Sentinel SN node and wait for the nod
 swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 ```
 
-9.  Run Swarm Operator node \(SWOP1\).
+11.  Run Swarm Operator node \(SWOP1\).
 
 <blockquote>
     
@@ -127,7 +143,7 @@ NOTE: If required, according to environment, modify IP and proxy in the profile 
    SWOP_KEEP_CONTAINERS is set to True so that SWOP doesn't remove stopped SL and ML containers. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
 </blockquote>
 
-10. Run SWCI node \(SWCI1\). It creates, finalizes and assigns below task to task-framework for sequential execution:
+12. Run SWCI node \(SWCI1\). It creates, finalizes and assigns below task to task-framework for sequential execution:
 
 -   `user_env_tf_build_task`: Builds TensorFlow based Docker image for ML node to run model training.
 
@@ -149,7 +165,7 @@ NOTE: If required, according to environment, modify SN IP in <code>workspace/fra
 -e http_proxy= -e https_proxy= --apls-ip=172.1.1.1
 ```
 
-11. Four nodes of Swarm training are automatically started when the run task (`swarm_fd_task`) gets assigned and executed. Open a new terminal on host-1 and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
+13. Four nodes of Swarm training are automatically started when the run task (`swarm_fd_task`) gets assigned and executed. Open a new terminal on host-1 and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
 
 ```
 SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
@@ -157,7 +173,7 @@ SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm
 
 Final Swarm model is saved inside each user’s private `scratch` directory, which is `workspace/fraud-detection/user<id>/data-and-scratch/scratch` on both the hosts. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continues to run.
 
-12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and remove Docker network (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
+14. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and remove Docker network (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
 
 1 [1](#)[https://www.kaggle.com/mlg-ulb/creditcardfraud](#)
