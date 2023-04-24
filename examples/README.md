@@ -6,6 +6,14 @@
 3. After Web UI completes its installation, verify if swarm-learning wheel file and its symbolic link are placed under the `lib` directory.
 
 
+For more information on starting license server and installing the Swarm Learning, see [HPE Swarm Learning Installation and Configuration Guide](swarm-learning/docs/Install).
+In this section, examples use different models, data, ML platforms, and Swarm cluster configurations. All examples require valid X.509 certificates to be used by different Swarm Learning components. A certificate generation utility is provided with each example to enable users to run the examples quickly.
+<blockquote>
+NOTE: HPE recommends that users must use their own certificates in actual production environment.
+
+</blockquote>
+
+
 ## Swarm Learning Examples
 
 Several examples of using Swarm Learning are provided with the package. 
