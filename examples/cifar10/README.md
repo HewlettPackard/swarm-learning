@@ -6,7 +6,7 @@ The code for this example has been modified to run on a Swarm Learning platform.
 
 This example uses CIFAR-10 dataset distributed along with TensorFlow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code to Swarm Learning.
 
-This example shows the Swarm training of Keras based CIFAR-10 model using two ML nodes. It also shows how ML environment can be built manually using docker command and how Swarm training can be launched without SWCI or SWOP nodes. Here `scripts/bin/run-sl` script is used to spawn each ML node to run CIFAR-10 model as a `sidecar` container of each SL node.
+This example shows the Swarm training of Keras based CIFAR-10 model using two ML nodes. It also shows how ML environment can be built manually using `run-sl` command and how Swarm training can be launched without SWCI or SWOP nodes. Here `scripts/bin/run-sl` script is used to spawn each ML node to run CIFAR-10 model as a `sidecar` container of each SL node.
 
 The following image illustrates a cluster setup for the CIFAR-10 example:
 
@@ -29,7 +29,7 @@ The following image illustrates a cluster setup for the CIFAR-10 example:
 cd swarm-learning
 ```
 
-2.  On both host-1 and host-2, create a temporary workspace directory and copy `cifar10` example.
+2.  On both host-1 and host-2, create a temporary workspace directory, copy `cifar10`, and and gen-cert utility.
 
 ```
 mkdir workspace
@@ -77,8 +77,22 @@ You may need to specify the correct https_proxy for the docker build if you are 
 ``` 
 docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-server-ip>:<port> workspace/cifar10/ml-context
 ```
+6.  On both host-1 and host-2, declare and assign values to the variables like `APLS_IP`, `SN_IP`, `HOST_IP` and `ports`. For example,
 
-6.  On host-1, Run Swarm Network node \(sentinel node\)
+    ``` {#CODEBLOCK_RFL_5BK_XWB}
+    APLS_IP=172.1.1.1
+    SN_IP=172.1.1.1
+    HOST_1_IP=172.1.1.1
+    HOST_2_IP=172.2.2.2
+    SN_API_PORT=30304
+    SN_P2P_PORT=30303
+    SL_1_FS_PORT=16000
+    SL_2_FS_PORT=17000
+    ```
+
+    **NOTE:** You must use the appropriate values as per your Swarm network.
+    
+7.  On host-1, Run Swarm Network node \(sentinel node\)
 
 ```
 ./scripts/bin/run-sn -d --rm --name=sn1 --host-ip=172.1.1.1 \
@@ -93,7 +107,7 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
     swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
     ```
 
-7.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset.
+8.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset.
 
 ```
 ./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
@@ -110,7 +124,7 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --apls-ip=172.1.1.1
 ```
 
-8.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset
+9.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset
 
 ```
 ./scripts/bin/run-sl --name=sl2 --host-ip=172.2.2.2 \
@@ -127,7 +141,7 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --apls-ip=172.1.1.1
 ```
 
-9.  On both host-1 and host-2, Two node of Swarm training are started. User can monitor the Docker logs of ML nodes \(ML1 and ML2 containers\) for Swarm training on both host-1 and host-2. Training ends with the following log message:
+10.  On both host-1 and host-2, Two node of Swarm training are started. User can monitor the Docker logs of ML nodes \(ML1 and ML2 containers\) for Swarm training on both host-1 and host-2. Training ends with the following log message:
 
 ```
 SwarmCallback : INFO : Saved the trained model - model/saved_models/cifar10.h5
@@ -135,7 +149,7 @@ SwarmCallback : INFO : Saved the trained model - model/saved_models/cifar10.h5
 
    Final Swarm model is saved inside the model directory that is `workspace/cifar10/model/saved_models` directory on both the hosts. SL and ML nodes exit but it is not removed after the Swarm training.
 
-10. On both host-1 and host-2, To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and delete the workspace directory.
+11. On both host-1 and host-2, To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and delete the workspace directory.
 
 
 [1](#) [https://www.cs.toronto.edu/%7Ekriz/cifar.html](#)
