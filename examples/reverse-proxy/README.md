@@ -6,6 +6,19 @@
 
 2.  Before running these examples, make sure APLS is already running. Also, ensure wheel file with its symbolic link are placed under the `lib` directory.
 
+3.  Reverse proxy examples run the swarm containers with fixed IP addresses. This is required because the users pre-configure the NGINX with the IP addresses of swarm containers before the containers start. For default bridge networks, there are more chances of IP conflicts; Or, the Docker command will not consider the IP passed. Hence, HPE recommends creating a separate non-default \(custom\) bridge network to start the containers with predefined IP addresses.
+
+    To create the own network, use the following command:
+
+    ``` {#CODEBLOCK_H2X_3P3_LWB}
+    docker network create --subnet=<subnet-ip>/16 <network-name>
+    ```
+
+    In this command, `<subnet-ip>` is an IP other than default Docker bridge network's subnet. For example, if the default bridge uses 172.18.0.0 subnet, then you can use 192.18.0.0 subnet. `<network-name>` is a string which is used as an argument to the run scripts of these examples.
+
+4.  By default, the NGINX container started by these examples will use 443 port. Ensure that there is no other service is already running on this 443 port.
+
+5.  In these reverse proxy examples, build task pulls docker images along with some packages and run task pulls datasets from the external sites. Ensure that the necessary proxy configurations are added in the SWOP profiles before running the automated scripts.
 
 **NOTE:**
 
