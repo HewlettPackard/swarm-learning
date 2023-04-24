@@ -25,6 +25,22 @@ This example uses one training batch and one test batch. The files for both thes
 
 This example shows the Swarm training of MNIST model using two Machine Learning (ML) nodes. Machine Learning nodes are automatically spawned by Swarm Operators (SWOP) node. Swarm training is initiated by Swarm Command Interface (SWCI) node and orchestrated by a Swarm Network (SN) node. This example also shows how private data and shared model can be mounted to Machine Learning nodes for Swarm training. For details, see the profile files and task definition files placed under `examples/reverse-proxy/mnist/swop` and `examples/reverse-proxy/mnist/swci` folders respectively.
 
+For example, if the 192.18.0.0 subnet is used in the network that is created as part of the reverse proxy example prerequisite, the IP addresses of BIND9 and NGINX may be 192.18.0.1 and 192.18.0.2, respectively. The following table shows how the corresponding swarm components are incremented by 1 in the last octet of this IP address.
+
+**NOTE:**
+
+These are the container IP addresses.
+
+|SNo|Container|IP Address|
+|---|---------|----------|
+|1|SN-1-IP|192.18.0.3|
+|2|SWOP-1-IP|192.18.0.4|
+|3|SWCI-1-IP|192.18.0.5|
+|4|SL-1-IP|192.18.0.6|
+|5|ML-1-IP|192.18.0.7|
+|6|SL-2-IP|192.18.0.8|
+|7|ML-2-IP|192.18.0.9|
+
 ## IP mapping with FQDNs in Bind9 Container
 SNo | FQDN | IP Address |
 --- | --- | --- | 
@@ -48,11 +64,13 @@ SNo | FQDN | IP with Port |
     ``` {#CODEBLOCK_MYT_33W_NVB}
     cd swarm-learning
     ```
+    
+    **NOTE:** Ensure that the prerequisites are met. For more information about prerequisite, see [Prerequisite for running reverse Proxy examples](swarm-learning/examples/reverse-proxy/README.md).
 
-2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `Host IP`.
+2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `Network name`. Assume as part of [Prerequisite for running reverse Proxy examples](swarm-learning/examples/reverse-proxy/README.md), the network created is `rp-network`.
 
     ``` {#CODEBLOCK_LQT_DNY_NVB}
-    .\examples\reverse-proxy\mnist\run-all 172.1.1.1 172.1.1.1
+    .\examples\reverse-proxy\mnist\run-all 172.1.1.1 rp-network
     ```
 
     First argument `APLS_IP` is the ip address of the APLS and is a mandatory parameter. In the above command this argument is passed as current host ip assuming apls is running on the same host. Second argument `Host_IP` is the ip address of the current host and is used for the nginx and dns configurations.
