@@ -8,21 +8,20 @@
 
     The installer has a few configurable options. To change the default options, run the installer from a command prompt. Use the following optional flags to customize the configuration or behavior of the installer:
 
-    -port
-    :   Defines the port for the application to run. The default value is 30302.
-
+    **-port**
+          Defines the port for the application to run. The default value is 30302.
         Example, `-port 30355`
 
-    -logs
-    :   If enabled, displays the detailed message. To enable, use the command, `-logs verbose`.
+    **-logs**
+          If enabled, displays the detailed message. To enable, use the command, `-logs verbose`.
 
-    -version
-    :   Defines the version of SLM-UI to be installed. Default value: 2.0.0.
+    **-version**
+          Defines the version of SLM-UI to be installed. Default value: 2.0.0.
 
         Example, `-version 2.0.0`
 
-    -timeoutDuration
-    :   Defines installer timeout duration for individual installation tasks. The default value is 300 seconds.
+    **-timeoutDuration**
+         Defines installer timeout duration for individual installation tasks. The default value is 300 seconds.
 
         Example, `-timeoutDuration 600`
 
