@@ -1,4 +1,4 @@
-# Adding a Swarm Host in SLM-UI {#GUID-0C3D027B-C9F0-4EFE-B1FD-1B690EECD32D .task}
+# <a name="GUID-0C3D027B-C9F0-4EFE-B1FD-1B690EECD32D/"> Adding a Swarm Host in SLM-UI
 
 1.  In the **Hosts**, click **Add Host**.
 
@@ -10,7 +10,7 @@
 
 4.  Enter the Swarm Install Path.
 
-    The default installation directory is /opt/hpe/swarm-learning. This directory path must have write permission.
+    The default installation directory is `/opt/hpe/swarm-learning`. This directory path must have write permission.
 
 5.  Enter the Host username and password.
 
