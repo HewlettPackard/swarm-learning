@@ -1,4 +1,4 @@
-# Configuring the License Settings {#GUID-9BBCF1CF-5BC3-4E66-82C5-EB2A958485B7 .task}
+# <a name="GUID-9BBCF1CF-5BC3-4E66-82C5-EB2A958485B7"/> Configuring the License Settings
 
 1.  In the **License Settings**, click **Update License Server**.
 
