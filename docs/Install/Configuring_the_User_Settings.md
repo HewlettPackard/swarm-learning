@@ -1,4 +1,4 @@
-# Configuring the User Settings {#GUID-09412B21-518E-4278-8906-DAEE83474F58 .task}
+# <a name="GUID-09412B21-518E-4278-8906-DAEE83474F58"/> Configuring the User Settings
 
 1.  In the **User Settings**, click **Create Account**.
 
