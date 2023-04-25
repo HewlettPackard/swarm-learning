@@ -1,4 +1,4 @@
-# Creating a Contract {#GUID-5EBE2D57-5A69-4C12-996B-AB854DF657C2 .task}
+# <a name="GUID-5EBE2D57-5A69-4C12-996B-AB854DF657C2"/> Creating a Contract
 
 1.  In the **MyProjects**, click the **Project name** link.
 
