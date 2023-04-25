@@ -1,4 +1,4 @@
-# Adding Swarm Nodes {#GUID-F6B6ABE2-E83D-4C12-94AF-4B11AE64A3EA .task}
+# <a name="GUID-F6B6ABE2-E83D-4C12-94AF-4B11AE64A3EA/"> Adding Swarm Nodes
 
 The following procedure can be used to add the SN node and the SWOP node.
 
