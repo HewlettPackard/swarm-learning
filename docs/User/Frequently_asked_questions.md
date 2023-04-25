@@ -24,6 +24,20 @@ Look for following message after executing `run-sn` command to confirm successfu
 
 This message does not show up if APLS server is not configured correctly.
 
+
+## <a name="GUID-902F3923-84A9-4572-96D6-CDDD081D1544"/> What are the possible reasons for "unable to contact API server"?
+
+A swarm container could be unable to reach an SN node for several reasons.
+
+1.  SN is not running. To confirm, check the Docker running state of the SN container.
+
+2.  SN node can be reached via SN container FQDN only in a single host custom bridge network. But for all other scenarios, IP address of the host machine must be used. Ensure the correctness of `--sn-ip` and `--sn-api-port` parameters.
+
+3.  Ensure that SN-API-port is allowed in your firewall settings. User can check this by running `sudo ufw status`. If the SN-API-port is not in the list, then add it by using `sudo ufw allow <SN-API-port>`. The same configuration is applicable for all other Swarm ports. Ignore this step if the `ufw status` is inactive, as this state allows all ports.
+
+4.  If the certificates get expired, then the other swarm components including non-sentinel SN are not able to reach SN. User can check the expiry date of their certificates and update them accordingly.
+
+
 ## <a name="SECTION_L5P_RCK_1TB"/> How many SLs can connect with a SN?
 
 It depends on several factors like, the available system resources, the ML algorithm complexity, how often it does parameter merging and so on.
@@ -40,7 +54,7 @@ For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SW
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
 
 For AMD GPUs, you can set `usercontaineropts` and/or `usrenvvars` section of the SWOP profile. For more information, see [SWOP profile schema](/docs/User/SWOP_profile_schema.md).
-If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate parameters as specified in the [User machine learning container parameters](/docs/Install/Running_Swarm_Learning.md).
+If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate parameters as specified in the [User machine learning container parameters](/docs/Install/Running_Swarm_Learning.md). For more information on User machine learning container parameters, see *HPE Swarm Learning Installation and Configuration Guide*.
 
 ## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
 
@@ -111,7 +125,11 @@ One can also use “GET TASKRUNNER PEER STATUS” to display the status for the 
 
 -   For RUN_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
 -   If there are failed PEERs, using its node UID, one can identify the container name/id from ‘LIST NODES’ command. With container name/id, user can debug the error with docker logs command.
- 
+
+## <a name="SECTION_X3S_HLL_XWB"/> How to mount data/example/file to ML container if “Swarm install directory" or "source file path” is different across hosts?
+
+SWOP profile supports mounts with private data. If the installation path or any file path is different across hosts, then `privatedata` field of SWOP profile can be used to mount. User can specify different values for`privatedata` field specific to each ML container. Mount target path is in the `PrivateContent` field in the run task definition. It is the same for all ML containers, and hence ML applications can access these files in the same manner.
+
 ## <a name="SECTION_IZQ_TFS_HSB"/> What network ports does Swarm Learning use? Can they be customized?
 
 Each SN node requires two network ports for incoming connections from other SN, SL, SWCI, and SWOP nodes.
@@ -139,9 +157,11 @@ For configuring the license server API port, see *AutoPass License Server User G
 
 ## <a name="SECTION_HH5_KNP_NSB"/> What is the IP address used in the run scripts?
 
-By default, Swarm Learning framework uses the host network to connect and communicate with its peers. In this case, the IP addresses represent the IP addresses or FQDN of the host systems on which the containers are run.
+The `--host-ip` and `slhostip` IP addresses in the run scripts and the SWOP profile are the IP addresses of the host machine, where the respective containers are running on the host machine. Based on access, user can even use the FQDN of the host system.
 
-Swarm Learning can also be configured to use a Docker bridge network. In this case, the IP addresses represent the IP addresses or FQDN of the containers themselves.
+By default, Swarm Learning framework uses a Docker bridge network. For improved isolation, users can even use a user-defined bridge network.
+
+While using the user-defined bridge network, the options `--ip` and `ip` field of `slnetworkopts` in SWOP profile are the IP addresses of the container themselves. This case is specific to the reverse proxy examples or scenarios where user wants to use the fixed IP addresses for containers.
 
 ## <a name="SECTION_RVM_DGS_HSB"/> Where are the log files?
 
@@ -193,9 +213,17 @@ Any Python package can be used to build the ML container.
 
 If SWOP framework is used, packages must be specified in the build-task definition file.
 
+## <a name="GUID-0B47942A-ACC0-4A7C-A9D6-F838BDAB7201"/> What is the guidance on minPeers in the application vs "WITH PEERS in the assign run task"?
+
+`minPeers` specifies the minimum number of ML peers \(quorum\) that must be available \(and able to communicate to each other\) to continue the Swarm training. Otherwise, the Swarm training gets blocked indefinitely.
+
+`WITH peersNeeded` in the `assign task` is used to start the number of SL, ML pairs using the SWOP framework. Also, this count is used to decide the overall status of the task.
+
+`WITH peersNeeded` in the `assign task` must be equal to or greater than the `minPeers`. It can be closer to the total number of ML peers in the Swarm training.
+
 ## <a name="SECTION_PXX_LHS_HSB"/> What happens if a node runs slowly or drops out of the network?
 
-Swarm Learning has a configurable parameter called `min_peers`, which is the minimum number of nodes essential at each sync step for the model training to continue. The framework ensures that a node can contribute in a sync step only if it is up to date with the model derived from the previous sync step.
+Swarm Learning has a configurable parameter called `minPeers`, which is the minimum number of nodes essential at each sync step for the model training to continue. The framework ensures that a node can contribute in a sync step only if it is up to date with the model derived from the previous sync step.
 
 The scenario of a node running at a slower rate than the others or completely dropping out of the network can lead to two situations:
 
