@@ -27,6 +27,31 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
 4. Training is initiated by SWCI node (**swci-1**) that runs on host 172.1.1.1
 5. Example assumes that License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
+For example, if the 192.18.0.0 subnet is used in the network that is created on host-1 as part of reverse proxy example prerequisite, then the IP addresses of BIND9 and NGINX may be 192.18.0.1 and 192.18.0.2, respectively. The following table shows how the corresponding swarm components are incremented by 1 in the last octect of this IP address.
+
+**NOTE:** These are the container IP addresses.
+
+|SNo|Container|IP Address|
+|---|---------|----------|
+|1|SN-1-IP|192.18.0.3|
+|2|SWOP-1-IP|192.18.0.4|
+|3|SWCI-1-IP|192.18.0.5|
+|4|SL-1-IP|192.18.0.6|
+|5|ML-1-IP|192.18.0.7|
+|6|SL-2-IP|192.18.0.8|
+|7|ML-2-IP|192.18.0.9|
+
+Similarly, if the 192.19.0.0 subnet is used in the network that is created on host-2 as part of reverse proxy example prerequisite, then the IP addresses of BIND9 and NGINX may be 192.19.0.1 and 192.19.0.2, respectively. The following table shows how the corresponding swarm components are incremented by 1 in the last octect of this IP address.
+
+|SNo|Container|IP Address|
+|---|---------|----------|
+|1|SN-2-IP|192.19.0.3|
+|2|SWOP-2-IP|192.19.0.4|
+|3|SL-3-IP|192.19.0.5|
+|4|ML-3-IP|192.19.0.6|
+|5|SL-4-IP|192.19.0.7|
+|6|ML-4-IP|192.19.0.8|
+
 
 ## DNS Configuration on both hosts
 SNo | FQDN | IP Address |
