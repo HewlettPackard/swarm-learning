@@ -1,4 +1,4 @@
-# Running SLM-UI Installer {#GUID-0256BC04-3EDD-4044-91C9-74372B0B8E1F .task}
+# <a name="GUID-0256BC04-3EDD-4044-91C9-74372B0B8E1F/"> Running SLM-UI Installer
 
 1.  Run the SLM-UI Installer Web App. This is launched in a web browser.
 
