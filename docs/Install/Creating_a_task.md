@@ -1,4 +1,4 @@
-# Creating a task {#GUID-4760825E-0F95-4843-B806-4CBF9780AFDA .task}
+# <a name="GUID-4760825E-0F95-4843-B806-4CBF9780AFDA"/> Creating a task
 
 1.  In the **Tasks** tab, click **Create new task**.
 
