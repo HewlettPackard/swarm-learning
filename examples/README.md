@@ -56,3 +56,4 @@ For more information on Swarm Learning platform and package, see *HPE Swarm Lear
     -   After training, the final Swarm model is saved by each ML node.
 2.  The files created under the workspace directory that include certs, models, data, etc., are expected to have the minimum file permission as 664. Once the files are copied to the workspace directory, check the permissions of the files inside it. If desired permissions are not met, user might observe `file permission denied` in the respective swarm component's Docker logs. To overcome such cases, user can change the permissions of the files by using the `chmod` command.
 3.  Finally, these instructions assume that `swarm-learning` is the current working directory on all the systems: `cd swarm-learning`.
+
