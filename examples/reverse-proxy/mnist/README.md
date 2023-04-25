@@ -65,9 +65,9 @@ SNo | FQDN | IP with Port |
     cd swarm-learning
     ```
     
-    **NOTE:** Ensure that the prerequisites are met. For more information about prerequisite, see [Prerequisite for running reverse Proxy examples](swarm-learning/examples/reverse-proxy/README.md).
+    **NOTE:** Ensure that the prerequisites are met. For more information about prerequisite, see [Prerequisite for running reverse Proxy examples](/examples/reverse-proxy/README.md).
 
-2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `Network name`. Assume as part of [Prerequisite for running reverse Proxy examples](swarm-learning/examples/reverse-proxy/README.md), the network created is `rp-network`.
+2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `Network name`. Assume as part of [Prerequisite for running reverse Proxy examples](/examples/reverse-proxy/README.md), the network created is `rp-network`.
 
     ``` {#CODEBLOCK_LQT_DNY_NVB}
     .\examples\reverse-proxy\mnist\run-all 172.1.1.1 rp-network
