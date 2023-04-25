@@ -1,4 +1,4 @@
-# Executing a Task {#GUID-3469F96B-6670-4E3B-B786-798CF4B4E205 .task}
+# <a name="GUID-3469F96B-6670-4E3B-B786-798CF4B4E205"/> Executing a Task
 
 After you create the task, perform the following steps to execute the task. User can use the Execute Task to execute various types of Swarm tasks on a task runner and see the progress of the execution of the task.
 
