@@ -1,4 +1,4 @@
-# Running Swarm Learning examples using SLM-UI {#GUID-A2B92980-7281-4B0A-989F-33097B7C96A5 .task}
+# <a name="GUID-A2B92980-7281-4B0A-989F-33097B7C96A5/"> Running Swarm Learning examples using SLM-UI
 
 **TIP:**
 
@@ -16,38 +16,22 @@ Perform the following steps to run the SL examples using SLM-UI.
 
 HPE recommends that users use their own certificates in actual production environment.
 
-1.  [Adding a Swarm Host](GUID-0C3D027B-C9F0-4EFE-B1FD-1B690EECD32D.md)
+1.  [Adding a Swarm Host](Adding_a_Swarm_Host_in_SLM-UI.md)
 
-2.  [Creating a Project](GUID-7FB7EDEC-F359-4ABF-A623-348EF665D8DC.md)
+2.  [Creating a Project](Creating_a_Project_in_SLM-UI.md)
 
-3.  [Adding Swarm Nodes](GUID-F6B6ABE2-E83D-4C12-94AF-4B11AE64A3EA.md)
+3.  [Adding Swarm Nodes](Adding_Swarm_Nodes.md)
 
-4.  [Creating a Task](GUID-4760825E-0F95-4843-B806-4CBF9780AFDA.md)
+4.  [Creating a Task](Creating_a_task.md)
 
-5.  [Creating Task Runners](GUID-CAD82E68-9A3A-465E-9DC2-06BBDCD1DC55.md)
+5.  [Creating Task Runners](Creating_Task_Runners.md)
 
-6.  [Creating a Contract](GUID-5EBE2D57-5A69-4C12-996B-AB854DF657C2.md)
+6.  [Creating a Contract](Creating_a_Contract.md)
 
-7.  [Executing a Task](GUID-3469F96B-6670-4E3B-B786-798CF4B4E205.md)
+7.  [Executing a Task](Executing_a_Task.md)
 
-8.  [Managing the Global Settings](GUID-15129C81-8774-4B60-85F8-EC618677D51C.md)
+8.  [Managing the Global Settings](Managing_the_Global_Settings.md)
 
-
--   **[Adding a Swarm Host in SLM-UI](GUID-0C3D027B-C9F0-4EFE-B1FD-1B690EECD32D.md)**  
-
--   **[Creating a Project in SLM-UI](GUID-7FB7EDEC-F359-4ABF-A623-348EF665D8DC.md)**  
-
--   **[Adding Swarm Nodes](GUID-F6B6ABE2-E83D-4C12-94AF-4B11AE64A3EA.md)**  
-
--   **[Creating a task](GUID-4760825E-0F95-4843-B806-4CBF9780AFDA.md)**  
-
--   **[Creating Task Runners](GUID-CAD82E68-9A3A-465E-9DC2-06BBDCD1DC55.md)**  
-
--   **[Creating a Contract](GUID-5EBE2D57-5A69-4C12-996B-AB854DF657C2.md)**  
-
--   **[Executing a Task](GUID-3469F96B-6670-4E3B-B786-798CF4B4E205.md)**  
-
--   **[Managing the Global Settings](GUID-15129C81-8774-4B60-85F8-EC618677D51C.md)**  
 
 
 **Parent topic:**[Installing HPE Swarm Learning Management UI \(SLM-UI\)](GUID-60017971-B0A9-4119-AEAF-A21594EE5C1E.md)
