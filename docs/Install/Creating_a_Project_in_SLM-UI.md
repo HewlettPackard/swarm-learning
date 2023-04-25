@@ -1,4 +1,4 @@
-# Creating a Project in SLM-UI {#GUID-7FB7EDEC-F359-4ABF-A623-348EF665D8DC .task}
+# <a name="GUID-7FB7EDEC-F359-4ABF-A623-348EF665D8DC"/> Creating a Project in SLM-UI 
 
 1.  In the **My Projects**, click **Create Project**.
 
