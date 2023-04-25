@@ -59,14 +59,11 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
 
 ## Getting Started 
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
-  2. Clone this repository on all machines where you want to run Swarm Learning.<br> <br>
-    **NOTE**: The suggested default location is to clone it under `/opt/hpe`. It will create a `swarm-learning` folder and copy the files under it. If you clone it in a different location, please make sure to give the same location when running the installer UI, for the `Swarm Installation location` text box as "`<clone-location>/swarm-learning`". For the default case, the UI screen would have `/opt/hpe/swarm-learning` pre-populated. <br>
-    **CAUTION**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
-  3. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
-  4. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
-  5. Execute [MNIST example](/examples/mnist/README.md) 
-  6. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
-  7. [Troubleshooting](/docs/User/Troubleshooting.md)
+  2. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
+  3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
+  4. Execute [MNIST example](/examples/mnist/README.md) 
+  5. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  6. [Troubleshooting](/docs/User/Troubleshooting.md)
 
 ## Documentation
 
