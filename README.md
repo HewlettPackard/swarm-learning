@@ -65,6 +65,12 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   5. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   6. [Troubleshooting](/docs/User/Troubleshooting.md)
 
+<blockquote>
+
+NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent swarm training** mentioned in the enterprise documentation are applicable for enterprise customers ONLY.
+
+</blockquote>
+
 ## Documentation
 
   - [How Swarm Learning Components interact](/docs/User/Swarm_Learning_component_interactions.md)
