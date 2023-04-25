@@ -1,4 +1,4 @@
-# Creating Task Runners {#GUID-CAD82E68-9A3A-465E-9DC2-06BBDCD1DC55 .task}
+# <a name="GUID-CAD82E68-9A3A-465E-9DC2-06BBDCD1DC55"/> Creating Task Runners
 
 1.  In the **MyProjects**, click the **Project name** link.
 
