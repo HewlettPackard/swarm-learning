@@ -88,11 +88,15 @@ Each ML node by default runs on CPU. If you want to run on GPUs, specify it in t
 
 ## <a name="SECTION_LXB_TLD_VSB"/> Can you run multiple concurrent Model Trainings in the same Swarm Network?
 
-Yes, it is supported only in the licensed version. You can even run one training session using Keras and another using PyTorch.
+Yes, it is supported only in the enterprise version. You can even run one training session using Keras and another using PyTorch.
 
 You need different training contracts specified in the ML programs via `Swarmcallback` API.
 
 If you are using SWOP to launch concurrent training, you need to have separate SWOP nodes each watching a different taskrunner, which is specified in their SWOP profiles.
+<blockquote>
+  
+NOTE: Concurrent swarm training (enterprise feature) is applicable only for enterprise customers and not for community users.
+</blockquote>
 
 ## <a name="SECTION_VH1_YND_VSB"/> When you start SWCI, you do not specify any IP/name for SN. How does it know which SN to connect to?
 
