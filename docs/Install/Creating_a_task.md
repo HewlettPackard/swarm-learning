@@ -1,0 +1,13 @@
+# Creating a task {#GUID-4760825E-0F95-4843-B806-4CBF9780AFDA .task}
+
+1.  In the **Tasks** tab, click **Create new task**.
+
+2.  Create a task by providing the following details.
+
+    ![Create Task](GUID-19FCF5A5-F3AC-42D7-8F4B-D94BAE696C48-high.png)
+
+3.  Click **Create** to create the task. The created task is displayed under the Task List.
+
+
+**Parent topic:**[Running Swarm Learning examples using SLM-UI](GUID-A2B92980-7281-4B0A-989F-33097B7C96A5.md)
+
