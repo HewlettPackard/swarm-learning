@@ -1,4 +1,4 @@
-# Configuring the Swarm Settings {#GUID-8D0B6FA0-E953-4186-ABF3-9C1F932A263F .task}
+# <a name="GUID-8D0B6FA0-E953-4186-ABF3-9C1F932A263F"/> Configuring the Swarm Settings
 
 1.  In the **Swarm Settings**, click **Add Version**.
 
