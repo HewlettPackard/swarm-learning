@@ -1,4 +1,4 @@
-# Managing the Global Settings {#GUID-15129C81-8774-4B60-85F8-EC618677D51C .concept}
+# <a name="GUID-15129C81-8774-4B60-85F8-EC618677D51C"/> Managing the Global Settings
 
 The Global settings feature allows the user to create multiple custom user accounts, configure swarm settings and configure License server settings. It also displays the version number of swarm software.
 
