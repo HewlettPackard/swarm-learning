@@ -29,12 +29,12 @@ Build depends upon python `build` module so make sure its latest version. Only p
 
 Steps to build client library:
 
-1. Set `SWARM_VER` environment variable to corresponding swarm version(check ##WHERE##)
+1. Set `SWARM_VER` environment variable to corresponding swarm version
 2. Run python -m build command from current directory
 
 ```
 export SWARM_VER=2.0.1
-python -m build --wheel -n --outdir `pwd` <source dir>
+python -m build --wheel -n --outdir `pwd` python-client
 ```
 Above command will generate `swarmlearning-2.0.1-py3-none-manylinux_2_24_x86_64.whl` file in current directory.
 
@@ -49,4 +49,4 @@ Activate virtual env with `source swarmvenv/bin/activate`
 
 Install swarm wheel with `pip install <path to swarm wheel file>`.
 
-Continue swarm client development. 
+Newly built wheel file is now installed in virtual environment. This can be used to test the new swarm API code changes. 
