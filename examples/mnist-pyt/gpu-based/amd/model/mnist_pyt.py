@@ -1,5 +1,5 @@
 ############################################################################
-## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -17,6 +17,7 @@ import datetime
 import numpy as np
 import os
 from swarmlearning.pyt import SwarmCallback
+from torchvision import datasets, transforms
 import time
 import torch 
 import torch.nn as nn
@@ -52,25 +53,11 @@ class mnistNet(nn.Module):
         output = F.log_softmax(x, dim=1)
         return output
         
-def loadData(dataDir):
-    # load data from npz format to numpy 
-    path = os.path.join(dataDir,'mnist.npz')
-    with np.load(path) as f:
-        xTrain, yTrain = f['x_train'], f['y_train']
-        xTest, yTest = f['x_test'], f['y_test']
-        xTrain, xTest = xTrain / 255.0, xTest / 255.0        
-        
-    # transform numpy to torch.Tensor
-    xTrain, yTrain, xTest, yTest = map(torch.tensor, (xTrain.astype(np.float32), 
-                                                      yTrain.astype(np.int_), 
-                                                      xTest.astype(np.float32),
-                                                      yTest.astype(np.int_)))    
-    # convert torch.Tensor to a dataset
-    yTrain = yTrain.type(torch.LongTensor)
-    yTest = yTest.type(torch.LongTensor)
-    trainDs = torch.utils.data.TensorDataset(xTrain,yTrain)
-    testDs = torch.utils.data.TensorDataset(xTest,yTest)
-    return trainDs, testDs
+def loadData():
+    train_ds = datasets.MNIST('../data', train=True, download=True, transform=transforms.ToTensor())
+    test_ds = datasets.MNIST('../data', train=False, transform=transforms.ToTensor())
+    
+    return train_ds, test_ds
     
 def doTrainBatch(model,device,trainLoader,optimizer,epoch,swarmCallback):
     model.train()
@@ -108,13 +95,12 @@ def test(model, device, testLoader):
         100. * correct / len(testLoader.dataset)))    
 
 def main():
-    dataDir = os.getenv('DATA_DIR', '/platform/data')
     scratchDir = os.getenv('SCRATCH_DIR', '/platform/scratch')
     modelDir = os.getenv('MODEL_DIR', '/platform/model')
     max_epochs = int(os.getenv('MAX_EPOCHS', str(default_max_epochs)))
     min_peers = int(os.getenv('MIN_PEERS', str(default_min_peers)))
     batchSz = 25000
-    trainDs, testDs = loadData(dataDir)
+    trainDs, testDs = loadData()
     useCuda = torch.cuda.is_available()
     
     if useCuda:
@@ -140,8 +126,8 @@ def main():
     model = mnistNet().to(device)
     model_name = 'mnist_pyt'
     opt = optim.Adam(model.parameters())
-    trainLoader = torch.utils.data.DataLoader(trainDs,batch_size=batchSz)
-    testLoader = torch.utils.data.DataLoader(testDs,batch_size=batchSz)
+    trainLoader = torch.utils.data.DataLoader(trainDs, batch_size=batchSz)
+    testLoader = torch.utils.data.DataLoader(testDs, batch_size=batchSz)
     
     # Create Swarm callback
     swarmCallback = None

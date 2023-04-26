@@ -1,30 +1,18 @@
-## Prerequisite for all examples
-1. Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](/docs/Install/HPE_Swarm_Learning_installation.md).
+# Prerequisite for all examples
+1. Start license server and install valid license before running any of the examples. Refer Installing licenses and starting license server.
 
-2. Install the Swarm Learning product using the Web UI installer.  Refer [Web UI installation](/docs/Install/HPE_Swarm_Learning_installation.md)
 
-For more information on starting license server and installing the Swarm Learning, see [HPE Swarm Learning Installation and Configuration Guide](/docs/Install/HPE_Swarm_Learning_installation.md).
-In this section, examples use different models, data, ML platforms, and Swarm cluster configurations. All examples require valid X.509 certificates to be used by different Swarm Learning components. A certificate generation utility is provided with each example to enable users to run the examples quickly.
-<blockquote>
-NOTE: HPE recommends that users must use their own certificates in actual production environment.
+# Swarm Learning Examples
+Below examples of using Swarm Learning are provided with the package:  
+    1. MNIST (`swarm-learning/examples/mnist`)  
+    2. MNIST-PYT (`swarm-learning/examples/mnist-pyt`)  
+    3. CIFAR-10 (`swarm-learning/examples/cifar10`)  
+    4. Credit card fraud detection (`swarm-learning/examples/fraud-detection`)  
+    5. Reverse Proxy based examples (`swarm-learning/examples/reverse-proxy`)  
+    
+They use different models, data, platforms and Swarm cluster configurations. Each example requires valid certificates to be used by different Swarm Learning components. A certificate generation utility (`gen-cert`) is provided under `swarm-learning/examples/utils` folder so that user can quickly generate certificates and run the examples.
 
-</blockquote>
-
-## Swarm Learning Examples
-
-Several examples of using Swarm Learning are provided with the package. 
-
-For details of running each example, see the below:
-
--   [MNIST](/examples/mnist/MNIST.md)
--   [MNIST-PYT](/examples/mnist-pyt/MNIST-PYT.md)
--   [CIFAR-10](/examples/cifar10/CIFAR-10.md)
--   [Credit card fraud detection](/examples/fraud-detection/Credit_card_fraud_detection.md)
--   [Reverse Proxy based examples](/examples/reverse-proxy/README.md)
-
-They use different models, data, ML platforms, and Swarm cluster configurations. All examples require valid X.509 certificates to be used by different Swarm Learning components. A certificate generation utility (`gen-cert`) is provided to enable users to run the examples quickly.
-
-``` {#CODEBLOCK_WLX_CZN_WWB}
+```
 ./swarm-learning/examples/utils/gen-cert -h
 Usage: gen-cert -e EXAMPLE-NAME -i HOST-INDEX
         -e Name of the example e.g. mnist, mnist-pyt, cifar10 etc.
@@ -32,28 +20,21 @@ Usage: gen-cert -e EXAMPLE-NAME -i HOST-INDEX
         -h Show help.
 ```
 
-<blockquote>
-NOTE: HPE recommends that users must use their own certificates in actual production environment.
+**Note: It is strongly recommended that users must use their own certificates in actual production environment.**
 
-</blockquote>
+See the README file for each example for brief instructions on running them. For a more detailed reference on the Swarm Learning platform and package, see the Swarm Learning Installation and Configuration Guide. This document can be found in the `swarm-learning/docs/` directory.
 
-
-For more information on Swarm Learning platform and package, see *HPE Swarm Learning Installation and Configuration Guide*. This document is present in `swarm-learning/docs/directory`.
-
-### System setup for the examples
-
-1.  The instructions in these examples assume that Swarm Learning runs on 1 to 2 host systems.
-
-    -   These systems have IP addresses 172.1.1.1 and 172.2.2.2.
-    -   License server is installed on 172.1.1.1 and running on default port 5814.
-    -   172.1.1.1 runs the Sentinel SN node.
-    -   MNIST example has one more SN node. 172.2.2.2 runs the other SN node. A SL and ML node pair are spawned across these 2 host systems - 172.1.1.1 and 172.2.2.2.
-
-    -   Spawning of SL and ML nodes can be automatic or manual.
-    -   SWOP node, which runs on each host system, is automatically spawned using the task framework. MNIST example shows how Swarm training can be automatically launched using SWCI and SWOP nodes. SWCI runs on 172.1.1.1 host, while Swarm Operator runs on both 172.1.1.1 and 172.2.2.2 hosts.
-    -   CIFAR-10 example shows how Swarm training can be manually launched using `run-sl` script on each host.
-    -   Model training starts once minimum number \(`minPeers`\) of specified ML nodes are launched, either automatically or manually.
-    -   After training, the final Swarm model is saved by each ML node.
-2.  The files created under the workspace directory that include certs, models, data, etc., are expected to have the minimum file permission as 664. Once the files are copied to the workspace directory, check the permissions of the files inside it. If desired permissions are not met, user might observe `file permission denied` in the respective swarm component's Docker logs. To overcome such cases, user can change the permissions of the files by using the `chmod` command.
-3.  Finally, these instructions assume that `swarm-learning` is the current working directory on all the systems: `cd swarm-learning`.
-
+## System setup for the examples
+1. The instructions in these examples assume that Swarm Learning will run on 1 to 2 host systems.
+    - These systems have IP addresses 172.1.1.1 and 172.2.2.2.
+    - License server is installed on 172.1.1.1 and running on default port 5814.
+    - 172.1.1.1 will run the Sentinel Swarm Network node.
+    - MNIST example has one more Swarm Network (SN) node. 172.2.2.2 will run the other Swarm Network node. A Swarm Learning (SL) and Machine Learning (ML) node pair will be spawned across these 2 host systems - 172.1.1.1 and 172.2.2.2. 
+    - Spawning of SL and ML nodes can be automatic or manual.
+    - Swarm Operator (SWOP) node, running on each host system, takes care of spawning them automatically using the task framework. MNIST example shows how Swarm training can be launched in automatic way using Swarm Command Interface (SWCI) and Swarm Operator (SWOP) nodes. SWCI runs on 172.1.1.1 whereas Swarm Operator runs on both 172.1.1.1 and 172.2.2.2 hosts.
+    - CIFAR-10 example shows how Swarm training can be manually launched using run-sl script on each host.
+    - Model training will start once minimum number (minPeers) of specified ML nodes are launched either automatic or manual way.
+	- After training final Swarm model will be saved by each ML node
+2. The files created under the workspace directory that includes certs, models, data etc., are expected to have the minimum file permission as 664. Once the files are copied to workspace directory check the permissions of the files inside it. If desired permissions are not met one might observe `file permission denied` in the respective swarm component's docker logs. To overcome such cases, upfront please change the permission of the files by using `chmod` command. 
+3. Finally, these instructions assume swarm-learning to be the current working directory on all the systems:
+    `cd swarm-learning`

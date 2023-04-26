@@ -1,5 +1,5 @@
 ######################################################################
-# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ######################################################################
 Name: run_mnist_pyt
 TaskType: RUN_SWARM
@@ -10,9 +10,9 @@ Body:
     Command: model/mnist_pyt.py --cuda
     Entrypoint: python3
     WorkingDir: /tmp/test
-    Envvars: ["DATA_DIR": data-and-scratch/app-data, "SCRATCH_DIR": data-and-scratch/scratch, "MODEL_DIR": model, "MAX_EPOCHS": 500, "MIN_PEERS": 4]
-    PrivateContent: /tmp/test/data-and-scratch
+    Envvars: ["MODEL_DIR": model, "MAX_EPOCHS": 5, "MIN_PEERS": 4]
+    PrivateContent: /tmp/test/
     SharedContent:
-    -   Src: <CURRENT-PATH>/workspace/mnist-pyt/model
+    -   Src: <PROJECT-MODEL>
         Tgt: /tmp/test/model
         MType: BIND

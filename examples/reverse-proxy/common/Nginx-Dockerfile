@@ -3,20 +3,12 @@
 ######################################################################
 
 
-FROM ubuntu:22.04
-
+FROM nginx:1.23.0
 
 RUN apt-get update                              \
  && apt-get install                             \
-    ca-certificates=20211016ubuntu0.22.04.1     \
-    curl=7.81.0-1ubuntu1.6                      \
-    gnupg2=2.2.27-3ubuntu2.1                    \
-    lsb-release=11.1.0ubuntu4                   \
-    nginx=1.18.0-6ubuntu14.3                    \
-    nginx-extras=1.18.0-6ubuntu14.3             \
-    ubuntu-keyring=2021.03.26                   \
+    nginx-extras=1.18.0-6.1+deb11u3             \
     --no-install-recommends -y
-
 
 ENTRYPOINT ["nginx"]
 CMD ["-g", "daemon off;"]

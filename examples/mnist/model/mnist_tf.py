@@ -1,5 +1,5 @@
 ############################################################################
-## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -33,6 +33,7 @@
 ############################################################################
 
 import tensorflow as tf
+from tensorflow.keras.datasets import mnist
 import numpy as np
 import time
 import datetime
@@ -43,30 +44,24 @@ import logging
 default_max_epochs = 5
 default_min_peers = 2
 
-def load_data(dataDir):
+def load_data():
     """Loads the MNIST dataset.
-    # Arguments
-        dataDir: path where to find the mnist.npz file
-    # Returns
-        Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
+    # The data, split between train and test sets:
+    # Refer - https://keras.io/api/datasets/mnist/.
     """
-    path = os.path.join(dataDir,'mnist.npz') 
-
-    with np.load(path, allow_pickle=True) as f:
-        x_train, y_train = f['x_train'], f['y_train']
-        x_test, y_test = f['x_test'], f['y_test']
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
     return (x_train, y_train), (x_test, y_test)
 
 
 def main():
-  dataDir = os.getenv('DATA_DIR', '/platform/data')
   modelDir = os.getenv('MODEL_DIR', '/platform/model')
   max_epochs = int(os.getenv('MAX_EPOCHS', str(default_max_epochs)))
   min_peers = int(os.getenv('MIN_PEERS', str(default_min_peers)))
-
+  scratchDir = os.getenv('SCRATCH_DIR', '/platform/scratch')
+  os.makedirs(scratchDir, exist_ok=True)
   model_name = 'mnist_tf'
 
-  (x_train, y_train),(x_test, y_test) = load_data(dataDir)
+  (x_train, y_train),(x_test, y_test) = load_data()
   x_train, x_test = x_train / 255.0, x_test / 255.0
 
   model = tf.keras.models.Sequential([
@@ -97,7 +92,7 @@ def main():
   # Save model and weights
   print('Saving the final Swarm model ...')
   swarmCallback.logger.info('Saving the final Swarm model ...')
-  model_path = os.path.join(modelDir, model_name)
+  model_path = os.path.join(scratchDir, model_name)
   model.save(model_path)
   print('Saved the trained model!')
   swarmCallback.logger.info(f'Saved the trained model - {model_path}')
