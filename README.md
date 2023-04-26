@@ -1,6 +1,6 @@
 # <d></d> <img style="float: right;" src="docs/images/GettyImages-1148109728_EAA-graphic-A_112_0_72_RGB.jpg?raw=true"/> SWARM LEARNING
 
-#### Product version: 1.2.0
+#### Product version: 2.0.0
 
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
 <img width="70%" height="70%" src="/docs/User/GUID-E80D248E-E754-498E-99D6-67508092F779-high.png">
@@ -60,7 +60,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
 ## Getting Started 
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
   2. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
-  3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
+  3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the SLM-UI installer 
   4. Execute [MNIST example](/examples/mnist/README.md) 
   5. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   6. [Troubleshooting](/docs/User/Troubleshooting.md)
