@@ -33,6 +33,3 @@ HPE recommends that users use their own certificates in actual production enviro
 8.  [Managing the Global Settings](Managing_the_Global_Settings.md)
 
 
-
-**Parent topic:**[Installing HPE Swarm Learning Management UI \(SLM-UI\)](GUID-60017971-B0A9-4119-AEAF-A21594EE5C1E.md)
-
