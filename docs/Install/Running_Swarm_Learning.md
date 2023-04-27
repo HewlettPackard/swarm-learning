@@ -1,4 +1,4 @@
-# <a name="GUID-5B830FEE-C3BE-491B-AD36-638BBC19638D"/> Running Swarm Learning
+# <a name="GUID-5B830FEE-C3BE-491B-AD36-638BBC19638D"/> Running Swarm Learning using CLI
 
 <blockquote>
 TIP:
