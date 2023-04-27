@@ -3,7 +3,9 @@
 The following API methods help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
 
 <blockquote>
-NOTE:Arguments that do not have default values are mandatory.
+NOTE:
+  Arguments that do not have default values are mandatory.
+  This is an experimental API methods for developers.
 
 </blockquote>
 The python3 program needs to import the SWCI class first, and then use the below APIs.
