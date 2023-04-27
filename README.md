@@ -67,7 +67,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
 
 <blockquote>
 
-NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent swarm training** mentioned in the enterprise documentation are applicable for enterprise customers ONLY.
+NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent swarm training** feature mentioned in the documentation are applicable for enterprise customers ONLY.
 
 </blockquote>
 
@@ -80,21 +80,21 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
   - [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md)
   - [Configuring Swarm Learning components](/docs/Install/Configuring_Swarm_Learning.md) 
-  - [Running Swarm learning examples using SLM-UI](/docs/Install/Running_Swarm_Learning_examples_using_SLM-UI.md)
-  - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
   - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
+  - [Running Swarm learning examples using SLM-UI](/docs/Install/Running_Swarm_Learning_examples_using_SLM-UI.md)
+  - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
   - [Examples](/examples/README.md)
   - [Swarm Learning Log Collection](/docs/User/Swarm_Log_Collector.md)
   
 ## References
 
-  - [Papers](docs/papers-and-articles.md)
-  - [Videos](docs/videos.md)
-  - [URLs](docs/URL.md)
+  - [Papers](docs/Generic/papers-and-articles.md)
+  - [Videos](docs/Generic/videos.md)
+  - [URLs](docs/Generic/URL.md)
 
 ## Acronyms and Abbreviations
-  Refer to [Acronyms and Abbreviations](docs/acronyms.md) for more information.
+  Refer to [Acronyms and Abbreviations](docs/Generic/acronyms.md) for more information.
 
 ## Getting in touch 
   Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  
@@ -102,9 +102,9 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel.
   
 ## Contributing
-  Refer to [Contributing](CONTRIBUTING.md) for more information.
+  Refer to [Contributing](docs/Generic/CONTRIBUTING.md) for more information.
 
 ## License
-  The distribution of Swarm Learning in this repository is for non-commercial and experimental use under this [license](LICENSE.md). 
+  The distribution of Swarm Learning in this repository is for non-commercial and experimental use under this [license](docs/Generic/LICENSE.md). 
   
-  See [ATTRIBUTIONS](ATTRIBUTIONS.md) and [DATA LICENSE](DATA_LICENSE.md) for terms and conditions for using the datasets included in this repository.
+  See [ATTRIBUTIONS](docs/Generic/ATTRIBUTIONS.md) and [DATA LICENSE](docs/Generic/DATA_LICENSE.md) for terms and conditions for using the datasets included in this repository.
