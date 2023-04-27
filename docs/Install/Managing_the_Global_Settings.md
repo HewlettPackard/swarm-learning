@@ -4,11 +4,11 @@ The Global settings feature allows the user to create multiple custom user accou
 
 ![Global Settings](GUID-C61F746E-1DFC-4A68-8F10-5C6C689EC6E8-high.png)
 
--   **[Configuring the User Settings](GUID-09412B21-518E-4278-8906-DAEE83474F58.md)**  
+-   **[Configuring the User Settings](Configuring_the_User_Settings.md)**  
 
--   **[Configuring the Swarm Settings](GUID-8D0B6FA0-E953-4186-ABF3-9C1F932A263F.md)**  
+-   **[Configuring the Swarm Settings](Configuring_the_Swarm_Settings.md)**  
 
--   **[Configuring the License Settings](GUID-9BBCF1CF-5BC3-4E66-82C5-EB2A958485B7.md)**  
+-   **[Configuring the License Settings](Configuring_the_License_Settings.md)**  
 
 
 **Parent topic:**[Running Swarm Learning examples using SLM-UI](Running_Swarm_Learning_examples_using_SLM-UI.md)
