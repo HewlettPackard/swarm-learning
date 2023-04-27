@@ -12,7 +12,8 @@ Perform the following steps to run the SL examples using SLM-UI.
 
 3.  User can use the provided template files and the generated certificates for the examples from the laptop and import them into the SLM-UI installer.
 
-      **NOTE:** HPE recommends that users use their own certificates in actual production environment.
+      ### **NOTE:** 
+     HPE recommends that users use their own certificates in actual production environment.
   
 To run the Swarm Learning examples using SLM-UI, perform the following steps:
 
