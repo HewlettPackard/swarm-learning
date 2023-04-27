@@ -11,5 +11,5 @@
     ![User Settings](GUID-C61F746E-1DFC-4A68-8F10-5C6C689EC6E8-high.png)
 
 
-**Parent topic:**[Managing the Global Settings](GUID-15129C81-8774-4B60-85F8-EC618677D51C.md)
+**Parent topic:**[Managing the Global Settings](Managing_the_Global_Settings.md)
 
