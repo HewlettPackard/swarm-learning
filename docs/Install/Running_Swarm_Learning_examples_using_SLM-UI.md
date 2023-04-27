@@ -1,8 +1,8 @@
 # <a name="GUID-A2B92980-7281-4B0A-989F-33097B7C96A5/"> Running Swarm Learning examples using SLM-UI
 
-**TIP:**
+SLM-UI containers are automatically started by the SLM-UI installer. But, if it is not running on the host, users need to manually start it using the commands. For more information, see [Starting SLM-UI manually](Starting_SLM-UI_manually.md).
 
-Before you start using the SLM-UI, HPE recommends you to read the [Documentation](/README.md#documentation) section to understand about the architecture of Swarm Learning, how these nodes work, how model training happens, and Swarm Learning Concepts section.
+Before you start using the SLM-UI, HPE recommends you to read the [Documentation](/README.md#documentation) section to understand about the architecture     of Swarm Learning, how these nodes work, how model training happens, and Swarm Learning Concepts section.
 
 Perform the following steps to run the SL examples using SLM-UI.
 
@@ -12,9 +12,9 @@ Perform the following steps to run the SL examples using SLM-UI.
 
 3.  User can use the provided template files and the generated certificates for the examples from the laptop and import them into the SLM-UI installer.
 
-**NOTE:**
-
-HPE recommends that users use their own certificates in actual production environment.
+      **NOTE:** HPE recommends that users use their own certificates in actual production environment.
+  
+To run the Swarm Learning examples using SLM-UI, perform the following steps:
 
 1.  [Adding a Swarm Host](Adding_a_Swarm_Host_in_SLM-UI.md)
 
