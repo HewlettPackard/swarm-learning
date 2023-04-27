@@ -5,6 +5,12 @@
 2.  In the **Task Runners** tab, click **Create new task runner**.
 
     If you are running concurrent Swarm training, you need to create multiple task runners. If you are running a single training, the default task runner would be good enough and this step is optional.
+    <blockquote>
+    
+    **Note:**
+    This feature is available for enterprise license users ONLY.
+    
+    </blockquote>
 
 3.  Create new Task Runner by providing the following details.
 
