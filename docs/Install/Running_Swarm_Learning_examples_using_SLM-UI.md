@@ -2,7 +2,7 @@
 
 **TIP:**
 
-Before you start using the SLM-UI, HPE recommends you to read the *HPE Swarm Learning User Guide* to understand about the architecture of Swarm Learning, how these nodes work, how model training happens, and Swarm Learning Concepts section.
+Before you start using the SLM-UI, HPE recommends you to read the [Documentation](/README.md#documentation) section to understand about the architecture of Swarm Learning, how these nodes work, how model training happens, and Swarm Learning Concepts section.
 
 Perform the following steps to run the SL examples using SLM-UI.
 
