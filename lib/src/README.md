@@ -30,7 +30,7 @@ Build depends upon python `build` module so make sure its latest version. Only p
 Steps to build client library:
 
 1. Set `SWARM_VER` environment variable to corresponding swarm version
-2. Run python -m build command from current directory
+2. Run python -m build command from path of src directory
 
 ```
 export SWARM_VER=2.0.1
