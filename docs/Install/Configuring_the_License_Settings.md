@@ -9,5 +9,5 @@
     ![License Settings](GUID-2DC5F818-A512-4A5E-AECE-C5635663C7E7-high.png)
 
 
-**Parent topic:**[Managing the Global Settings](GUID-15129C81-8774-4B60-85F8-EC618677D51C.md)
+**Parent topic:**[Managing the Global Settings](Managing_the_Global_Settings.md)
 
