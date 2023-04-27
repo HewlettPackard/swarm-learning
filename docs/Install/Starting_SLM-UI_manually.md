@@ -28,5 +28,5 @@ The following arguments are the optional arguments for `run-slm-ui`:
 |<code>-ca&vert;--ca-cert</code>`<name>`|Certificate Authority Certificate Name.|
 |<code>-h&vert;--help</code>`/h`|help|
 
-**Parent topic:**[Installing HPE Swarm Learning Management UI \(SLM-UI\)](GUID-60017971-B0A9-4119-AEAF-A21594EE5C1E.md)
+**Parent topic:**[Running Swarm Learning examples using SLM-UI](Running_Swarm_Learning_examples_using_SLM-UI.md)
 
