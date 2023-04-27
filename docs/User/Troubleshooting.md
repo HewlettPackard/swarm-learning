@@ -9,6 +9,7 @@
 - Any experimental release of Ubuntu greater than LTS 20.04 may result in the following error message when running SWOP tasks.
   ```SWOP MAKE_USER_CONTAINER fails.```
   This occurs as SWOP is not able to obtain image of itself because of Docker setup differences in this experimental Ubuntu release. Switch to 20.04 LTS to resolve  this issue.
+- On the OS platform (or base images), some of the dependent open-source packages (for example, apt packages) may change asynchronously. In such cases, users must update their deployment environment with compatible and/or latest packages.
 
 # <a name="GUID-96BB1337-2B99-45C7-BA9F-3D7D3B76663E"/> Troubleshooting
 
@@ -38,22 +39,26 @@ Error code: 6002, as shown in the following screenshot occurs when Swarm Learnin
 3.  Verify if the Swarm licenses are installed using APLS web management console. For more information, see APLS User Guide.
 
 
-## 2. Installation of HPE Swarm Learning on air-gaped systems or if the Web UI Installer runs into any issue and not able to install
+## 2. Installation of HPE Swarm Learning on air-gaped systems or if the SLM-UI Installer runs into any issue and not able to install
 
-- Download the following from HPE My Support Center(MSC) on a host system that has internet access - tar file (HPE_SWARM_LEARNING_DOCS_EXAMPLES_SCRIPTS_Q2V41-11033.tar.gz) and the signature file for the above tar file.
+- Download the following from [HPE My Support Center(MSC)](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) on a host system that has internet access - tar file (HPE_SWARM_LEARNING_DOCS_EXAMPLES_SCRIPTS_Q2V41-11033.tar.gz) containing docs, scripts and examples, and the signature file for the above tar file.
 - Untar the tar file under `/opt/hpe/swarm-learning`.
 - Do a docker login from your host:
-   `docker login hub.myenterpriselicense.hpe.com –u <YOUR-HPE-PASSPORT-EMAIL> -p hpe_eval`
+   `docker login hub.myenterpriselicense.hpe.com –u <YOUR-HPE-PASSPORT-EMAIL> -p hpe`
 - Pull the signed Swarm Learning images from HPEs Docker Trust Registry (DTR):
    ```
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:<latest Swarm Learning Version>
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sl:<latest Swarm Learning Version>
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/swci:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sn:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sl:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swci:<latest Swarm Learning Version>
    docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swop:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui-postgres:<latest Swarm Learning Version>
+   docker pull hello-world
    
    For eg: docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.2.0
    ```
-- Copy the tar file and Docker images to the air-gaped systems.
+- Copy the tar file and Docker images to the air-gaped Linux systems.
+- Contact HPE for further instructions on manually starting the SLM-UI.
 
 ## 3. System resource issues if too many SLs are mapped to the same SN
 
