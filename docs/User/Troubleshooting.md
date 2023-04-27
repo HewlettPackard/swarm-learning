@@ -55,7 +55,7 @@ Error code: 6002, as shown in the following screenshot occurs when Swarm Learnin
    docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui-postgres:<latest Swarm Learning Version>
    docker pull hello-world
    
-   For eg: docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.2.0
+   For eg: docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sn:2.0.0
    ```
 - Copy the tar file and Docker images to the air-gaped Linux systems.
 - Contact HPE for further instructions on manually starting the SLM-UI.
