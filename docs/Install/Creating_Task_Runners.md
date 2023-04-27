@@ -21,5 +21,5 @@
     ![Task Runner List](GUID-895823EE-3612-4689-A763-0794B9B44D74-high.png)
 
 
-**Parent topic:**[Running Swarm Learning examples using SLM-UI](GUID-A2B92980-7281-4B0A-989F-33097B7C96A5.md)
+**Parent topic:**[Running Swarm Learning examples using SLM-UI](Running_Swarm_Learning_examples_using_SLM-UI.md)
 
