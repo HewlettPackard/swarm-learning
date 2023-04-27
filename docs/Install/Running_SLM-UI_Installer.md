@@ -66,5 +66,3 @@
     After logging in to the SLM-UI, user can run the examples. User can also create the custom account.
 
 
-**Parent topic:**[Installing HPE Swarm Learning Management UI \(SLM-UI\)](GUID-60017971-B0A9-4119-AEAF-A21594EE5C1E.md)
-
