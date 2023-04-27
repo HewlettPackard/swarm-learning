@@ -47,5 +47,5 @@
     ![My Projects](GUID-18FA0377-F495-443F-BD38-76AEACC22D98-high.png)
 
 
-**Parent topic:**[Running Swarm Learning examples using SLM-UI](GUID-A2B92980-7281-4B0A-989F-33097B7C96A5.md)
+**Parent topic:**[Running Swarm Learning examples using SLM-UI](Running_Swarm_Learning_examples_using_SLM-UI.md)
 
