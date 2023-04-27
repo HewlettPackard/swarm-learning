@@ -5,6 +5,12 @@
 2.  In the **Contracts** tab, click **Create new contract**.
 
     If you are running concurrent Swarm training, you need to create multiple contracts. If you are running a single training, the default contract would be good enough and this step is optional.
+    <blockquote>
+    
+    **Note:**
+      This feature is available for enterprise customers ONLY.
+    
+    </blockquote>
 
 3.  Create new contract by providing the following details.
 
