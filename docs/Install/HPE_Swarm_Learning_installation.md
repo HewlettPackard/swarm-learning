@@ -2,6 +2,6 @@
 
 1.   [Download the License Server](Download_the_License_Server.md) 
 2.   [Install the License Server and download Swarm Learning](Install_the_License_Server.md) 
-3.   [Installing HPE Swarm Learning Management UI](Installing_HPE_Swarm_Learning_Management_UI.md) 
+3.   [Running SLM-UI Installer](Running_SLM-UI_Installer.md) 
 
 
