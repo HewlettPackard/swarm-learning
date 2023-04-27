@@ -74,7 +74,7 @@ snServerName = 'SN Server Name or IP'
 # Connect to the SWCI via SWCI_WEB_PORT
 s = sw.Swci(swciServerName,port=30306) #30306 is the default port
 # Connect to SN and create context
-print(s.createContext('testContext', snServerName))
+print(s.createContext('testContext', ip=snServerName))
 # Switches the context to testContext
 print(s.switchContext('testContext'))
 # Creates a training contract
