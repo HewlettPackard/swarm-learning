@@ -81,7 +81,7 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md)
   - [Configuring Swarm Learning components](/docs/Install/Configuring_Swarm_Learning.md) 
   - [Running Swarm learning examples using SLM-UI](/docs/Install/Running_Swarm_Learning_examples_using_SLM-UI.md)
-  - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_Using_CLI.md)
+  - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
   - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
   - [Examples](/examples/README.md)
