@@ -17,5 +17,5 @@
     ![Swarm Settings](GUID-7707134A-A746-4CA9-B79F-AB6BD4B6938C-high.png)
 
 
-**Parent topic:**[Managing the Global Settings](GUID-15129C81-8774-4B60-85F8-EC618677D51C.md)
+**Parent topic:**[Managing the Global Settings](Managing_the_Global_Settings.md)
 
