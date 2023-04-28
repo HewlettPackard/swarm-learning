@@ -54,7 +54,7 @@ For Nvidia GPUS, you can set `--gpus` under `usrcontaineropts` section of the SW
 If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate environment variables by using `--ml-e` option.
 
 For AMD GPUs, you can set `usercontaineropts` and/or `usrenvvars` section of the SWOP profile. For more information, see [SWOP profile schema](/docs/User/SWOP_profile_schema.md).
-If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate parameters as specified in the [User machine learning container parameters](/docs/Install/Running_Swarm_Learning.md). For more information on User machine learning container parameters, see *HPE Swarm Learning Installation and Configuration Guide*.
+If you are starting the SL and ML nodes by using the `run-sl` script, then the GPUs can be specified as appropriate parameters as specified in the [User machine learning container parameters](/docs/Install/Running_Swarm_Learning_using_CLI.md#-user-machine-learning-container-parameters). For more information on User machine learning container parameters, see [User machine learning container parameters](/docs/Install/Running_Swarm_Learning_using_CLI.md#-user-machine-learning-container-parameters).
 
 ## <a name="SECTION_F32_J1Y_CTB"/> What all GPUs are supported ?
 
