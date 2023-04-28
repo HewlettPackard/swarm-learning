@@ -1,6 +1,6 @@
 # <a name="GUID-3E1F1726-9D98-413A-961F-80048D1080F4"/> SWCI APIs
 
-The following API methods help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
+The following API features help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
 
 <blockquote>
 NOTE:
