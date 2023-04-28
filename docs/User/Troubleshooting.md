@@ -9,7 +9,7 @@
 - Any experimental release of Ubuntu greater than LTS 22.04 may result in the following error message when running SWOP tasks.
   ```SWOP MAKE_USER_CONTAINER fails.```
   This occurs as SWOP is not able to obtain image of itself because of Docker setup differences in this experimental Ubuntu release. Switch to 22.04 LTS to resolve  this issue.
-- On the OS platform (or base images), some of the dependent open-source packages (for example, apt packages) may change asynchronously. In such cases, users must update their deployment environment with compatible and/or latest packages.
+- On the OS platform (or base images), some of the dependent open-source packages (for example, apt packages) may get absolete or updated. In such cases, users must update their deployment environment with compatible and/or latest packages.
 
 # <a name="GUID-96BB1337-2B99-45C7-BA9F-3D7D3B76663E"/> Troubleshooting
 
