@@ -179,7 +179,6 @@ class SwarmCallback(SwarmCallbackBase):
         :param inDict: The flat model weights' dictionary to be loaded in the model
         :return: Nothing is returned, the saved model is updated in-place
         '''
-        # HPESL-141 # SL : PYT: fails to handle dim-0 (scalar , layers) 
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
         # Partially loading a model or loading a partial model are common scenarios 
         # when transfer learning or training a new complex model. 
@@ -212,7 +211,6 @@ class SwarmCallback(SwarmCallbackBase):
         Pytorch specific implementation of abstract method
         _calculateLocalLoss in SwarmCallbackBase class.
         '''
-        # TBD : To be implemented later
         return 0
 
 

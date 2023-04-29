@@ -87,7 +87,7 @@ class Swci:
         # setup client side security for URL access
         # Ref: https://docs.python-requests.org/en/latest/user/advanced/#ca-certificates
         self.__sess = requests.Session()
-        # TODO: Clean-up mTLS / TLS with SWCI server
+        # Clean-up mTLS / TLS with SWCI server
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.__secure = False
         self.__cert = None
@@ -307,7 +307,6 @@ class Swci:
         return ret
     
     def createTrainingContract(self, ctName):
-        #https://github.hpe.com/yoshio-sugiyama/swarm-learning-examples/issues/1
         ret = self.__execCmd('create contract ' + ctName)
         if ret: # cache maintenance 
             # clean up the contract list, ignore errors

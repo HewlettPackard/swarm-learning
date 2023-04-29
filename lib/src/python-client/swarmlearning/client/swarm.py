@@ -216,8 +216,6 @@ class SwarmCallbackBase(ABC):
             self.logger.debug("OnEpochEnd: Bypassing Swarm Learning functionality as SWARM_LOOPBACK is True")
             return
         self.logger.debug("="*20 + " swarmOnEpochEnd : START " + "="*20)
-        # NO Swarm related functionality is implemented here for now
-        # Space holder for future use
         self.logger.debug("="*20 + " swarmOnEpochEnd : END " + "="*20)
 
 
@@ -343,10 +341,6 @@ class SwarmCallbackBase(ABC):
         stream_handler.flush = sys.stdout.flush
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
-        # Add file handler
-        ### Commenting the code to write file log ###
-        # Will uncomment only when we decide where to 
-        # create the log file in user container
         '''
         logFile = 'swarm_callback.log'
         os.remove(logFile) if os.path.exists(logFile) else None

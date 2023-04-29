@@ -36,13 +36,9 @@ MessageBody = Union[
   , spb.LossResponse
 ]
 
-# Cython does not support import of annotations from __future__. So, we are left
-# with this hack for type annotation.
 BridgeLaneDirection = TypeVar("Bridge.LaneDirection")
 
 
-# TODO: add a logger. This is slightly complicated by the fact we have different
-# logging methods on the two sides.
 class Bridge:
     class LaneDirection(IntEnum):
         NorthBound = 1
@@ -53,7 +49,6 @@ class Bridge:
 
         self.__setAPIVersion()
         
-        # HPESL-634 -> /tmp/hpe-swarm/...request.pipe: [Errno 13] Permission denied
         # createPipes is set to True for SL container.
         # WARNING: If it is set to True from ML container,
         #          then ML call to mkfifo might fail as ML runs with limited privileges.
@@ -65,7 +60,6 @@ class Bridge:
 
         # These values must be non-zero. Zero values get optimized out, giving
         # us a serialized size that is smaller than what we want.
-        # TODO: find a way to disable this optimization.
         dummyHeader = spb.Header(apiVersion=self._apiVer, msgType=1, msgSize=1)
         self._serializedHeaderSize = len(
             dummyHeader.SerializeToString(deterministic=True)
@@ -117,7 +111,7 @@ class Bridge:
         )
         # message = spb.Message(header=header, body=body)
 
-        # TODO: chunk the message into 2GB blocks.
+        # chunk the message into 2GB blocks.
         lane = self._openLanes[sendLane]
 
         # Send the header and body separately until we understand the protobuf

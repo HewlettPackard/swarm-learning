@@ -277,7 +277,6 @@ class SwarmCallback(Callback, SwarmCallbackBase):
                 # Scaling done as Solidity contract cannot handle floats
                 valLoss = scores[0]
         elif self.mlPlatform == SLPlatforms.TF:
-            # TODO: To be implemented later
             valLoss = 0
         return valLoss
 

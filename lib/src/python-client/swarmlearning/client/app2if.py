@@ -172,8 +172,6 @@ class APP2IF:
         paramWeights = slutil.toWeights(params)
         syncReq = spb.SyncRequest(
             sessionID=self.__sessionID
-            # See if we can do better here. Currently, we need the field names
-            # in a fixed order.
           , syncSeqNum=self.__sequenceCounters[sequenceNames[0]]
           , nodeWeightage=nodeWeightage
           , numberOfNodes=numberOfNodes
@@ -220,8 +218,6 @@ class APP2IF:
                       , lossResp
                       )
                 except Exception as eignore:
-                    # Suppress the context i.e. "during handling another exception"
-                    # Details - https://stackoverflow.com/questions/24752395/python-raise-from-usage
                     raise e from None
                 else:
                     raise
