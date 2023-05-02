@@ -21,11 +21,15 @@ if using SWOP:\n
 ./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<path to example folder>"\n
 if using run-sl:\n
 ./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ML Image Name>"\n
-
 EXAMPLES:\n
-./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/"\n
-
-./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop"\n'
+Run the below command if you are running the example from CLi \n
+./swarmLogCollector "hub.myenterpriselicense.hpe.com/hpe/swarmlearning"
+"workspace=<Swarm Installation DIR>/workspace/fraud-detection/"\n
+Run the below command if you are running the example from SLM-UI \n
+./swarmLogCollector "hub.myenterpriselicense.hpe.com/hpe/swarmlearning"
+"workspace=<Swarm Installation DIR>/slm-ui/projects/1/"\n
+Run the below command if you are running the example without SWOP \n
+./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe/swarm-learning" "mlimage=user-env-tf2.7.0-swop"\n'
 
 #Checking docker hub passed as argument. If not, exiting
 if [ -z "$1" ]
@@ -40,7 +44,7 @@ if [ -z "$2" ]
     msg=`date`"-ERROR: You have to provide absolute path to workspace(if using SWOP to running examples or ML Image name (If using run SL script) !!"
     exitLogCollection $msg $usage
 fi
-
+DEFAULTIFS=$IFS
 hostname=$(hostname)
 dt=$(date +%Y%m%d%H%M%S)
 
@@ -56,7 +60,16 @@ if [ "${parse_ml_or_swop[0]}" == "mlimage" ] ; then
   USER_CONTAINERS=${parse_ml_or_swop[1]}
 elif [ "${parse_ml_or_swop[0]}" == "workspace" ] ; then
   WORKSPACE=${parse_ml_or_swop[1]}
-  IFS=':' read -ra  user_container <<< $(cat $WORKSPACE/swci/taskdefs/user_env_tf_build_task.yaml | grep Outcome)
+  build_yamls=$(grep -r "MAKE_USER_CONTAINER" $WORKSPACE/swci/taskdefs/*.yaml)
+  
+  IFS=':' 
+  read -ra filename <<< "$build_yamls"
+  for val in "${filename[@]}";
+  do
+    read -ra  user_container <<< $(cat $val | grep Outcome)
+	break
+  done
+  
   USER_CONTAINERS_=${user_container[1]}
   USER_CONTAINERS="$(echo -e "${USER_CONTAINERS_}" | tr -d '[:space:]')"
 
@@ -113,13 +126,13 @@ echo -e "NVIDIA DETAILS\n"
 nvidia-smi
 
 DOCKER_HUB=$1
-
+IFS=$DEFAULTIFS
 # If user has multiple version of swarm, this will reurn a array.
 TAGS=$(docker images | grep $DOCKER_HUB/sn  | awk '{print $2}')
 tags_array=($TAGS)
 
 #Looping through images and checking all images exists.
-for TAG in "${!TAGS[@]}"
+for TAG in "${!tags_array[@]}"
 do
 	for image in swop swci sn sl
 	 do
@@ -135,7 +148,7 @@ done
 #Looping through all tags and collecting logs. 
 #Only active container will have logs.
 isSNExist=0 # To check whether SN container exists 
-for TAG in "${!TAGS[@]}"
+for TAG in "${!tags_array[@]}"
 do
 	SNs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sn:${tags_array[TAG]})
 	sns_array=($SNs)
@@ -154,7 +167,7 @@ fi
 
 ########### BEGIN TAKING SWOPs LOGS######################
 isSWOPExist=0 # To check whether SWOP container exists 
-for TAG in "${!TAGS[@]}"
+for TAG in "${!tags_array[@]}"
 do
 	SWOPs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/swop:${tags_array[TAG]})
 	swops_array=($SWOPs)
@@ -172,7 +185,7 @@ fi
 
 ########### BEGIN TAKING SLs LOGS######################
 isSLExist=0 # To check whether SL container exists 
-for TAG in "${!TAGS[@]}"
+for TAG in "${!tags_array[@]}"
 do
 	SLs=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/sl:${tags_array[TAG]})
 	sls_array=($SLs)
@@ -190,7 +203,7 @@ fi
 
 ########### BEGIN TAKING USER LOGS######################
 isMLExist=0 # To check whether ML container exists 
-for TAG in "${!TAGS[@]}"
+for TAG in "${!tags_array[@]}"
 do
 	MLs=$(docker ps -a -q  --filter ancestor=$USER_CONTAINERS)
 	mls_array=($MLs)
@@ -206,6 +219,42 @@ if [ "$isMLExist" == 0 ] ; then
     echo `date`"-ERROR: No active ML container exists in this host!!"
 fi
 ########### END TAKING USER LOGS######################
+########### BEGIN TAKING SLM UI LOGS#######################
+isSLMUIExist=0 # To check whether SLM container exists
+for TAG in "${!tags_array[@]}"
+do
+	SLM_UI=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/slm-ui:${tags_array[TAG]})
+	slm_array=($SLM_UI)
+	for index in "${!slm_array[@]}"
+	do
+		echo "INFO: capturing log for ${slm_array[index]}"
+		docker logs ${slm_array[index]}  > "$LOG_DIR"/slm_ui_$index.log
+		docker inspect ${slm_array[index]} > "$LOG_DIR"/slm_ui_inspect_$index.log
+		isSLMUIExist=1
+	done
+done
+if [ "$isSLMUIExist" == 0 ] ; then
+    echo `date`"-ERROR: No active SLM-UI container exists in this host!!"
+fi
+########### END TAKING SLM UI LOGS######################
+########### BEGIN TAKING SLM UI POSTGRES LOG#######################
+isSLMUIPOSTGRESExist=0 # To check whether SLM POSTGRES container exists
+for TAG in "${!tags_array[@]}"
+do
+	SLM_POSTGRES=$(docker ps -a -q  --filter ancestor=$DOCKER_HUB/slm-ui-postgres:${tags_array[TAG]})
+	slm_postgres_array=($SLM_POSTGRES)
+	for index in "${!slm_postgres_array[@]}"
+	do
+		echo "INFO: capturing log for ${slm_postgres_array[index]}"
+		docker logs ${slm_postgres_array[index]}  > "$LOG_DIR"/slm_postgres_$index.log
+		docker inspect ${slm_postgres_array[index]} > "$LOG_DIR"/slm_postgres_inspect_$index.log
+		isSLMUIPOSTGRESExist=1
+	done
+done
+if [ "$isSLMUIPOSTGRESExist" == 0 ] ; then
+    echo `date`"-ERROR: No active SLM UI POSTGRES container exists in this host!!"
+fi
+########### END TAKING SLM UI POSTGRES LOG######################
 
 echo -e "Python Libraries:\n"
 pip list

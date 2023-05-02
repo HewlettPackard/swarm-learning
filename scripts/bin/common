@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ######################################################################
-## (C)Copyright 2021, 2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -78,10 +78,10 @@ trap "exit 1" SIGUSR1 SIGUSR2
 
 
 # Swarm product version.
-swarmVer="1.2.0"
+swarmVer="2.0.0"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
-swarmOrg="hpe_eval/swarm-learning"
+swarmOrg="hpe/swarm-learning"
 
 slRepoName="sl"
 snRepoName="sn"
@@ -1192,6 +1192,18 @@ dockerRun()
     ! hasItem "dockerOpts" "${sidecarPrefix}" "--user" "q" &&  \
     [[ ${sidecarPrefix} == "ml-" ]] && \
         dockerOptsVar+=("--user=$(id -u):$(id -g)")
+
+
+    # This is the additional safety to check and error out when any unsupported 
+    # arguments are used in the ML container.
+    match="--ml"
+    # Loop through the items and error out if any argument that starts with the match string.
+    for i in "${!cmdVar[@]}"; do
+    if [[ "${cmdVar[$i]}" == "$match"* ]]; then
+        echo "Error: ${cmdVar[$i]} is an unsupported option."  
+        exit 1
+    fi
+    done
 
     declare -n containerIDVar=$(makeVarName "${sidecarPrefix}" containerID)
     containerIDVar=$(${sudo} docker container create    \

@@ -1,71 +1,40 @@
-## Prerequisite for all examples
-1. Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](/docs/Install/HPE_Swarm_Learning_installation.md).
-
-2. Install the Swarm Learning product using the Web UI installer.  Refer [Web UI installation](/docs/Install/HPE_Swarm_Learning_installation.md)
-
-3. After Web UI completes its installation, verify if swarm-learning wheel file and its symbolic link are placed under the `lib` directory.
+# Prerequisite for all examples
+1. Start license server and install valid license before running any of the examples. Refer Installing licenses and starting license server.
 
 
-## Swarm Learning Examples
+# Swarm Learning Examples
+Below examples of using Swarm Learning are provided with the package:  
+    1. MNIST (`swarm-learning/examples/mnist`)  
+    2. MNIST-PYT (`swarm-learning/examples/mnist-pyt`)  
+    3. CIFAR-10 (`swarm-learning/examples/cifar10`)  
+    4. Credit card fraud detection (`swarm-learning/examples/fraud-detection`)  
+    5. Reverse Proxy based examples (`swarm-learning/examples/reverse-proxy`)  
+    
+They use different models, data, platforms and Swarm cluster configurations. Each example requires valid certificates to be used by different Swarm Learning components. A certificate generation utility (`gen-cert`) is provided under `swarm-learning/examples/utils` folder so that user can quickly generate certificates and run the examples.
 
-Several examples of using Swarm Learning are provided with the package. 
+```
+./swarm-learning/examples/utils/gen-cert -h
+Usage: gen-cert -e EXAMPLE-NAME -i HOST-INDEX
+        -e Name of the example e.g. mnist, mnist-pyt, cifar10 etc.
+        -i Host index like 1,2 etc.
+        -h Show help.
+```
 
-They use different models, data, ML platforms, and Swarm cluster configurations. All examples require valid X.509 certificates to be used by different Swarm Learning components. A certificate generation utility (gen-cert) is provided to enable users to run the examples quickly.
+**Note: It is strongly recommended that users must use their own certificates in actual production environment.**
 
-<blockquote>
-NOTE:HPE recommends that users must use their own certificates in actual production environment.
+See the README file for each example for brief instructions on running them. For a more detailed reference on the Swarm Learning platform and package, see the Swarm Learning Installation and Configuration Guide. This document can be found in the `swarm-learning/docs/` directory.
 
-</blockquote>
-
-
-For details of running each example, see the below:
-
-### [MNIST](/examples/mnist#-mnist) 
-This example demonstrates Swarm learning use case on following setup. 
-- Based on 2 hosts  
-- Mnist dataset
-- ML platform is Tensorflow 
-- SL-ML pairs are spawned using SWOP
-        
-### [MNIST-PYT](/examples/mnist-pyt#mnist-pytorch-example) 
-This example demonstrates Swarm learning use case on following setup. 
-Additionally this example has branches to show case **CPU based** and **GPU based (amd, nvidia)** local training of machine learning application. 
-- Based on single host
-- Mnist dataset
-- ML platform is PyTorch 
-- SL-ML pairs are spawned using SWOP
-        
-### [CIFAR-10](/examples/cifar10#-cifar-10)
-This example demonstrates Swarm learning use case on following setup. 
-- Based on 2 hosts  
-- Cifar dataset
-- ML platform is Tensorflow
-- SL-ML pairs are spawned using run-sl script
-        
-### [Credit card fraud detection](/examples/fraud-detection#-credit-card-fraud-detection) 
-This example demonstrates Swarm learning use case on following setup. 
-- Based on 1 host  
-- Credit card fraud detection dataset
-- ML platform is Tensorflow
-- SL-ML pairs are spawned using SWOP
-        
-### [BreakHis](/examples/breakhis)
-This example demonstrates Swarm learning use case on following setup. 
-- Based on 2 hosts  
-- BreakHis dataset
-- ML platform is Tensorflow
-- SL-ML pairs are spawned using run-sl script
-        
-### [Cancer prediction](/examples/cancer-pred#cancer-prediction) 
-This example demonstrates Swarm learning use case on following setup. 
-- Based on 2 hosts  
-- Cancer prediction dataset
-- ML platform is Tensorflow
-- SL-ML pairs are spawned using run-sl script
-
-### [Examples using reverse proxy](/examples/reverse-proxy)
-These examples demonstrates Swarm learning using a Reverse proxy server. [For details see](/docs/User/Swarm_Learning_Component_Interactions_using_Reverse_Proxy.md)
-- Uses 'services' instead of opening up network ports for connecting among Swarm components
-- ML platform is Tensorflow
-- SL-ML pairs are spawned using SWOP
-        
+## System setup for the examples
+1. The instructions in these examples assume that Swarm Learning will run on 1 to 2 host systems.
+    - These systems have IP addresses 172.1.1.1 and 172.2.2.2.
+    - License server is installed on 172.1.1.1 and running on default port 5814.
+    - 172.1.1.1 will run the Sentinel Swarm Network node.
+    - MNIST example has one more Swarm Network (SN) node. 172.2.2.2 will run the other Swarm Network node. A Swarm Learning (SL) and Machine Learning (ML) node pair will be spawned across these 2 host systems - 172.1.1.1 and 172.2.2.2. 
+    - Spawning of SL and ML nodes can be automatic or manual.
+    - Swarm Operator (SWOP) node, running on each host system, takes care of spawning them automatically using the task framework. MNIST example shows how Swarm training can be launched in automatic way using Swarm Command Interface (SWCI) and Swarm Operator (SWOP) nodes. SWCI runs on 172.1.1.1 whereas Swarm Operator runs on both 172.1.1.1 and 172.2.2.2 hosts.
+    - CIFAR-10 example shows how Swarm training can be manually launched using run-sl script on each host.
+    - Model training will start once minimum number (minPeers) of specified ML nodes are launched either automatic or manual way.
+	- After training final Swarm model will be saved by each ML node
+2. The files created under the workspace directory that includes certs, models, data etc., are expected to have the minimum file permission as 664. Once the files are copied to workspace directory check the permissions of the files inside it. If desired permissions are not met one might observe `file permission denied` in the respective swarm component's docker logs. To overcome such cases, upfront please change the permission of the files by using `chmod` command. 
+3. Finally, these instructions assume swarm-learning to be the current working directory on all the systems:
+    `cd swarm-learning`

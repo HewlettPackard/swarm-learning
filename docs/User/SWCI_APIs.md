@@ -1,9 +1,11 @@
 # <a name="GUID-3E1F1726-9D98-413A-961F-80048D1080F4"/> SWCI APIs
 
-The following API methods help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
+The following API features help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
 
 <blockquote>
-NOTE:Arguments that do not have default values are mandatory.
+NOTE:
+  Arguments that do not have default values are mandatory.
+  This is an experimental API methods for developers.
 
 </blockquote>
 The python3 program needs to import the SWCI class first, and then use the below APIs.
@@ -72,7 +74,7 @@ snServerName = 'SN Server Name or IP'
 # Connect to the SWCI via SWCI_WEB_PORT
 s = sw.Swci(swciServerName,port=30306) #30306 is the default port
 # Connect to SN and create context
-print(s.createContext('testContext', snServerName))
+print(s.createContext('testContext', ip=snServerName))
 # Switches the context to testContext
 print(s.switchContext('testContext'))
 # Creates a training contract

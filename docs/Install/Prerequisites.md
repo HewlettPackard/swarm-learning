@@ -30,25 +30,30 @@ NOTE:The requirements of system running the user ML node is driven by the comple
 
 ## <a name="SECTION_DXX_P12_JSB"/> Operating systems
 
--   Linux - Qualified on Ubuntu 20.04, RHEL 8.1.
+-   Linux - Qualified on Ubuntu 20.04, RHEL 8.5, SLES 15.
 
--   For Swarm Web UI installer, any x86-64 hardware running Linux, Windows, or Mac.
+-   For Swarm SLM-UI installer, any x86-64 hardware running Linux, Windows, or Mac.
 
 
 ## <a name="SECTION_JCW_Q12_JSB"/> Container hosting platform
 
--   HPE Swarm Learning is qualified with Docker 20.10.5.
+-   HPE Swarm Learning is qualified with Docker 20.10.5. Configure Docker to use IPv4.
 
 -   Configure Docker to run as a non-root user. For more details, see [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
 
 -   Configure network proxy settings for Docker. For more details, see [HTTP/HTTPS proxy](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy).
 
--   Configure Docker to use IPv4.
 
 
 ## <a name="SECTION_SMY_512_JSB"/> Machine Learning framework
 
-Qualified with Keras \(TensorFlow 2 backend\) and PyTorch 1.5 based Machine Learning models implemented using Python3.
+Qualified with Keras 2.9.0 \(TensorFlow 2 backend\) and PyTorch 1.5 based Machine Learning models implemented using Python3.
+
+<blockquote>
+
+  NOTE: Python version must be between 3.6 to 3.9.
+
+</blockquote>
 
 ## <a name="SECTION_BMS_BN4_RSB"/> Multi system cluster requirements
 

@@ -6,9 +6,10 @@
 - Swarm components are not able to see each other - See the [Exposed Ports](/docs/Install/Exposed_port_numbers.md) to see if the required ports are exposed.
 - User is not using the Swarm APIs correctly – See [Swarm Wheels Package](/docs/User/Swarm_client_interface-wheels_package.md) for details of API.
 - Errors related to SWOP task definition, profile schema, or SWCI init script – These are user defined artifacts. Verify these files for correctness.
-- Any experimental release of Ubuntu greater than LTS 20.04 may result in the following error message when running SWOP tasks.
+- Any experimental release of Ubuntu greater than LTS 22.04 may result in the following error message when running SWOP tasks.
   ```SWOP MAKE_USER_CONTAINER fails.```
-  This occurs as SWOP is not able to obtain image of itself because of Docker setup differences in this experimental Ubuntu release. Switch to 20.04 LTS to resolve  this issue.
+  This occurs as SWOP is not able to obtain image of itself because of Docker setup differences in this experimental Ubuntu release. Switch to 22.04 LTS to resolve  this issue.
+- On the OS platform (or base images), some of the dependent open-source packages (for example, apt packages) may get absolete or updated. In such cases, users must update their deployment environment with compatible and/or latest packages.
 
 # <a name="GUID-96BB1337-2B99-45C7-BA9F-3D7D3B76663E"/> Troubleshooting
 
@@ -38,22 +39,26 @@ Error code: 6002, as shown in the following screenshot occurs when Swarm Learnin
 3.  Verify if the Swarm licenses are installed using APLS web management console. For more information, see APLS User Guide.
 
 
-## 2. Installation of HPE Swarm Learning on air-gaped systems or if the Web UI Installer runs into any issue and not able to install
+## 2. Installation of HPE Swarm Learning on air-gaped systems or if the SLM-UI Installer runs into any issue and not able to install
 
-- Download the following from HPE My Support Center(MSC) on a host system that has internet access - tar file (HPE_SWARM_LEARNING_DOCS_EXAMPLES_SCRIPTS_Q2V41-11033.tar.gz) and the signature file for the above tar file.
+- Download the following from [HPE My Support Center(MSC)](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) on a host system that has internet access - tar file (HPE_SWARM_LEARNING_DOCS_EXAMPLES_SCRIPTS_Q2V41-110*.tar.gz) containing docs, scripts and examples, and the signature file for the above tar file.
 - Untar the tar file under `/opt/hpe/swarm-learning`.
 - Do a docker login from your host:
-   `docker login hub.myenterpriselicense.hpe.com –u <YOUR-HPE-PASSPORT-EMAIL> -p hpe_eval`
+   `docker login hub.myenterpriselicense.hpe.com –u <YOUR-HPE-PASSPORT-EMAIL> -p hpe`
 - Pull the signed Swarm Learning images from HPEs Docker Trust Registry (DTR):
    ```
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:<latest Swarm Learning Version>
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sl:<latest Swarm Learning Version>
-   docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/swci:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sn:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sl:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swci:<latest Swarm Learning Version>
    docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swop:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui:<latest Swarm Learning Version>
+   docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui-postgres:<latest Swarm Learning Version>
+   docker pull hello-world
    
-   For eg: docker pull hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn:1.2.0
+   For eg: docker pull hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sn:2.0.0
    ```
-- Copy the tar file and Docker images to the air-gaped systems.
+- Copy the tar file and Docker images to the air-gaped Linux systems.
+- Contact HPE for further instructions on manually starting the SLM-UI.
 
 ## 3. System resource issues if too many SLs are mapped to the same SN
 
@@ -70,7 +75,23 @@ User to ensure no failure in ML code before Swarm training starts. Check using `
 ## 5. Error while docker pull Swarm Learning images: 'could not rotate trust to a new trusted root'
 
 Please remove below directories and re-try pull images: <br> </br>
-~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/swci/
-~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sn/
-~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/swop/
-~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning/sl/
+~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swci/
+~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sn/
+~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe/swarm-learning/swop/
+~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sl/
+~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui/
+~/.docker/trust/tuf/hub.myenterpriselicense.hpe.com/hpe/swarm-learning/slm-ui-postgres/
+
+## 6. SWOP may not launch SL containers correctly on some versions of Docker. It would incorrectly report completion of run task within a few seconds
+
+The suggested workaround is to run the following command and then re-run the task:
+<br><br>docker tag hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sl:2.0.0 hub.docker.hpecorp.net/swarm-learning/sl:2.0.0
+
+## 7. Unable to contact API-Server
+`Unable to contact API-Server`
+### Resolution
+A swarm container could be unable to reach an SN node for several reasons.
+1. SN is not running. To confirm, check the Docker running state of the SN container.
+2. SN node can be reached via SN container FQDN only in a single host custom bridge network. But for all other scenarios, IP address of the host machine must be used. Ensure the correctness of `--sn-ip` and `--sn-api-port` parameters.
+3. Ensure that SN-API-port is allowed in your firewall settings. User can check this by running sudo ufw status. If the SN-API-port is not in the list, then add it by using sudo ufw allow <SN-API-port>. The same configuration is applicable for all other Swarm ports. Ignore this step if the ufw status is inactive, as this state allows all ports.
+4. If the certificates get expired, then the other swarm components including non-sentinel SN are not able to reach SN. User can check the expiry date of their certificates and update them accordingly.

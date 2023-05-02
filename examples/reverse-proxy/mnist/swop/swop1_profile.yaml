@@ -5,7 +5,7 @@
 
 groupname: demo
 taskrunner: defaulttaskbb.taskdb.sml.hpe
-network: default
+network: <NETWORK-NAME>
 policyuri: ~
 resourcemgr:
     mgrtype: DOCKER
@@ -47,11 +47,15 @@ nodes:
                 subPath: null
         slhostname: sl-1.swarm
         slhostip: ~
-        slport: 40001
+        slport: ~
         slfsservice: fs.sl-1.swarm
         slenvvars: null
+        slnetworkopts:
+            - ip: <SL-IP-1>
         usrhostname: ml-1
         usrenvvars: null
+        usrnetworkopts:
+            - ip: <ML-IP-1>
         privatedata :
             src: "<CURRENT-PATH>/workspace/reverse-proxy/mnist/app-data"
             mType : BIND
@@ -78,11 +82,15 @@ nodes:
                 subPath: null
         slhostname: sl-2.swarm
         slhostip: ~
-        slport: 40002
+        slport: ~
         slfsservice: fs.sl-2.swarm
         slenvvars: null
+        slnetworkopts:
+            - ip: <SL-IP-2>
         usrhostname: ml-2
         usrenvvars: null
+        usrnetworkopts:
+            - ip: <ML-IP-2>
         privatedata :
             src: "<CURRENT-PATH>/workspace/reverse-proxy/mnist/app-data"
             mType : BIND
