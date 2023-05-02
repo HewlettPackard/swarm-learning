@@ -1,4 +1,4 @@
-# Taskrunner Framework {#GUID-F6D8B8BE-58C2-451F-BF36-7477B0F4FB51 .concept}
+# Taskrunner Framework
 
 Taskrunner framework is a decentralized task management framework.
 
@@ -12,5 +12,5 @@ Here, we point out a few key differences.
 
 Considering the above aspects, rolling back a failed task is not possible, as we have only partial knowledge of the full state of the system at any given time. Instead, we can always take corrective action by re-running a task or creating new tasks that supersede earlier failed tasks.
 
-**Parent topic:**[Swarm Operator node \(SWOP\)](GUID-5F7569ED-23C9-4091-A229-D7AF18E11A2E.md)
+**Parent topic:**[Swarm Operator node \(SWOP\)](Swarm_Operator_node_(SWOP).md)
 
