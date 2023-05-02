@@ -10,6 +10,10 @@
   ```SWOP MAKE_USER_CONTAINER fails.```
   This occurs as SWOP is not able to obtain image of itself because of Docker setup differences in this experimental Ubuntu release. Switch to 22.04 LTS to resolve  this issue.
 - On the OS platform (or base images), some of the dependent open-source packages (for example, apt packages) may get absolete or updated. In such cases, users must update their deployment environment with compatible and/or latest packages.
+- While running through SLM-UI, for a multi host example the Docker network names should match with the associated Docker network names in the SWOP profiles.
+- In SLM-UI while creating SN and SWOP nodes, you must specify the proxy, if any, under Show advanced option.
+- While running a multi host example through SLM-UI, you cannot use the <SWARM-NETWORK> macro in the SWOP profile.
+- While using SLM-UI any Upload dialogue box expects the files to be present on the laptop.
 
 # <a name="GUID-96BB1337-2B99-45C7-BA9F-3D7D3B76663E"/> Troubleshooting
 
