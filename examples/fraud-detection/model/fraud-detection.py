@@ -1,5 +1,5 @@
 ############################################################################
-## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -47,11 +47,10 @@ defaultMinPeers = 2
 def main():
   modelName = 'fraud-detection'
   dataDir = os.getenv('DATA_DIR', '/platform/data')
-  modelDir = os.getenv('MODEL_DIR', '/platform/model')
   scratchDir = os.getenv('SCRATCH_DIR', '/platform/scratch')
   maxEpoch = int(os.getenv('MAX_EPOCHS', str(defaultMaxEpoch)))
   minPeers = int(os.getenv('MIN_PEERS', str(defaultMinPeers)))
-
+  os.makedirs(scratchDir, exist_ok=True)
   print('***** Starting model =', modelName)
   # ================== load test and train Data =========================
   print('-' * 64)
@@ -106,7 +105,6 @@ def main():
   print('***** Test accuracy:', scores[1])
 
   # Save
-  os.makedirs(scratchDir, exist_ok=True)
   model_path = os.path.join(scratchDir, modelName)
   model.save(model_path)
   print('Saved the trained model!')

@@ -1,6 +1,6 @@
 ---
 ######################################################################
-# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ######################################################################
 groupname  : demo
 taskrunner : defaulttaskbb.taskdb.sml.hpe
@@ -9,15 +9,16 @@ resourcemgr :
     mgrtype    : DOCKER
     accessinfo :
         accesstype : FROMENV
-network    : host-1-net
+network    : <SWARM-NETWORK>
 apls :
     locator :
-        host : 172.1.1.1
+        host : <LICENSE-SERVER-ADDRESS>
         port : ~
 apisrv :
     locator :
-        host : 172.1.1.1
+        host : ~
         port : ~
+        service: ~
 envvars :
     - SL_LOG_LEVEL : INFO
     - http_proxy : ~
@@ -33,117 +34,117 @@ nodes :
             - attribute :
                 aType : KEY
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-key.pem"
+                src : "<PROJECT-CERTS>/sl-1-key.pem"
                 tgt : "/swarm-cert/sl-1-key.pem"
                 subPath : null
             - attribute :
                 aType : CERT
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-cert.pem"
+                src : "<PROJECT-CERTS>/sl-1-cert.pem"
                 tgt : "/swarm-cert/sl-1-cert.pem"
                 subPath : null
             - attribute :
                 aType : CAPATH
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/ca/capath"
+                src : "<PROJECT-CACERTS>"
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl1
-        slhostip   : 172.1.1.1
-        slport : 16000
+        slhostip   : sl1
+        slport : ~
         usrhostname : user1
         privatedata :
-            src: "<CURRENT-PATH>/workspace/mnist-pyt/user1/data-and-scratch"
+            src: "<PROJECT>"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : [SCRATCH_DIR : "user1"]
     - slnodedef :
         idx : 1
         identity :
             - attribute :
                 aType : KEY
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-key.pem"
+                src : "<PROJECT-CERTS>/sl-1-key.pem"
                 tgt : "/swarm-cert/sl-2-key.pem"
                 subPath : null
             - attribute :
                 aType : CERT
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-cert.pem"
+                src : "<PROJECT-CERTS>/sl-1-cert.pem"
                 tgt : "/swarm-cert/sl-2-cert.pem"
                 subPath : null
             - attribute :
                 aType : CAPATH
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/ca/capath"
+                src : "<PROJECT-CACERTS>"
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl2
-        slhostip   : 172.1.1.1
-        slport : 17000
+        slhostip   : sl2
+        slport : ~
         usrhostname : user2
         privatedata :
-            src: "<CURRENT-PATH>/workspace/mnist-pyt/user2/data-and-scratch"
+            src: "<PROJECT>"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : [SCRATCH_DIR : "user2"]
     - slnodedef :
         idx : 2
         identity :
             - attribute :
                 aType : KEY
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-key.pem"
+                src : "<PROJECT-CERTS>/sl-1-key.pem"
                 tgt : "/swarm-cert/sl-3-key.pem"
                 subPath : null
             - attribute :
                 aType : CERT
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-cert.pem"
+                src : "<PROJECT-CERTS>/sl-1-cert.pem"
                 tgt : "/swarm-cert/sl-3-cert.pem"
                 subPath : null
             - attribute :
                 aType : CAPATH
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/ca/capath"
+                src : "<PROJECT-CACERTS>"
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl3
-        slhostip   : 172.1.1.1
-        slport : 18000
+        slhostip   : sl3
+        slport : ~
         usrhostname : user3
         privatedata :
-            src: "<CURRENT-PATH>/workspace/mnist-pyt/user3/data-and-scratch"
+            src: "<PROJECT>"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : [SCRATCH_DIR : "user3"]
     - slnodedef :
         idx : 3
         identity :
             - attribute :
                 aType : KEY
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-key.pem"
+                src : "<PROJECT-CERTS>/sl-1-key.pem"
                 tgt : "/swarm-cert/sl-4-key.pem"
                 subPath : null
             - attribute :
                 aType : CERT
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/sl-1-cert.pem"
+                src : "<PROJECT-CERTS>/sl-1-cert.pem"
                 tgt : "/swarm-cert/sl-4-cert.pem"
                 subPath : null
             - attribute :
                 aType : CAPATH
                 mType : BIND
-                src : "<CURRENT-PATH>/workspace/mnist-pyt/cert/ca/capath"
+                src : "<PROJECT-CACERTS>"
                 tgt : "/swarm-cert/capath"
                 subPath : null
         slhostname : sl4
-        slhostip   : 172.1.1.1
-        slport : 19000
+        slhostip   : sl4
+        slport : ~
         usrhostname : user4
         privatedata :
-            src: "<CURRENT-PATH>/workspace/mnist-pyt/user4/data-and-scratch"
+            src: "<PROJECT>"
             mType : BIND
         slenvvars : null
-        usrenvvars : null
+        usrenvvars : [SCRATCH_DIR : "user4"]

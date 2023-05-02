@@ -1,6 +1,6 @@
 # <d></d> <img style="float: right;" src="docs/images/GettyImages-1148109728_EAA-graphic-A_112_0_72_RGB.jpg?raw=true"/> SWARM LEARNING
 
-#### Product version: 1.2.0
+#### Product version: 2.0.0
 
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
 <img width="70%" height="70%" src="/docs/User/GUID-E80D248E-E754-498E-99D6-67508092F779-high.png">
@@ -59,14 +59,17 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
 
 ## Getting Started 
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
-  2. Clone this repository on all machines where you want to run Swarm Learning.<br> <br>
-    **NOTE**: The suggested default location is to clone it under `/opt/hpe`. It will create a `swarm-learning` folder and copy the files under it. If you clone it in a different location, please make sure to give the same location when running the installer UI, for the `Swarm Installation location` text box as "`<clone-location>/swarm-learning`". For the default case, the UI screen would have `/opt/hpe/swarm-learning` pre-populated. <br>
-    **CAUTION**: Users are recommended not to save their model related artifacts under this folder, as future version upgrade of Swarm Learning would delete these folders.
-  3. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
-  4. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the Web UI installer 
-  5. Execute [MNIST example](/examples/mnist/README.md) 
-  6. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
-  7. [Troubleshooting](/docs/User/Troubleshooting.md)
+  2. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
+  3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the SLM-UI installer 
+  4. Execute [MNIST example](/examples/mnist/README.md) 
+  5. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  6. [Troubleshooting](/docs/User/Troubleshooting.md)
+
+<blockquote>
+
+NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent swarm training** feature mentioned in the documentation are applicable for enterprise customers ONLY.
+
+</blockquote>
 
 ## Documentation
 
@@ -77,20 +80,21 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   - [Adapting ML programs for Swarm Learning](/docs/User/Adapting_an_ML_program_for_Swarm_Learning.md)
   - [Swarm wheels package](/docs/User/Swarm_client_interface-wheels_package.md)
   - [Configuring Swarm Learning components](/docs/Install/Configuring_Swarm_Learning.md) 
-  - [Running Swarm Learning Components](/docs/Install/Running_Swarm_Learning.md)
   - [Using SWCI](/docs/User/Swarm_Learning_Command_Interface.md)
   - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
+  - [Running Swarm learning examples using SLM-UI](/docs/Install/Running_Swarm_Learning_examples_using_SLM-UI.md)
+  - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
   - [Examples](/examples/README.md)
   - [Swarm Learning Log Collection](/docs/User/Swarm_Log_Collector.md)
   
 ## References
 
-  - [Papers](docs/papers-and-articles.md)
-  - [Videos](docs/videos.md)
-  - [URLs](docs/URL.md)
+  - [Papers](docs/Generic/papers-and-articles.md)
+  - [Videos](docs/Generic/videos.md)
+  - [URLs](docs/Generic/URL.md)
 
 ## Acronyms and Abbreviations
-  Refer to [Acronyms and Abbreviations](docs/acronyms.md) for more information.
+  Refer to [Acronyms and Abbreviations](docs/Generic/acronyms.md) for more information.
 
 ## Getting in touch 
   Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  
@@ -98,9 +102,9 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel.
   
 ## Contributing
-  Refer to [Contributing](CONTRIBUTING.md) for more information.
+  Refer to [Contributing](docs/Generic/CONTRIBUTING.md) for more information.
 
 ## License
-  The distribution of Swarm Learning in this repository is for non-commercial and experimental use under this [license](LICENSE.md). 
+  The distribution of Swarm Learning in this repository is for non-commercial and experimental use under this [license](docs/Generic/LICENSE.md). 
   
-  See [ATTRIBUTIONS](ATTRIBUTIONS.md) and [DATA LICENSE](DATA_LICENSE.md) for terms and conditions for using the datasets included in this repository.
+  See [ATTRIBUTIONS](docs/Generic/ATTRIBUTIONS.md) and [DATA LICENSE](docs/Generic/DATA_LICENSE.md) for terms and conditions for using the datasets included in this repository.

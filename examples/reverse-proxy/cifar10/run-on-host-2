@@ -41,6 +41,12 @@ echo "SL and ML contianers will now use the both Bind9 contianer IP and current 
 # Directory path of this repository on the another host. If not passed script assumes default installation directory of swarm. 
 [[ -n "${6}" ]] && Host_1_INSTALL_DIR=${6} || Host_1_INSTALL_DIR="/opt/hpe/swarm-learning"
 
+# A non default bridge network with which containers connect. This has been introduced
+# to start the containers with fixed IP addresses. 
+Network_Name=$7
+[[ -z "$7" ]] && { echo "The non-default bridge network is empty" ; exit 1; }
+echo "Network Name: "${Network_Name}
+
 
 # This step will also ensure if in correct directory
 if [[ -f "$(pwd)/scripts/bin/common" ]]
@@ -107,23 +113,23 @@ fi
 build()
 {
     # Build the nginx image.
-    docker build                                    \
-        -t nginx:${swarmVersion}                    \
-        --build-arg http_proxy=${http_proxy}        \
-        --build-arg https_proxy=${https_proxy}      \
-        --build-arg no_proxy=${no_proxy}            \
-        -                                           \
+    docker build                                        \
+        -t nginx:"${swarmVersion}"                      \
+        --build-arg http_proxy="${http_proxy}"          \
+        --build-arg https_proxy="${https_proxy}"        \
+        --build-arg no_proxy="${no_proxy}"              \
+        -                                               \
         < "${reverseProxyDir}/common/Nginx-Dockerfile"
     [[ $? -ne 0 ]] && exit 1
 
 
     # Build the bind image.
-    docker build                                    \
-        -t bind9:${swarmVersion}                    \
-        --build-arg http_proxy=${http_proxy}        \
-        --build-arg https_proxy=${https_proxy}      \
-        --build-arg no_proxy=${no_proxy}            \
-        -                                           \
+    docker build                                        \
+        -t bind9:"${swarmVersion}"                      \
+        --build-arg http_proxy="${http_proxy}"          \
+        --build-arg https_proxy="${https_proxy}"        \
+        --build-arg no_proxy="${no_proxy}"              \
+        -                                               \
         < "${reverseProxyDir}/common/Bind-Dockerfile"
     [[ $? -ne 0 ]] && exit 1
 
@@ -136,9 +142,9 @@ build()
 registerIP()
 {
     sed -f - "${reverseProxyCifarDir}/nginx-on-host-2.conf" > ${workingDir}/nginx.conf << _EOF
-s/<sn-2-ip>/${Host_2_IP}/g
-s/<sl-3-ip>/${Host_2_IP}/g
-s/<sl-4-ip>/${Host_2_IP}/g
+s/<sn-2-ip>/${SN_2_IP}/g
+s/<sl-3-ip>/${SL_3_IP}/g
+s/<sl-4-ip>/${SL_4_IP}/g
 _EOF
 
     # Services.
@@ -147,10 +153,10 @@ _EOF
     docker exec "${1}" add-dns -d fs.sl-1.swarm -i ${Host_1_IP}
     docker exec "${1}" add-dns -d fs.sl-2.swarm -i ${Host_1_IP}
 
-    docker exec "${1}" add-dns -d api.sn-2.swarm -i ${Host_2_IP}
+    docker exec "${1}" add-dns -d api.sn-2.swarm -i ${NGINX_IP}
     docker exec "${1}" add-dns -d p2p.sn-2.swarm -i ${Host_2_IP}
-    docker exec "${1}" add-dns -d fs.sl-3.swarm -i ${Host_2_IP}
-    docker exec "${1}" add-dns -d fs.sl-4.swarm -i ${Host_2_IP}
+    docker exec "${1}" add-dns -d fs.sl-3.swarm -i ${NGINX_IP}
+    docker exec "${1}" add-dns -d fs.sl-4.swarm -i ${NGINX_IP}
     return 0
 }
 
@@ -161,6 +167,7 @@ startBind9Server()
     docker run                      \
         -d                          \
         --name=swarm-bind9          \
+        --network=${Network_Name}   \
         -e no_proxy="${no_proxy}"   \
         bind9:${swarmVersion}       \
         -d swarm
@@ -174,6 +181,8 @@ startNginx()
     docker run                                                          \
         -d                                                              \
         --name=nginx                                                    \
+        --network=${Network_Name}                                       \
+        --ip=${NGINX_IP}                                                \
         -v ${workingDir}/nginx.conf:/etc/nginx/nginx.conf               \
         -e no_proxy="${no_proxy}"                                       \
         -p 443:443                                                      \
@@ -194,6 +203,26 @@ startBind9Server
 
 # Here we assume no other user creates any conflicting containers
 BIND9_IP=$(docker exec swarm-bind9 hostname -I | cut -d' ' -f1)
+octet123="$(echo "${BIND9_IP}" | cut -d'.' -f1-3)"
+octet4="$(echo "${BIND9_IP}" | cut -d'.' -f4)"
+# Incrementing the bindIP and assigning these IP's to 
+# respective components
+((octet4+=1))
+NGINX_IP="${octet123}.${octet4}"
+((octet4+=1))
+SN_2_IP="${octet123}.${octet4}"
+((octet4+=1))
+SWOP_2_IP="${octet123}.${octet4}"
+((octet4+=1))
+SWCI_IP="${octet123}.${octet4}"
+((octet4+=1))
+SL_3_IP="${octet123}.${octet4}"
+((octet4+=1))
+ML_3_IP="${octet123}.${octet4}"
+((octet4+=1))
+SL_4_IP="${octet123}.${octet4}"
+((octet4+=1))
+ML_4_IP="${octet123}.${octet4}"
 
 registerIP swarm-bind9
 startNginx
@@ -202,9 +231,14 @@ startNginx
 # Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
 # Also Modifies the <CURRENT-PATH> in swarm_cifar10_task file
 sed -i "s+<CURRENT-PATH>+$(pwd)+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<NETWORK-NAME>+${Network_Name}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<Bind9-IP>+${BIND9_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<Host-DNS-IP>+${Host_2_DNS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<SL-IP-3>+${SL_3_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<SL-IP-4>+${SL_4_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<ML-IP-3>+${ML_3_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<ML-IP-4>+${ML_4_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 
 # Start Swarm components.
 # --dns is the DNS IP to which the container will interact to resolve ip addresses
@@ -214,18 +248,18 @@ echo "##################### Starting SN #####################"
 "./scripts/bin/run-sn"                                  \
     -d                                                  \
     --name=sn-2                                         \
-    --hostname=sn-2.swarm                               \
+    --hostname=sn-2                                     \
     --dns=${BIND9_IP}                                   \
+    --network=${Network_Name}                           \
+    --ip=${SN_2_IP}                                     \
     --sn-api-service=api.sn-2.swarm                     \
     --sn-p2p-service=p2p.sn-2.swarm:30303               \
-    -p 30303:30303                                      \
-    -p 30304:30304                                      \
     --sentinel-api-service=api.sn-1.swarm               \
     --apls-ip=${APLS_IP}                                \
     -e no_proxy="${no_proxy}"                           \
     --key=${workingDir}/cert/sn-2-key.pem               \
     --cert=${workingDir}/cert/sn-2-cert.pem             \
-    --capath=${workingDir}/cert/ca/capath
+    --capath=${workingDir}/cert/ca/capath               
 [[ $? -ne 0 ]] && exit 1
 
 # wait for SN API service to start
@@ -233,7 +267,7 @@ retries=1
 isUp=''
 while [[ ${isUp} != "OK" ]]
 do
-    isUp=`curl -sk --cert ${workingDir}/cert/sn-2-cert.pem --key ${workingDir}/cert/sn-2-key.pem "https://${Host_2_IP}:30304/is_up"`
+    isUp=`curl -sk --noproxy ${SN_2_IP} --cert ${workingDir}/cert/sn-2-cert.pem --key ${workingDir}/cert/sn-2-key.pem "https://${SN_2_IP}:30304/is_up"`
     if [[ ${retries} -gt 20 ]] 
     then
         echo "Exiting: Failed to start SN API service within the time limit of 10 minutes" 
@@ -258,6 +292,8 @@ echo "#################### Starting SWOP ####################"
     -d                                                  \
     --name=swop-2                                       \
     --dns=${BIND9_IP}                                   \
+    --network=${Network_Name}                           \
+    --ip=${SWOP_2_IP}                                   \
     --sn-api-service=api.sn-2.swarm                     \
     --apls-ip=${APLS_IP}                                \
     -e no_proxy="${no_proxy}"                           \
@@ -268,4 +304,4 @@ echo "#################### Starting SWOP ####################"
     --profile-file-name=swop2_profile.yaml              \
     --key=${workingDir}/cert/swop-2-key.pem             \
     --cert=${workingDir}/cert/swop-2-cert.pem           \
-    --capath=${workingDir}/cert/ca/capath
+    --capath=${workingDir}/cert/ca/capath               

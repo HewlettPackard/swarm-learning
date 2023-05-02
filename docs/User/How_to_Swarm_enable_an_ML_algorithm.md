@@ -90,5 +90,5 @@ swarmCallback.on_epoch_end(epoch)
 swarmCallback.on_train_end()
 ```
 
-4.  Run Swarm Learning using the supplied scripts. For more information, see Running Swarm Learning in the with the data and model directories as input parameters.
+4.  Run Swarm Learning using the supplied scripts. For more information, see [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md) with the data and model directories as input parameters.
 

@@ -14,28 +14,37 @@ The tar archive includes:
 Syntax:
 
 ```
-./swarmLogCollector.sh [OPTIONS] 
+./swarmLogCollector [OPTIONS] 
 ```
 
 ##  Run the below command if you are using SWOP:
 
 ```
- ./swarmLogCollector.sh "<DOCKER_HUB>" "workspace=<swarm-learning workspace/exampleFolder>" 
+ ./swarmLogCollector "<DOCKER_HUB>" "workspace=<Swarm Installation DIR/swarm-learning workspace/exampleFolder>" 
 ```
-Example:
+For example,
+
+## Run the below command if you are running the example from CLI:
 
 ```
- ./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "workspace=/opt/hpe/swarm-learning/workspace/fraud-detection/" 
+./swarmLogCollector "hub.myenterpriselicense.hpe.com/hpe/swarmlearning" "workspace=<Swarm Installation DIR>/workspace/fraud-detection/"
 ```
+
+## Run the below command if you are running the example from SLM-UI:
+
+``` {#CODEBLOCK_ZDP_XP5_YWB}
+./swarmLogCollector "hub.myenterpriselicense.hpe.com/hpe/swarmlearning" "workspace=<Swarm Installation DIR>/slm-ui/projects/1/"
+```
+
 ## Run the below command if you are using run-sl script:
 
 ```
-./swarmLogCollector.sh "<DOCKER_HUB>" "mlimage=<ml image name>" 
+./swarmLogCollector "<DOCKER_HUB>" "mlimage=<ml image name>" 
 ```
 Example:
 
 ```
-./swarmLogCollector.sh "hub.myenterpriselicense.hpe.com/hpe_eval/swarm-learning" "mlimage=user-env-tf2.7.0-swop" 
+./swarmLogCollector "hub.myenterpriselicense.hpe.com/hpe/swarm-learning" "mlimage=user-env-tf2.7.0-swop" 
 ```
 
 ## Additional information to provide:

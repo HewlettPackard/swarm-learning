@@ -1,9 +1,11 @@
 # <a name="GUID-3E1F1726-9D98-413A-961F-80048D1080F4"/> SWCI APIs
 
-The following API methods help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
+The following API features help to invoke SWCI operations programmatically. It is used to view the status, control, and manage the Swarm Learning framework.
 
 <blockquote>
-NOTE:Arguments that do not have default values are mandatory.
+NOTE:
+  Arguments that do not have default values are mandatory.
+  This is an experimental API methods for developers.
 
 </blockquote>
 The python3 program needs to import the SWCI class first, and then use the below APIs.
@@ -16,7 +18,7 @@ The python3 program needs to import the SWCI class first, and then use the below
 |`assignTask()`|This method assigns a task to a Taskrunner instance and specifies the minimum peer count for declaring the result. This triggers SWOPs to execute this task <br> <br> Meaningful value of peersNeeded is dependent on the task type. For `RUN_SWARM` task, it is the number of SL and ML node pairs. For all other task types, it is the number of SWOP nodes. <br> <br> For RUN_SWARM task type, the actual numbers of SL/ML peers started could be equal or greater than `peersNeeded`, depending on the number of the SL nodes defined in the SWOP profiles. <br> For other TASK types, the number of SWOPs participating would be equal to `peersNeeded`. | - `taskName`: Specifies the unique name of a task.<br>- `trName`: Specifies the unique name of a Taskrunner. SWOP’s listening on this Taskrunner participates and executes this task.<br>- `peersNeeded` is a nonzero positive integer specifying the minimum number of peers required to complete this task.<br> |
 |`cd()`|This method changes the current working directory of SWCI container.|`dirPath`|
 |`clearCache()`|This method clears any cached values in the SWCI instance.| |
-|`createContext()`|This method creates an SWCI context.<br> **NOTE**: User can create SWCI context with (ip and port) or with service [eg:api.sn.swarm:30304].|`ctxName`, `ip`, `port=30304`, `service`|
+|`createContext()`|This method creates an SWCI context.<br> **NOTE**: User can create SWCI context with (ip and port) or with service [eg:api.sn.swarm:30304].<br> </br> For example,<br> </br> 1. createContext(test,ip=172.1.1.1) - This variation assumes SN API running on default 30304 port. <br> </br> 2. createContext(test, ip=172.1.1.1, port=16000) – This variation is used when SN API running on nondefault port,<br> </br> 3. createContext(test,service=api.sn.swarm) – In reverse proxy scenario, this variation means SN API service running on default 443 port.<br> </br> 4. createContext(test,service=api.sn.swarm:17000) – In reverse proxy scenario, this variation means SN API service running on non-default port.|`ctxName`, `ip=None`, `port=30304`, `service=None`|
 |`createTaskFrom()`|This method creates a new task from the YAML file, the YAML definition file must be exported to the SWCI container using `uploadTaskDefintion` method.|`yamlFileName`|
 |`createTrainingContract()`|This method registers the specified Swarm Learning training contract into the Swarm Learning network.|`ctName`|
 |`deleteTask()`|This method deletes the specified task which is not finalized.|`taskName`|
@@ -72,7 +74,7 @@ snServerName = 'SN Server Name or IP'
 # Connect to the SWCI via SWCI_WEB_PORT
 s = sw.Swci(swciServerName,port=30306) #30306 is the default port
 # Connect to SN and create context
-print(s.createContext('testContext', snServerName))
+print(s.createContext('testContext', ip=snServerName))
 # Switches the context to testContext
 print(s.switchContext('testContext'))
 # Creates a training contract
