@@ -86,6 +86,7 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
   - [Examples](/examples/README.md)
   - [Swarm Learning Log Collection](/docs/User/Swarm_Log_Collector.md)
+  - [Extending Swarm Learning for new ML platforms](/lib/src/README.md)
   
 ## References
 
