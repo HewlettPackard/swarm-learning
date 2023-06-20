@@ -205,7 +205,7 @@ onTrainEnd()
         appendArrayVar "" dockerOpts "--env=SL_FS_SERVICE=${slFsService}"
         
         # This below logic extracts and publishes the port passed along with the
-        # SL FS service. If no port passed, it by default publishes 30303 port.
+        # SL FS service. If no port passed, it by default publishes 30305 port.
         # The value of this argument gets split based on the seperator ':' and
         # stored inside a array variable. 
         # Case 1 : If there is no port mentioned then the array size will be 1,

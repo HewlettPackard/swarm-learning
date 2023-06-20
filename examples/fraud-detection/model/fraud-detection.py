@@ -75,7 +75,7 @@ def main():
   model = tf.keras.models.Sequential()
   model.add(tf.keras.layers.Dense(1, input_shape=(30,), activation='sigmoid',
     kernel_initializer='random_uniform', bias_initializer='zeros'))
-  sgd = tf.keras.optimizers.SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+  sgd = tf.keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
   model.compile(loss = 'binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
   print(model.summary())
 
