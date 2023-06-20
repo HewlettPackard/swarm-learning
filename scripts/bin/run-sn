@@ -201,13 +201,14 @@ onTrainEnd()
         # stored inside a array variable. 
         # Case 1 : If there is no port mentioned then the array size will be 1,
         # Hence the default port gets published.
-        # Case 2 : Array size will be 2 when port mentioned in the service name.
-        # Hence the port number passed along with service gets published.
+        # Case 2 : Array size will be more than 1 when port mentioned in the service name.
+        # The port number passed along with service gets published. The last element in the
+        # array has to be published hence using the negative index.
         IFS=':' read -ra apiServiceArr <<< ${snApiService}
         case "${#apiServiceArr[@]}" in
             1) appendArrayVar "" dockerOpts "--publish=${internalAPIPort}:${internalAPIPort}";;
 
-            2) apiServicePort=${apiServiceArr[1]}
+            2) apiServicePort=${apiServiceArr[-1]}
                appendArrayVar "" dockerOpts "--publish=${apiServicePort}:${internalAPIPort}";;
         esac
     fi
@@ -228,13 +229,14 @@ onTrainEnd()
         # stored inside a array variable. 
         # Case 1 : If there is no port mentioned then the array size will be 1,
         # Hence the default port gets published.
-        # Case 2 : Array size will be 2 when port mentioned in the service name.
-        # Hence the port number passed along with service gets published.
+        # Case 2 : Array size will be more than 1 when port mentioned in the service name.
+        # The port number passed along with service gets published. The last element in the
+        # array has to be published hence using the negative index.
         IFS=':' read -ra p2pServiceArr <<< ${snP2pService}
         case "${#p2pServiceArr[@]}" in
             1) appendArrayVar "" dockerOpts "--publish=${internalP2PPort}:${internalP2PPort}";;
 
-            2) p2pServicePort=${p2pServiceArr[1]}
+            2) p2pServicePort=${p2pServiceArr[-1]}
                appendArrayVar "" dockerOpts "--publish=${p2pServicePort}:${internalP2PPort}";;
         esac
     fi     
