@@ -200,8 +200,26 @@ onTrainEnd()
         appendArrayVar "" dockerOpts "--publish=${slFsPort}:${internalFSPort}"
     fi
 
-    [[ -n "${slFsService}" ]] &&    \
+    if [[ -n "${slFsService}" ]]
+    then
         appendArrayVar "" dockerOpts "--env=SL_FS_SERVICE=${slFsService}"
+        
+        # This below logic extracts and publishes the port passed along with the
+        # SL FS service. If no port passed, it by default publishes 30303 port.
+        # The value of this argument gets split based on the seperator ':' and
+        # stored inside a array variable. 
+        # Case 1 : If there is no port mentioned then the array size will be 1,
+        # Hence the default port gets published.
+        # Case 2 : Array size will be 2 when port mentioned in the service name.
+        # Hence the port number passed along with service gets published.
+        IFS=':' read -ra fsServiceArr <<< ${slFsService}
+        case "${#fsServiceArr[@]}" in
+            1) appendArrayVar "" dockerOpts "--publish=${internalFSPort}:${internalFSPort}";;
+
+            2) fsServicePort=${fsServiceArr[1]}
+               appendArrayVar "" dockerOpts "--publish=${fsServicePort}:${internalFSPort}";;
+        esac
+    fi
 
     cmd+=("${unprocessedOpts[@]}")
     unprocessedOpts=()
