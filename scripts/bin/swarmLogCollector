@@ -45,10 +45,10 @@ if [ -z "$2" ]
     exitLogCollection $msg $usage
 fi
 DEFAULTIFS=$IFS
-hostname=$(hostname)
+host_name=$(hostname)
 dt=$(date +%Y%m%d%H%M%S)
 
-LOG_DIR="swarm_logs_$hostname_$dt"
+LOG_DIR="swarm_logs_${host_name}_$dt"
 
 #Creating dir for saving logs 
 mkdir -m 777 "$LOG_DIR"
@@ -259,8 +259,10 @@ fi
 echo -e "Python Libraries:\n"
 pip list
 
-#cp out.log  "$LOG_DIR"/out.log
-tar -czvf "$LOG_DIR.tar.gz" "$LOG_DIR"
-
+cp out.log  "$LOG_DIR"/out.log
+mkdir ../../logs
+rm -rf ../../logs/swarm_logs_*
+tar -czvf ../../logs/"$LOG_DIR.tar.gz" "$LOG_DIR"
+rm -rf swarm_logs_*
 echo `date`" : LOG COLLECTION DONE"
 echo "============================================="
