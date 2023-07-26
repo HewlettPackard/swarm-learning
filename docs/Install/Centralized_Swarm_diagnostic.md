@@ -1,8 +1,9 @@
-# Centralized Swarm diagnostic {#GUID-37B42288-C9EB-4E15-9D28-4642E7983B07 .task}
+# Centralized Swarm diagnostic
 
 Centralized Swarm diagnostic utility will collect and upload the logs from all the hosts associated with a project to the host or VM provided by user via the utility.
 
-The utility will show all the hosts where swarm learning installed in the drop down and user can choose one among them. Note that in that VM the sshpass utility should be installed. \(apt install sshpass\).![Centralized Swarm Diagnostics](GUID-EA3ED67E-52AD-464F-B126-E21C6F835125-high.png)
+The utility will show all the hosts where swarm learning installed in the drop down and user can choose one among them. Note that in that VM, the sshpass utility should be installed. \(*apt install sshpass*\).<br></br>
+![Centralized Swarm Diagnostics](GUID-EA3ED67E-52AD-464F-B126-E21C6F835125-high.png)
 
 1.  In the **Projects** tab, click **Collect Log** icon.
 
