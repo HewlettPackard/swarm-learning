@@ -33,4 +33,6 @@ To run the Swarm Learning examples using SLM-UI, perform the following steps:
 
 8.  [Managing the Global Settings](Managing_the_Global_Settings.md)
 
+9.  [Centralized Swarm diagnostic](Centralized_Swarm_diagnostic.md)
+
 
