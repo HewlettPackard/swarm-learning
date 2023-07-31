@@ -103,17 +103,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    ```
    Note: If the swarm installation directory is different for both the hosts then user need to manually modify the <PROJECT-MODEL> value from the swarm_mnist_task.yaml file to the path that is common to both the hosts.  
 
-7. *On both host-1 and host-2*:  
-   Create a docker volume and copy SwarmLearning wheel file there
-   ```
-   docker volume rm sl-cli-lib
-   docker volume create sl-cli-lib
-   docker container create --name helper -v sl-cli-lib:/data hello-world
-   docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
-   docker rm helper
-   ```
-
-8. *On host-1*:  
+7. *On host-1*:  
    Run Swarm Network node (sn1) - sentinel node  
    ```
    ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel --sn-p2p-port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} \
@@ -122,7 +112,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    Use the docker logs command to monitor the Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:  
    `swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304`
 
-9. *On host-2*:  
+8. *On host-2*:  
    Run Swarm Network node (sn2)  
    ```
    ./scripts/bin/run-sn -d --rm --name=sn2 --network=host-2-net --host-ip=${HOST_2_IP} --sentinel-ip=${SN_1_IP} --sn-p2p-port=${SN_P2P_PORT}                \
@@ -130,7 +120,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    --apls-ip=${APLS_IP}
    ```
 
-10.	*On host-1*:  
+9.	*On host-1*:  
     Run Swarm Operator node (swop1)  
     
     Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/mnist/swop` folder.  
@@ -141,7 +131,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    --apls-ip=${APLS_IP}
    ```
 
-11.	*On host-2*:  
+10.	*On host-2*:  
     Run Swarm Operator node (swop2)  
     
     Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/mnist/swop` folder.
@@ -152,7 +142,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    --apls-ip=${APLS_IP}
    ```
 
-12.	*On host-1*:  
+11.	*On host-1*:  
     Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
     - user_env_tf_build_task: Builds Tensorflow based docker image for ML node to run model training  
     - swarm_mnist_task: Create containers out of ML image and mount model and data path to run Swarm training  
@@ -164,12 +154,12 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    -e http_proxy= -e https_proxy= --apls-ip=${APLS_IP}
    ```
 
-13.	*On both host-1 and host-2*:  
+12.	*On both host-1 and host-2*:  
     Two node Swarm training is automatically started when the run task (swarm_mnist_task) gets assigned and executed. User can open a new terminal on both host-1 and host-2 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
     `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
     Final Swarm model will be saved inside \<PROJECT\> location which will likely be user's specific as `workspace/mnist/<userN>` directory on both the hosts. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
-14.	*On both host-1 and host-2*:  
+13.	*On both host-1 and host-2*:  
     To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` and `host-2-net`) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
 

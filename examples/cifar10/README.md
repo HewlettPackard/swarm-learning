@@ -67,9 +67,8 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    ```
 
 5. *On both host-1 and host-2*:  
-   Copy SwarmLearning wheel file inside build context and build docker image for ML that contains environment to run Swarm training of user models.  
+   Build docker image for ML that contains environment to run Swarm training of user models.  
    ```
-   cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl workspace/cifar10/ml-context/
    docker build -t user-ml-env-tf2.7.0 workspace/cifar10/ml-context
    ```
 6. *On both host-1 and host-2*: 
@@ -85,7 +84,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
     SL_2_FS_PORT=17000
     ```
    
-8. *On host-1*:  
+6. *On host-1*:  
    Run Swarm Network node (sentinel node)
    ```  
    ./scripts/bin/run-sn -d --rm --name=sn1 --host-ip=${HOST_1_IP} --sentinel --sn-api-port=${SN_API_PORT}      \
@@ -95,7 +94,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    Use the docker logs command to monitor the Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:  
    `swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304`
 
-8. *On host-1*:  
+7. *On host-1*:  
    Run Swarm Learning node and Machine Learning node (as a "sidecar"): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset.
    ```
    ./scripts/bin/run-sl -d --name=sl1 --host-ip=${HOST_1_IP} --sn-ip=${SN_IP} --sn-api-port=${SN_API_PORT}            \
@@ -106,7 +105,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> --apls-ip=${APLS_IP}
    ```
 
-9. *On host-2*:  
+8. *On host-2*:  
    Run Swarm Learning node and Machine Learning node (as a "sidecar"): Set the proxy server as appropriate, as the ML program needs to download the CIFAR dataset.
    ```
    ./scripts/bin/run-sl -d --name=sl2 --host-ip=${HOST_2_IP} --sn-ip=${SN_IP} --sn-api-port=${SN_API_PORT}            \
@@ -117,12 +116,12 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> --apls-ip=${APLS_IP}
    ```
 
-10.	*On both host-1 and host-2*:  
+9.	*On both host-1 and host-2*:  
    Two node Swarm training is started. User can open a new terminal on both host-1 and host-2 and monitor the docker logs of ML nodes (ml1 and ml2 containers) for Swarm training. Swarm training will end with the following log message at the end –  
    `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
    Final Swarm model will be saved inside the model directory i.e. `workspace/cifar10/model/saved_models` directory on both the hosts. SL and ML nodes will exit but will not be removed after Swarm training.
 
-11. *On both host-1 and host-2*:  
+10. *On both host-1 and host-2*:  
     To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. ML container needs to be removed manually using `docker rm` command. If needed, take backup of the container logs. Finally delete the `workspace` directory.
 
 

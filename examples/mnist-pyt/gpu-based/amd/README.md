@@ -77,17 +77,7 @@ The following image illustrates a cluster setup for the MNIST example:
     sed -i "s+<PROJECT-CACERTS>+$(pwd)/workspace/mnist-pyt/cert/ca/capath+g" workspace/mnist-pyt/swop/swop*_profile.yaml
     ```
 
-7.  Create a docker volume and copy Swarm Learning wheel file:
-
-    ```
-    docker volume rm sl-cli-lib
-    docker volume create sl-cli-lib
-    docker container create --name helper -v sl-cli-lib:/data hello-world
-    docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
-    docker rm helper
-    ```
-
-8.  Run SN node (SN1 - sentinel node)
+7.  Run SN node (SN1 - sentinel node)
 
     ```
     ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_IP} --sentinel --sn-p2p-port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT}      \
@@ -99,7 +89,7 @@ The following image illustrates a cluster setup for the MNIST example:
     swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
     ```
 
-9.  Run SWOP node \(SWOP1\).
+8.  Run SWOP node \(SWOP1\).
 
     ```
     ./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net --sn-ip=${SN_IP} --sn-api-port=${SN_API_PORT}                      \
@@ -117,7 +107,7 @@ The following image illustrates a cluster setup for the MNIST example:
    SWOP_KEEP_CONTAINERS is set to True so that SWOP doesn't remove stopped SL and ML containers. With out this setting if there is any internal error in SL or ML then SWOP removes them automatically. Refer documentation of SWOP_KEEP_CONTAINERS for more details.
 </blockquote>
 
-10. Run SWCI node and observe sequential execution of two tasks – build task (`build_pyt_user_image`) and run task (`run_mnist_pyt`).
+9. Run SWCI node and observe sequential execution of two tasks – build task (`build_pyt_user_image`) and run task (`run_mnist_pyt`).
 
     ```
     ./scripts/bin/run-swci -ti --rm --name=swci1 --network=host-1-net --usr-dir=workspace/mnist-pyt/swci                        \
@@ -133,7 +123,7 @@ The following image illustrates a cluster setup for the MNIST example:
    NOTE: If required, according to the environment, modify SN IP in <code>workspace/mnist-pyt/swci/swci-init</code> file.
 </blockquote>
 
-11. Four nodes of Swarm trainings are automatically started when the run task (`run_mnist_pyt`) gets assigned and executed. Open a new terminal and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
+10. Four nodes of Swarm trainings are automatically started when the run task (`run_mnist_pyt`) gets assigned and executed. Open a new terminal and monitor the Docker logs of ML nodes for Swarm training. Swarm training ends with the following log message:
 
     ```
     SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.
@@ -141,7 +131,7 @@ The following image illustrates a cluster setup for the MNIST example:
 
    Final Swarm model is saved inside each user's specific directory in `workspace/mnist-pyt/<userN>`. All the dynamically spawned SL and ML nodes exits after Swarm training. The SN and SWOP nodes continues to run.
 
-12. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
+11. To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs. Remove Docker networks (`host-1-net`) and Docker volume (`sl-cli-lib`), and delete the workspace directory.
 
 
 ### Running using `run-sl` command ###

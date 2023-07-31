@@ -73,7 +73,6 @@ python ./workspace/breakhis/dataset_split.py "<COPIED LOCATION OF THE DATASET FO
 6.  On both host-1 and host-2, copy Swarm Learning wheel file inside build context and build Docker image for ML that contains environment to run Swarm training of user models.
 
 ```
-cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl workspace/breakhis/ml-context/
 docker build -t user-ml-env-tf2.7.0 workspace/breakhis/ml-context
 ```
 You may need to specify the correct https_proxy for the docker build if you are behind a firewall. For eg,

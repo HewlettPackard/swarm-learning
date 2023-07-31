@@ -12,7 +12,6 @@ Body:
     BuildSteps:
     - FROM pytorch/pytorch:1.13.0-cuda11.6-cudnn8-runtime
     - RUN pip install --upgrade pip
-    - RUN mkdir -p /tmp/hpe-swarmcli-pkg
-    - COPY swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl  /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
-    - RUN pip install /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+    - '# Install SwarmLearning package, make sure package version matches with Swarm release you are using.'
+    - RUN pip3 install https://github.com/HewlettPackard/swarm-learning/raw/master/lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
 
