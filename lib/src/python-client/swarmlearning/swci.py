@@ -524,3 +524,8 @@ class Swci:
             return r.text
         except Exception as e:
             raise RuntimeError('Task definition file upload failed')            
+        
+    def perfdata(self, trainingBlackboardName):
+        cmd = 'perfdata %s'%(trainingBlackboardName)
+        return self.__execCmd(cmd)
+        
