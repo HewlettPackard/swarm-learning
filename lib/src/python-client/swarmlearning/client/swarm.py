@@ -49,11 +49,6 @@ class SLPlatforms(IntEnum):
     TF = 1
     KERAS = 2
     PYTORCH = 3
-# Merge Methods supported in SL framework
-class SLMergeMethod(IntEnum):
-    mean = 1
-    coordmedian = 2
-    geomedian = 3
 
 MAX_PEERS = 0
 
@@ -94,11 +89,9 @@ class SwarmCallbackBase(ABC):
         self.currentSyncFrequency = self.stepsBeforeNextSync = self.syncFrequency
         self.minPeers = self.__getMinPeers(minPeers)
         self.trainingContract = self.__getTrainingContract(trainingContract)
-        self.totalEpochs = self.__getTotalEpochs(params)
         self.maxPeers = self.__getMaxPeers(MAX_PEERS, minPeers)
         self.checkinModelOnTrainEnd = self.__getCheckinModel(params)
         self.nodeWeightage = self.__getNodeWeightage(params)
-        self.mergeMethod = self.__getMergeMethod(params)
         ( self.useAdaptiveSync, self.valData, self.valBatchSize, self.valGen, 
           self.validationSteps, self.valX, self.valY, self.valSampleWeight ) \
           = self.__getAdaptiveSyncParams(params)
@@ -106,7 +99,6 @@ class SwarmCallbackBase(ABC):
         self.isSwarmTrainingOver = False
         self.lastSuccessfulMergeDictInActTrng = None
         self.userMergeDone = False
-        self.epochsCompleted = 0
         # Print all params
         self.__prints()
         '''
@@ -126,11 +118,9 @@ class SwarmCallbackBase(ABC):
 
     def getLoss(self, mergedParamsDict):
         '''
-        This method is used to compute Loss and Metrics. 
-        Loss/metrics calculation of current model using validation data.
+        Loss calculation of current model using validation data.
         This should be called from SL or server side Blackboard 
-        implementation. These calculations are required for 
-        UI display and adaptive sync.
+        implementation. It is required for adaptive sync.
         '''
         ########################################################
         # Very important:
@@ -143,18 +133,17 @@ class SwarmCallbackBase(ABC):
         ########################################################
         self._loadModelWeightsFromDict(mergedParamsDict)
         self.lastSuccessfulMergeDictInActTrng = mergedParamsDict
-        # Call platform specific loss calculation only 
-        # if stepsBeforeNextSync is 0. Otherwise just return 0
+        # Call platform specific loss calculation only if useAdaptiveSync
+        # is true and stepsBeforeNextSync is 0. Otherwise just return 0
         localLoss = 0
-        localmetrics = None
-
-        if self.stepsBeforeNextSync == 0: 
+        if self.useAdaptiveSync and self.stepsBeforeNextSync == 0:
             # Calculate local loss is not implemented for all platforms.
             # Platforms for which ADS is supported, this method should be available. 
             # Platform specific loss calculation
-            localLoss, localmetrics = self._calculateLocalLossAndMetrics()
+            localLoss = self._calculateLocalLoss()
             self.logger.info("Calculated local loss using merged parameters = {}".format(localLoss))
-        return localLoss, localmetrics, self.epochsCompleted, self.totalEpochs
+        return localLoss
+
 
     def _swarmInitialize(self):
         '''
@@ -174,7 +163,6 @@ class SwarmCallbackBase(ABC):
               , checkinModelOnTrainEnd=self.checkinModelOnTrainEnd.name
               , nodeWeightage=self.nodeWeightage
               , trainingContract=self.trainingContract
-              , mergeMethod=self.mergeMethod.name
               , callbackLossFunc=self.getLoss
               , logger=self.logger
             )
@@ -218,20 +206,16 @@ class SwarmCallbackBase(ABC):
 
     def _swarmOnEpochEnd(self):
         '''
-        Should be called to execute swarm functionality at the end of each epoch of 
+        Currently not used by Swarm Learning. Should be called to 
+        execute swarm functionality at the end of each epoch of 
         local training. But currently platform specific implementation 
         may choose not to call this.
         '''
-        # Increment epochs completed count
-        self.epochsCompleted +=1
-        
         # If loopback just return
         if self.loopback:
             self.logger.debug("OnEpochEnd: Bypassing Swarm Learning functionality as SWARM_LOOPBACK is True")
             return
         self.logger.debug("="*20 + " swarmOnEpochEnd : START " + "="*20)
-        # NO Swarm related functionality is implemented here for now
-        # Space holder for future use
         self.logger.debug("="*20 + " swarmOnEpochEnd : END " + "="*20)
 
 
@@ -338,7 +322,7 @@ class SwarmCallbackBase(ABC):
 
 
     @abstractmethod
-    def _calculateLocalLossAndMetrics(self):
+    def _calculateLocalLoss(self):
         '''
         Individual training platform has to implement this
         '''
@@ -357,10 +341,6 @@ class SwarmCallbackBase(ABC):
         stream_handler.flush = sys.stdout.flush
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
-        # Add file handler
-        ### Commenting the code to write file log ###
-        # Will uncomment only when we decide where to 
-        # create the log file in user container
         '''
         logFile = 'swarm_callback.log'
         os.remove(logFile) if os.path.exists(logFile) else None
@@ -408,18 +388,6 @@ class SwarmCallbackBase(ABC):
                                    + str([member.name for member in CheckinModel])
                                    )
         return CheckinModel[scbCheckinModel]
-    
-    def __getMergeMethod(self, params):
-        scbMergeMethod = params.get('mergeMethod', 
-                                    SLMergeMethod.mean.name)
-        scbMergeMethod = scbMergeMethod.lower() # To handle even if upper case is passed.
-        if scbMergeMethod not in [member.name for member in SLMergeMethod]:
-            self._logAndRaiseError("Invalid value mergeMethod: " +
-                                   str(scbMergeMethod)
-                                   + ". Allowed values: "
-                                   + str([member.name for member in SLMergeMethod])
-                                   )
-        return SLMergeMethod[scbMergeMethod]
 
 
     def __getNodeWeightage(self, params):
@@ -442,22 +410,11 @@ class SwarmCallbackBase(ABC):
                     "For adaptive sync, valid adsValData and " +
                     "valid adsValBatchSize (a positive integer) are mandatory"
                     )
-        # Need unpack valData for loss and metrics computation.         
-        ( valGen, validationSteps, valX, valY, valSampleWeight ) \
-        = self._getValidationDataForAdaptiveSync(valData, valBatchSize)
-        
+            ( valGen, validationSteps, valX, valY, valSampleWeight ) \
+            = self._getValidationDataForAdaptiveSync(valData, valBatchSize)
         return useAdaptiveSync, valData, valBatchSize, valGen, \
             validationSteps, valX, valY, valSampleWeight
 
-    def __getTotalEpochs(self, params):
-        totalEpochs = params.get("totalEpochs", None)
-        if (None == totalEpochs):
-            self.logger.info("======================= WARNING ==================================")
-            self.logger.info("totalEpochs is not available through callback")
-            self.logger.info("Training progress or ETA to complete training may not be supported")
-            self.logger.info("==================================================================")
-        return totalEpochs
-    
 
     # Log print
     def __prints(self) :
@@ -470,7 +427,6 @@ class SwarmCallbackBase(ABC):
         self.logger.info("useAdaptiveSync: %s" % self.useAdaptiveSync)
         self.logger.info("checkinModelOnTrainEnd: %s" % self.checkinModelOnTrainEnd)
         self.logger.info("nodeWeightage: %d" % self.nodeWeightage)
-        self.logger.info("mergeMethod: %s" % self.mergeMethod)
         self.logger.info("="*30)
 
 
