@@ -357,10 +357,6 @@ class SwarmCallbackBase(ABC):
         stream_handler.flush = sys.stdout.flush
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
-        # Add file handler
-        ### Commenting the code to write file log ###
-        # Will uncomment only when we decide where to 
-        # create the log file in user container
         '''
         logFile = 'swarm_callback.log'
         os.remove(logFile) if os.path.exists(logFile) else None
@@ -450,12 +446,17 @@ class SwarmCallbackBase(ABC):
             validationSteps, valX, valY, valSampleWeight
 
     def __getTotalEpochs(self, params):
-        totalEpochs = params.get("totalEpochs", None)
-        if (None == totalEpochs):
+        totalEpochsParam = params.get("totalEpochs", None) 
+        if (totalEpochsParam is not None) :
+            totalEpochs = SwarmCallbackBase.safeCastType(totalEpochsParam, int)
+            if totalEpochs is None or totalEpochs <= 0:
+                self._logAndRaiseError("totalEpochs value is not a positive integer")
+        else: #totalEpochs set to 0 if not defined.
             self.logger.info("======================= WARNING ==================================")
             self.logger.info("totalEpochs is not available through callback")
             self.logger.info("Training progress or ETA to complete training may not be supported")
             self.logger.info("==================================================================")
+            totalEpochs = 0
         return totalEpochs
     
 

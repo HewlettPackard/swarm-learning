@@ -106,6 +106,10 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         SwarmCallbackBase.__init__(self, syncFrequency, minPeers, trainingContract, kwargs)        
         self._verifyAndSetPlatformContext(kwargs)
         self._swarmInitialize()
+        if(self.valData == None):
+            self.logger.info("=============================================================")
+            self.logger.info("WARNING: valData is not available to compute Loss and metrics")
+            self.logger.info("=============================================================")
 
     
     def on_train_begin(self, logs=None):
@@ -173,6 +177,11 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         It returns the details of X and Y of validation data.
         '''
         valGen = validationSteps = valX = valY = valSampleWeight = None
+        
+        if(not valData):
+            #valData is an optional parameter if not available, then performance data won't be supported
+            return valGen, validationSteps, valX, valY, valSampleWeight
+            
         if hasattr(valData, 'next') or hasattr(valData, '__next__'):
             # valData is a generator
             valGen = valData
@@ -267,6 +276,9 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         valLoss = 0
         totalMetrics = 0
         scores = None
+        if(self.valData == None):
+            return valLoss, totalMetrics
+        
         
         if self.mlPlatform == SLPlatforms.KERAS:
             if self.valX is not None:

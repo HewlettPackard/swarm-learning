@@ -228,6 +228,8 @@ class APP2IF:
                       , lossResp
                       )
                 except Exception as eignore:
+                    # Suppress the context i.e. "during handling another exception"
+                    # Details - https://stackoverflow.com/questions/24752395/python-raise-from-usage
                     raise e from None
                 else:
                     raise
@@ -259,6 +261,12 @@ class APP2IF:
         # Swarm sync call was successful
         return resp.nextSyncInterval, resp.trainingOver
 
+    # This method returns local performance data of individual model. 
+    # Performance data includes following
+    # 1. Loss
+    # 2. Metrics
+    # 3. Epochs completed
+    # 4. Total Epochs used in training
     def __computeLoss(
         self
       , lossReq: spb.LossRequest

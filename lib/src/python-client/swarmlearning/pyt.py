@@ -152,7 +152,12 @@ class SwarmCallback(SwarmCallbackBase):
         # https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
         self.metricFunction = kwargs.get('metricFunction', None)
         self.metricFunctionArgs = kwargs.get('metricFunctionArgs', None)
-    
+        
+        if(self.valData == None):
+            self.logger.info("=============================================================")
+            self.logger.info("WARNING: valData is not available to compute Loss and metrics")
+            self.logger.info("=============================================================")
+
     
     def on_train_begin(self):
         '''
@@ -206,6 +211,10 @@ class SwarmCallback(SwarmCallbackBase):
         _getValidationDataForAdaptiveSync in SwarmCallbackBase class.
         '''
         valGen = validationSteps = valX = valY = valSampleWeight = None
+        
+        if(not valData):
+            #valData is an optional parameter if not available, then performance data won't be supported
+            return valGen, validationSteps, valX, valY, valSampleWeight
         
         # No need to unpack valData for pyTorch. 
         # pyTorch supports only DataLoader object as valData
@@ -290,6 +299,9 @@ class SwarmCallback(SwarmCallbackBase):
         '''
         valLoss = 0
         totalMetrics = 0
+        
+        if(self.valData == None):
+            return valLoss, totalMetrics
         
         try: 
             # LOSS FUNCTION in pyTorch
