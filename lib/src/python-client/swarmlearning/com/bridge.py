@@ -70,15 +70,18 @@ class Bridge:
         return
 
     def __setAPIVersion(self) -> None:
-        apiVer = spb.DESCRIPTOR.GetOptions().Extensions[spb.apiVersion]
-        self._apiVer = spb.APIVersion(apiVersion=apiVer, minVersion=apiVer)
-
+        # Fetching the api version from the dynamically generated proto code.
+        apiVerFrmProto = spb.DESCRIPTOR.GetOptions().Extensions[spb.apiVersion]
+        # Building _apiVer as spb.APIVersion structure type. This will be used to 
+        # set the api version inside the header of _send method.
+        self._apiVer = spb.APIVersion(apiVersion=apiVerFrmProto, minVersion=apiVerFrmProto)
         return
 
-    def _verifyAPIVersion(self, apiVer: spb.APIVersion) -> None:
-        if apiVer.apiVersion != self._apiVer.apiVersion:
-            raise RuntimeError(f"unsupported API version: {apiVer.apiVersion}")
-
+    def _verifyAPIVersion(self, verionFromHeader: spb.APIVersion) -> None:
+        # Left side is the api version from the header of the _recv method
+        # Right side is the api version from the dynamically generated proto file
+        if verionFromHeader.apiVersion != self._apiVer.apiVersion:
+            raise RuntimeError(f"Mismatch in the Swarm API version between ML and SL containers. Expected version {self._apiVer.apiVersion}, but the version received from the header is {verionFromHeader.apiVersion}")
         return
 
     def _verifyMessageType(self, msgType: spb.MessageType) -> None:

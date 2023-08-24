@@ -87,7 +87,9 @@ class Swci:
         # setup client side security for URL access
         # Ref: https://docs.python-requests.org/en/latest/user/advanced/#ca-certificates
         self.__sess = requests.Session()
-        # Clean-up mTLS / TLS with SWCI server
+        # Although the code for client connection to SWCI without cert is provided below,
+        # this workflow doesn't work. That means client has to provide the client cert to have 
+        # secure connection to SWCI.
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.__secure = False
         self.__cert = None
@@ -524,3 +526,8 @@ class Swci:
             return r.text
         except Exception as e:
             raise RuntimeError('Task definition file upload failed')            
+        
+    def perfdata(self, trainingBlackboardName):
+        cmd = 'perfdata %s'%(trainingBlackboardName)
+        return self.__execCmd(cmd)
+        
