@@ -158,7 +158,7 @@ onTrainEnd()
     # else set it to default path of docker runtime
     if [[ -z ${dockerSocketFile} ]] && command -v podman &>/dev/null; then
         dockerSocketFile=`podman info --format '{{.Host.RemoteSocket.Path}}'`
-    elif [[ -z ${dockerSocketFile} ]]
+    elif [[ -z ${dockerSocketFile} ]]; then
         dockerSocketFile=${containerDockerSock}
     fi
 
