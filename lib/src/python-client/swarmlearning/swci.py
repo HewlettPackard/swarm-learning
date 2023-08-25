@@ -234,6 +234,10 @@ class Swci:
     def getTrainingContractStatus(self, ctName):
         return self.__execCmd('get contract status ' + ctName)                
         
+    def getTrainingContractPerformanceData(self, ctName):
+        cmd = 'perfdata %s'%(ctName)
+        return self.__execCmd(cmd)
+        
     # this list is dynamic and changes with topology 
     # so dont cache it    
     def listNodes(self):
@@ -525,9 +529,5 @@ class Swci:
             r = self.__sess.post(self.__uploadUrl, files=files, verify=False)
             return r.text
         except Exception as e:
-            raise RuntimeError('Task definition file upload failed')            
-        
-    def perfdata(self, trainingBlackboardName):
-        cmd = 'perfdata %s'%(trainingBlackboardName)
-        return self.__execCmd(cmd)
+            raise RuntimeError('Task definition file upload failed')
         
