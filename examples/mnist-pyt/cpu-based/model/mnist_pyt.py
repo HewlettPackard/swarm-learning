@@ -108,12 +108,27 @@ def main():
     
     # Create Swarm callback
     swarmCallback = None
+    # create a dictionary of named arguments for lossFunction
+    lFArgsDict={}
+    lFArgsDict['reduction']='sum'
+    # create a dictionary of named arguments for metricFunction
+    mFArgsDict={}
+    mFArgsDict['task']="multiclass"
+    mFArgsDict['num_classes']=10
+    
+    max_epochs = 10 # to test epochs
     swarmCallback = SwarmCallback(syncFrequency=swSyncInterval,
                                   minPeers=min_peers,
                                   useAdaptiveSync=False,
-                                  adsValData=testDs,
+                                  adsValData=testLoader,
                                   adsValBatchSize=batchSz,
-                                  model=model)
+                                  model=model,
+                                  totalEpochs=max_epochs,
+                                  lossFunction="CrossEntropyLoss", 
+                                  lossFunctionArgs=lFArgsDict,
+                                  metricFunction="F1Score",
+                                  metricFunctionArgs=mFArgsDict)
+                                  
     # initalize swarmCallback and do first sync 
     swarmCallback.on_train_begin()
         

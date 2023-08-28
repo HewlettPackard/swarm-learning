@@ -80,7 +80,8 @@ def main():
                                 minPeers=min_peers,
                                 useAdaptiveSync=False,
                                 adsValData=(x_test, y_test),
-                                adsValBatchSize=8)
+                                adsValBatchSize=8,
+                                totalEpochs=max_epochs)
   swarmCallback.logger.setLevel(logging.DEBUG)
 
   model.fit(x_train, y_train, 
