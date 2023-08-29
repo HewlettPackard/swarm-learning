@@ -76,6 +76,11 @@ def main():
                 metrics=['accuracy'])
 
   # Create Swarm callback
+
+  # In SwarmCallBack following parameter is provided to enable displaying training
+  # progress or ETA of training on the SLM UI.
+  # 'totalEpochs' - Total epochs used in local training.
+  
   swarmCallback = SwarmCallback(syncFrequency=128,
                                 minPeers=min_peers,
                                 useAdaptiveSync=False,

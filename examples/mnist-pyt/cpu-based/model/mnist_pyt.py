@@ -108,15 +108,26 @@ def main():
     
     # Create Swarm callback
     swarmCallback = None
-    # create a dictionary of named arguments for lossFunction
+
+    # In SwarmCallBack following parameters are provided to enable displaying training
+    # progress or ETA of training on the SLM UI.
+    # 'lossFunction'      - 'lossFunction' string should match with loss function class defined in PyTorch -
+    #                       https://pytorch.org/docs/stable/nn.html#loss-functions
+    # 'lossFunctionArgs'  - dictionary of named arguments for lossFunction as shown below.
+    # 'metricFunction'    - 'metricFunction' string should match with metric function class defined in torchmetrics -
+    #                       https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
+    # 'metricFunctionArgs'- dictionary of named arguments for metricFunction as show below.
+    # 'totalEpochs'       - Total epochs used in local training.
+
     lFArgsDict={}
     lFArgsDict['reduction']='sum'
-    # create a dictionary of named arguments for metricFunction
+
     mFArgsDict={}
     mFArgsDict['task']="multiclass"
     mFArgsDict['num_classes']=10
     
-    max_epochs = 10 # to test epochs
+    max_epochs = 10 
+
     swarmCallback = SwarmCallback(syncFrequency=swSyncInterval,
                                   minPeers=min_peers,
                                   useAdaptiveSync=False,
