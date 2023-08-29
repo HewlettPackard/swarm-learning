@@ -93,7 +93,8 @@ swarmCallback = SwarmCallback(syncFrequency=128,
                               minPeers=min_peers,
                               useAdaptiveSync=False,
                               adsValData=(x_test, y_test),
-                              adsValBatchSize=batch_size)
+                              adsValBatchSize=batch_size,
+                              totalEpochs=epochs)
 swarmCallback.logger.setLevel(logging.DEBUG)
 
 # Add SwarmCallback during training
