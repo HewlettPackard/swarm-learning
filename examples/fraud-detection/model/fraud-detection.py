@@ -84,7 +84,11 @@ def main():
   x_test, y_test = getXY(testData)
 
   # Adding swarm callback
-  swarmCallback = SwarmCallback(syncFrequency=128, minPeers=minPeers, mergeMethod='mean')
+
+  # In SwarmCallBack following parameter is provided to enable displaying training
+  # progress or ETA of training on the SLM UI.
+  # 'totalEpochs' - Total epochs used in local training.
+  swarmCallback = SwarmCallback(syncFrequency=128, minPeers=minPeers, mergeMethod='mean', totalEpochs=maxEpoch)
 
   # Model training
   model.fit(
