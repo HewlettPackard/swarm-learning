@@ -10,7 +10,7 @@ Body:
     Command: model/fraud-detection.py
     Entrypoint: python3
     WorkingDir: /tmp/test
-    Envvars: ["DATA_DIR": app-data, "MAX_EPOCHS": 32, "MIN_PEERS": 4]
+    Envvars: ["DATA_DIR": app-data, "MAX_EPOCHS": 16, "MIN_PEERS": 4]
     PrivateContent: /tmp/test/
     SharedContent:
     -   Src: <PROJECT-MODEL>

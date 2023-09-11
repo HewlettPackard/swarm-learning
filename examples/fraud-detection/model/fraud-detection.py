@@ -32,16 +32,11 @@ def getXY(dataSet):
 
 # Constants
 testFileName = 'SB19_CCFDUBL_BAL_TEST_2C.csv'
-fileNameList = [
-    'SB19_CCFDUBL_BAL_TRAIN_2C.csv'
-  , 'SB19_CCFDUBL_BAL_P1_2C.csv'
-  , 'SB19_CCFDUBL_BAL_P2_2C.csv'
-  , 'SB19_CCFDUBL_BAL_P3_2C.csv'
-]
+trainFileName = 'SB19_CCFDUBL_BAL_TRAIN_2C.csv'
 
 part = 0
 batchSize = 32
-defaultMaxEpoch = 1000
+defaultMaxEpoch = 100
 defaultMinPeers = 2
 
 def main():
@@ -54,8 +49,8 @@ def main():
   print('***** Starting model =', modelName)
   # ================== load test and train Data =========================
   print('-' * 64)
-  fname = fileNameList[part]
-  trainFile = dataDir + '/' + fname
+
+  trainFile = dataDir + '/' + trainFileName
   print("loading train dataset %s .." % trainFile)
   with open(trainFile, 'r') as f:
     # first line is the header row so remove it
