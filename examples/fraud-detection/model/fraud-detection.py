@@ -63,6 +63,7 @@ def main():
   with open(testFile, 'r') as f:
     # first line is the header row so remove it
     testData = np.array(list(csv.reader(f, delimiter=","))[1:], dtype=float)
+    print('size of test Data set : %s' % np.size(testData,0))
 
   print('-' * 64)
   # ================== Model to train and evaluate =========================
@@ -71,7 +72,9 @@ def main():
   model.add(tf.keras.layers.Dense(1, input_shape=(30,), activation='sigmoid',
     kernel_initializer='random_uniform', bias_initializer='zeros'))
   sgd = tf.keras.optimizers.SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-  model.compile(loss = 'binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
+  model.compile(loss = 'binary_crossentropy',
+                optimizer=sgd,
+                metrics=[tf.keras.metrics.AUC()])
   print(model.summary())
 
   print('Starting training ...')
@@ -83,7 +86,12 @@ def main():
   # In SwarmCallBack following parameter is provided to enable displaying training
   # progress or ETA of training on the SLM UI.
   # 'totalEpochs' - Total epochs used in local training.
-  swarmCallback = SwarmCallback(syncFrequency=128, minPeers=minPeers, mergeMethod='mean', totalEpochs=maxEpoch)
+  swarmCallback = SwarmCallback(syncFrequency=128,
+                                minPeers=minPeers,
+                                adsValData=(x_test, y_test),
+                                adsValBatchSize=batchSize,
+                                mergeMethod='mean',
+                                totalEpochs=maxEpoch)
 
   # Model training
   model.fit(
@@ -101,7 +109,7 @@ def main():
   # Evaluate
   scores = model.evaluate(x_test, y_test, verbose=1)
   print('***** Test loss:', scores[0])
-  print('***** Test accuracy:', scores[1])
+  print('***** Test auc:', scores[1])
 
   # Save
   model_path = os.path.join(scratchDir, modelName)
