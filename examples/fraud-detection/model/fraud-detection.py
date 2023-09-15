@@ -31,8 +31,8 @@ def getXY(dataSet):
 
 
 # Constants
-testFileName = 'SB19_CCFDUBL_BAL_TEST_2C.csv'
-trainFileName = 'SB19_CCFDUBL_BAL_TRAIN_2C.csv'
+testFileName = 'SB19_CCFDUBL_TEST.csv'
+trainFileName = 'SB19_CCFDUBL_TRAIN.csv'
 
 part = 0
 batchSize = 32
