@@ -78,7 +78,7 @@ trap "exit 1" SIGUSR1 SIGUSR2
 
 
 # Swarm product version.
-swarmVer="2.1.0-rc1"
+swarmVer="2.1.0-rc2"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
 swarmOrg="hpe/swarm-learning"
