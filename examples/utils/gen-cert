@@ -92,5 +92,7 @@ do
         -CAcreateserial                                                \
         -CAserial workspace/"$example"/cert/ca/ca-"$host"-srl.srl      \
         -extfile <(printf "%s\n" "${opensslConf[@]}")
+    rm workspace/"$example"/cert/${comp}-"$host"-csr.pem
 done
+rm workspace/"$example"/cert/ca/ca-"$host"-csr.pem
 
