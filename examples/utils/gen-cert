@@ -51,7 +51,8 @@ openssl req                                                   \
     -subj "/OU=Swarm-Learning/CN=CA-"$host""
 
 # We do not use the default configuration file because it
-# might specify a different set of properties.
+# might specify a different set of properties.\
+#Added SAN filed inorder to emit the deprecation of the CN warning
 local opensslConf=()
 opensslConf+=("basicConstraints = critical, CA:TRUE")
 opensslConf+=("keyUsage = critical, digitalSignature, keyCertSign")
@@ -92,6 +93,7 @@ do
         -CAcreateserial                                                \
         -CAserial workspace/"$example"/cert/ca/ca-"$host"-srl.srl      \
         -extfile <(printf "%s\n" "${opensslConf[@]}")
+    #removing the intermediate csr.pem files for smooth maintanence 
     rm workspace/"$example"/cert/${comp}-"$host"-csr.pem
 done
 rm workspace/"$example"/cert/ca/ca-"$host"-csr.pem
