@@ -51,7 +51,7 @@ openssl req                                                   \
     -subj "/OU=Swarm-Learning/CN=CA-"$host""
 
 # We do not use the default configuration file because it
-# might specify a different set of properties.\
+# might specify a different set of properties.
 #Added SAN filed inorder to emit the deprecation of the CN warning
 local opensslConf=()
 opensslConf+=("basicConstraints = critical, CA:TRUE")
