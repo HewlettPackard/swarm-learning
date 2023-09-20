@@ -201,6 +201,10 @@ Swarm Learning uses a blockchain network primarily to provide a consistent syste
 
 The current implementation runs an open-source version of Ethereum but, more platforms might be added in the future. At the time of initialization, the framework spawns its own blockchain network with a custom set of parameter values. Hence it cannot be replaced with any other blockchain network. This applies even when the blockchain platform is a supported one.
 
+## Where is the blockchain stored on SN container? {#SECTION_L1G_FCW_1YB .section}
+
+By default, blockchain is stored in the `/platform/swarm/SMLNODE` path inside SN containers. Blockchain is not preserved by default. To preserve it, user have to mount `/platform/swarm/SMLNODE` on a persistent volume on the host while starting SN. For more information, see `Starting Sentinel node` section in `HPE Swarm Learning Installation and Configuration Guide`.
+
 ## <a name="SECTION_DX2_VGS_HSB"/> What are the supported machine learning platforms?
 
 Swarm Learning supports Python3 based Machine Learning models that uses PyTorch and Keras \(based on TensorFlow 2\).
