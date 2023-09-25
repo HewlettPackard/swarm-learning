@@ -147,13 +147,11 @@ class SwarmCallbackBase(ABC):
         # if stepsBeforeNextSync is 0. Otherwise just return 0
         localLoss = 0
         localmetrics = None
-
-        if self.stepsBeforeNextSync == 0: 
-            # Calculate local loss is not implemented for all platforms.
-            # Platforms for which ADS is supported, this method should be available. 
-            # Platform specific loss calculation
-            localLoss, localmetrics = self._calculateLocalLossAndMetrics()
-            self.logger.info("Calculated local loss using merged parameters = {}".format(localLoss))
+        
+        # Platform specific loss calculation
+        localLoss, localmetrics = self._calculateLocalLossAndMetrics()
+        self.logger.info("Calculated local loss using merged parameters = {}".format(localLoss))
+        
         return localLoss, localmetrics, self.epochsCompleted, self.totalEpochs
 
     def _swarmInitialize(self):
@@ -430,15 +428,15 @@ class SwarmCallbackBase(ABC):
     def __getAdaptiveSyncParams(self, params):
         useAdaptiveSync = params.get('useAdaptiveSync', False)
         valData = params.get('adsValData', None)
-        valBatchSize = params.get('adsValBatchSize', 0)
+        valBatchSize = params.get('adsValBatchSize', None)
         valGen = validationSteps = valX = valY = valSampleWeight = None
         if useAdaptiveSync:
-            if valData == None or valBatchSize <= 0:
+            if valData == None:
                 self._logAndRaiseError(
-                    "For adaptive sync, valid adsValData and " +
-                    "valid adsValBatchSize (a positive integer) are mandatory"
+                    "For adaptive sync, valid adsValData is mandatory and " +
+                    "a positive adsValBatchSize if applicable"
                     )
-        # Need unpack valData for loss and metrics computation.         
+        # Need to unpack valData for loss and metrics computation.         
         ( valGen, validationSteps, valX, valY, valSampleWeight ) \
         = self._getValidationDataForAdaptiveSync(valData, valBatchSize)
         
@@ -466,8 +464,7 @@ class SwarmCallbackBase(ABC):
         self.logger.info("syncFrequency: %d" % self.syncFrequency)
         self.logger.info("minPeers: %d" % self.minPeers)
         self.logger.info("trainingContract: %s" % self.trainingContract)
-        self.logger.info("maxPeers: %d" % self.maxPeers)
-        self.logger.info("valBatchSize: %d" % self.valBatchSize)
+        self.logger.info("valBatchSize: {}".format(self.valBatchSize))
         self.logger.info("useAdaptiveSync: %s" % self.useAdaptiveSync)
         self.logger.info("checkinModelOnTrainEnd: %s" % self.checkinModelOnTrainEnd)
         self.logger.info("nodeWeightage: %d" % self.nodeWeightage)

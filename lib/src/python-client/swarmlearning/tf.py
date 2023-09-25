@@ -108,7 +108,8 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         self._swarmInitialize()
         if(self.valData == None):
             self.logger.info("=============================================================")
-            self.logger.info("WARNING: valData is not available to compute Loss and metrics")
+            self.logger.info("WARNING: adsValData and adsValBatchSize are not available ")
+            self.logger.info("to compute Loss and metrics")
             self.logger.info("=============================================================")
 
     
@@ -171,31 +172,12 @@ class SwarmCallback(Callback, SwarmCallbackBase):
 
 
     def _getValidationDataForAdaptiveSync(self, valData, valBatchSize):
-        '''
-        TF and Keras specific implementation of abstract method
-        _getValidationDataForAdaptiveSync in SwarmCallbackBase class.
-        It returns the details of X and Y of validation data.
-        '''
+
         valGen = validationSteps = valX = valY = valSampleWeight = None
-        
-        if(not valData):
-            #valData is an optional parameter if not available, then performance data won't be supported
-            return valGen, validationSteps, valX, valY, valSampleWeight
-            
-        if hasattr(valData, 'next') or hasattr(valData, '__next__'):
-            # valData is a generator
-            valGen = valData
-            validationSteps = int(len(valData) // valBatchSize)
-        else:
-            if len(valData) == 2:
-                valX, valY = valData
-            elif len(valData) == 3:
-                valX, valY, valSampleWeight = valData
-            else:
-                raise ValueError('`valData` should be a tuple '
-                                    '`(valX, valY, valSampleWeight)` '
-                                    'or `(valX, valY)`. Found: ' +
-                                    str(valData))
+        self.logger.info("Allow valData for evaluation")
+        self.logger.info("val data type is %s" %(type(valData)))
+        if(valBatchSize is not None):
+            self.logger.info("valBatchSize is %s" %(valBatchSize))
         return valGen, validationSteps, valX, valY, valSampleWeight
 
 
@@ -279,21 +261,30 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         if(self.valData == None):
             return valLoss, totalMetrics
         
-        
+        #Refer - https://www.tensorflow.org/api_docs/python/tf/keras/Model
         if self.mlPlatform == SLPlatforms.KERAS:
-            if self.valX is not None:
-                scores = self.mlCtx.model.evaluate(
-                                            x=self.valX,
-                                            y=self.valY, 
-                                            batch_size=self.valBatchSize)
-            elif self.valGen is not None:
-                scores = self.mlCtx.model.evaluate_generator(
-                                                self.valGen,
-                                                steps=self.validationSteps,
-                                                max_queue_size=self.max_queue_size,
-                                                workers=self.workers,
-                                                use_multiprocessing=self.use_multiprocessing,
-                                                verbose=self.verbose)
+            # If the valData is tuple it should be arranged in 
+            #  (inputs, targets) or (inputs, targets, sample_weights).
+            # If valData length is not 2 or 3, means valData might be 
+            # tf.Dataset or Generator so use it as is in evaluate call.
+            if(len(self.valData) == 2):
+                self.logger.debug("valData has 2 args")
+                valX, valY = self.valData
+                scores = self.mlCtx.model.evaluate( x=valX,
+                                                    y=valY, 
+                                                    batch_size=self.valBatchSize)
+            elif (len(self.valData) == 3):
+                self.logger.debug("valData has 3 arg")
+                valX, valY, valSampleWeight = self.valData
+                scores = self.mlCtx.model.evaluate( x=valX,
+                                                    y=valY, 
+                                                    sample_weight = valSampleWeight,
+                                                    batch_size=self.valBatchSize)
+            else:
+                self.logger.debug("valData has 1 arg")
+                scores = self.mlCtx.model.evaluate( self.valData, 
+                                                    batch_size=self.valBatchSize)
+
             # The first element in the scores list is loss, second element is metrics
             self.logger.debug("\n loss, metrics are :{}".format(scores))
             if scores:
