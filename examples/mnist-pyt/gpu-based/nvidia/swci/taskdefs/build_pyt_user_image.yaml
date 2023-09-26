@@ -15,4 +15,5 @@ Body:
     - RUN mkdir -p /tmp/hpe-swarmcli-pkg
     - COPY swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl  /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
     - RUN pip install /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+    - RUN pip3 install torchmetrics
 
