@@ -1,4 +1,4 @@
-![image](https://github.com/ganesaar/swarm-learning/assets/109956805/7598f566-d00f-4e26-a835-65dca1560620)# <a name="GUID-04214413-16D0-4870-B55D-F22E7FB61B8F"/> Prerequisites
+## Prerequisites
 
 HPE recommends that you run each Swarm Network node, and Swarm Learning node on dedicated systems to get the best performance from the platform.
 
