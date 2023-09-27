@@ -1,8 +1,7 @@
 # Centralized Swarm diagnostic
 
-Centralized Swarm diagnostic utility will collect and upload the logs from all the hosts associated with a project to the host or VM provided by user via the utility.
+Centralized Swarm diagnostics utility can be used to collect and upload the logs from all the hosts associated with a project. This can be sent to HPE to report Swarm issues.
 
-The utility will show all the hosts where swarm learning installed in the drop down and user can choose one among them. Note that in that VM, the sshpass utility should be installed. \(*apt install sshpass*\).<br></br>
 ![Centralized Swarm Diagnostics](GUID-EA3ED67E-52AD-464F-B126-E21C6F835125-high.png)
 
 1.  In the **Projects** tab, click **Collect Log** icon.
@@ -13,9 +12,13 @@ The utility will show all the hosts where swarm learning installed in the drop d
 
     ![Host Address](GUID-31258354-DEB0-428E-BC00-B706BD0BFCBA-high.png)
 
+    **NOTE:**
+
+    The sshpass utility must be installed in the VM. `\(apt install sshpass\)`.
+
 3.  Click **Create** to complete the Log Collection.
 
-    ![Log Collection Completed](GUID-486FE7B6-0ED8-41B6-80FE-18D848B59F1B-high.png)
+    ![Log Collection Completed](GUID-5383ABE4-9B19-40A1-83CB-47F605828833-high.png)
 
 
 **Parent topic:**[Running Swarm Learning examples using SLM-UI](GUID-A2B92980-7281-4B0A-989F-33097B7C96A5.md)
