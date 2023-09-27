@@ -44,6 +44,7 @@ A SWCI tool can control operations on multiple Swarm Learning framework instance
 |`GET CONTRACT STATUS \<SLContractName:string>`|Reports the current dynamic status of the specified Swarm Learning contract.|
 |`RESET CONTRACT \<SLContractName:string>`|Resets the state of the contract to uninitialized state.<br> **WARNING**:This action cannot be undone, reset only completed Swarm Learning contracts. Resetting the active contracts can result in unexpected behavior.<br> A typical scenario would be when a user wants to reuse a completed training contract and start a new training session.|
 |`CREATE CONTRACT \<SLContractName:string>`|Registers the specified Swarm Learning contract into the Swarm Learning network.|
+|`PERFDATA CONTRACT <SLContractName:string>`|Displays performance data about the training under the Swarm Learning contract. <br> It provides training performance data like UID, SL ADMIN status, model loss, model metric, total number of epochs and total number of completed epochs, for each SL-ML pair.|
 
 ## <a name="SECTION_VMG_GMK_HSB"/> SWCI commands related to Task
 
