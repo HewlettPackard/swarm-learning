@@ -102,7 +102,7 @@ SNo | FQDN | IP Address |
    
    Lets say if `Host_1_DNS_IP` is 172.3.3.3, `Host_2_USER` is test2, `Host_2_INSTALL_DIR` is /home/test2/swarm-learning and `Network_Name` is rp-network-1 is the network created in host 1.  Run command will looks like below 
    ```
-   .\examples\reverse-proxy\cifar10\run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 172.3.3.3 test2 /home/test2/swarm-learning rp-network-1
+   ./examples/reverse-proxy/cifar10/run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 172.3.3.3 test2 /home/test2/swarm-learning rp-network-1
    ```
    Above step will create workspace directory, moves files from examples to workspace, create a common path between hosts for ml program, generate certificates, creates volume for the wheel file and shares certificate releated pem files. It will also starts Bind9 container, Nginx container and rest of all the swarm containers specific to *host-1* in the sequential manner. All the run-script commands will now take FQDN's as service parameter arguments instead of ports. 
    
@@ -119,7 +119,7 @@ SNo | FQDN | IP Address |
    Lets say if `Host_2_DNS_IP` is 172.4.4.4, Host_1_USER is test1, `Host_1_INSTALL_DIR` is /home/test1/swarm-learning and `Network_Name` is rp-network-2 is the network created in host 2. Run command will looks like below 
       
    ```
-      .\examples\reverse-proxy\cifar10\run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 172.4.4.4 test1 /home/test1/swarm-learning rp-network-2
+      ./examples/reverse-proxy/cifar10/run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 172.4.4.4 test1 /home/test1/swarm-learning rp-network-2
    ```
       Above step will create workspace directory, moves files from examples to workspace, create a common path between hosts for ml program, generate certificates, creates volume for the wheel file and shares certificate releated pem files. It will also starts Bind9 container, Nginx container and rest of all the swarm containers specific to *host-2* in the sequential manner. All the run-script commands will now take FQDN's as service parameter arguments instead of ports. 
       
