@@ -1,4 +1,4 @@
-# <a name="GUID-04214413-16D0-4870-B55D-F22E7FB61B8F"/> Prerequisites
+![image](https://github.com/ganesaar/swarm-learning/assets/109956805/7598f566-d00f-4e26-a835-65dca1560620)# <a name="GUID-04214413-16D0-4870-B55D-F22E7FB61B8F"/> Prerequisites
 
 HPE recommends that you run each Swarm Network node, and Swarm Learning node on dedicated systems to get the best performance from the platform.
 
@@ -37,7 +37,7 @@ NOTE:Configuration of the ML user nodes are driven by the complexity of the ML a
 
 ## <a name="SECTION_JCW_Q12_JSB"/> Container hosting platform
 
--   HPE Swarm Learning is qualified with Docker 24.4.0 and Podman 4.0.2. Configure Docker/Podman to use IPv4. For more details, see [Running Swarm Leaning with Podman](GUID-4C73E127-7F79-4EAD-AC02-C593EA83CBE1.md).
+-   HPE Swarm Learning is qualified with Docker 24.0.5 and Podman 4.0.2. Configure Docker/Podman to use IPv4. For more details, see [Running Swarm Leaning with Podman](GUID-4C73E127-7F79-4EAD-AC02-C593EA83CBE1.md).
 
 -   Configure Docker to run as a non-root user. For more details, see [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
 
