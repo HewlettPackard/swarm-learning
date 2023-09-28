@@ -101,9 +101,9 @@ def main():
     useCuda = torch.cuda.is_available()
     
     if useCuda:
-        print("Cuda is accessable")
+        print("Cuda is available")
     else:
-        print("Cuda is not accessable")
+        print("Cuda is not available")
         
     device = torch.device("cuda" if useCuda else "cpu")  
     model = mnistNet().to(device)
