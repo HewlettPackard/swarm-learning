@@ -326,11 +326,14 @@ class SwarmCallback(SwarmCallbackBase):
             # keyword arguments during the call
             metricFunctionObj = metricFunctionClass(**self.metricFunctionArgs)
 
-            model = self.mlCtx.model
+
             testLoader = self.valData
             useCuda = torch.cuda.is_available()
             device = torch.device("cuda" if useCuda else "cpu")  
-            
+            # Update the model, mertic and loss also to device specific object
+            metricFunctionObj = metricFunctionObj.to(device)
+            lossFunctionObj = lossFunctionObj.to(device)
+            model = self.mlCtx.model.to(device)
             model.eval()
             
             with torch.no_grad():

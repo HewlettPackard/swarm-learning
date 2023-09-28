@@ -99,6 +99,12 @@ def main():
     batchSz = 128
     trainDs, testDs = loadData()
     useCuda = torch.cuda.is_available()
+    
+    if useCuda:
+        print("Cuda is available")
+    else:
+        print("Cuda is not available")
+        
     device = torch.device("cuda" if useCuda else "cpu")  
     model = mnistNet().to(device)
     model_name = 'mnist_pyt'
@@ -125,8 +131,6 @@ def main():
     mFArgsDict={}
     mFArgsDict['task']="multiclass"
     mFArgsDict['num_classes']=10
-    
-    max_epochs = 10 
 
     swarmCallback = SwarmCallback(syncFrequency=swSyncInterval,
                                   minPeers=min_peers,

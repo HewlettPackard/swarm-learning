@@ -104,9 +104,9 @@ def main():
     useCuda = torch.cuda.is_available()
     
     if useCuda:
-        print("Cuda is accessable")
+        print("Cuda is available")
     else:
-        print("Cuda is not accessable")
+        print("Cuda is not available")
         
         
     n_devices = pyamdgpuinfo.detect_gpus()
@@ -131,12 +131,36 @@ def main():
     
     # Create Swarm callback
     swarmCallback = None
+
+    # In SwarmCallBack following parameters are provided to enable displaying training
+    # progress or ETA of training on the SLM UI.
+    # 'lossFunction'      - 'lossFunction' string should match with loss function class defined in PyTorch -
+    #                       https://pytorch.org/docs/stable/nn.html#loss-functions
+    # 'lossFunctionArgs'  - dictionary of named arguments for lossFunction as shown below.
+    # 'metricFunction'    - 'metricFunction' string should match with metric function class defined in torchmetrics -
+    #                       https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
+    # 'metricFunctionArgs'- dictionary of named arguments for metricFunction as show below.
+    # 'totalEpochs'       - Total epochs used in local training.
+
+    lFArgsDict={}
+    lFArgsDict['reduction']='sum'
+
+    mFArgsDict={}
+    mFArgsDict['task']="multiclass"
+    mFArgsDict['num_classes']=10
+
     swarmCallback = SwarmCallback(syncFrequency=swSyncInterval,
                                   minPeers=min_peers,
                                   useAdaptiveSync=False,
-                                  adsValData=testDs,
+                                  adsValData=testLoader,
                                   adsValBatchSize=batchSz,
-                                  model=model)
+                                  model=model,
+                                  totalEpochs=max_epochs,
+                                  lossFunction="CrossEntropyLoss", 
+                                  lossFunctionArgs=lFArgsDict,
+                                  metricFunction="F1Score",
+                                  metricFunctionArgs=mFArgsDict)
+                                  
     # initalize swarmCallback and do first sync 
     swarmCallback.on_train_begin()
         
