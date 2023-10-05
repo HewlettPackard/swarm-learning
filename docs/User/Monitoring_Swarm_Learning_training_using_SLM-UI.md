@@ -9,7 +9,7 @@ This image shows all running swarm nodes associated with the project. It also sh
 <blockquote>
 
   **Note:** 
-  Post training completion, the completed nodes are still displayed approximately 7 to 10 minutes prior they are
+  Post training completion, the completed nodes are still displayed for approximately 7 to 10 minutes prior to being
 cleaned up in the SLM-UI.
 
 </blockquote>
