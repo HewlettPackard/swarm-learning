@@ -108,7 +108,7 @@ The following image illustrates a cluster setup for the MNIST example:
     -e http_proxy= -e https_proxy= --apls-ip=${APLS_IP}
     ```
 <blockquote>
-    NOTE: If required, modify proxy, according to environment, either in the above command or in the swop profile file under `workspace/mnist-pyt/gpu-based/nvidia/swop` folder.
+    NOTE: If required, modify proxy, according to environment, either in the above command or in the swop profile file under `workspace/mnist-pyt/swop` folder.
 </blockquote>
 
 <blockquote>

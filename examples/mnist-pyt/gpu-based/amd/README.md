@@ -109,7 +109,7 @@ The following image illustrates a cluster setup for the MNIST example:
     ```
 
 <blockquote>
-    NOTE: If required, modify proxy, according to environment, either in the above command or in the swop profile file under `workspace/mnist-pyt/gpu-based/amd/swop` folder.
+    NOTE: If required, modify proxy, according to environment, either in the above command or in the swop profile file under `workspace/mnist-pyt/swop` folder.
 </blockquote>
 
 <blockquote>

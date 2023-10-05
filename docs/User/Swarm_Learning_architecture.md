@@ -6,11 +6,11 @@ For more information on how these components interact, see [Swarm Learning compo
 
 The following illustration is the architecture of Swarm Learning components:
 
-<img src="GUID-E80D248E-E754-498E-99D6-67508092F779-high.png" width="80%" height="100%">
+<img src="GUID-899B556F-D33F-42D1-8D0D-37F191715709-high.png" width="80%" height="100%">
 
 -   SL nodes run the core of Swarm Learning. An SL node works in collaboration with all the other SL nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. SL nodes act as an interface between the user model application and other Swarm Learning components. SL nodes take care of distributing and merging model weights in a secured way.
 
--   SN nodes form the blockchain network. The current version of Swarm Learning uses an open-source version of Ethereum as the underlying blockchain platform. The SN nodes interact with each other using this blockchain platform to maintain and track progress. The SN nodes use this state and progress information to co-ordinate the working of the other swarm learning components.
+-   SN nodes form the blockchain network. The current version of Swarm Learning uses an open-source version of Ethereum as the underlying blockchain platform. The SN nodes interact with each other using this blockchain platform to maintain and track progress. The SN nodes use this state and progress information to co-ordinate the working of the other swarm learning components. Blockchain can be persisted across SN restart to preserve the past training history. User can lookup blockchain and see all history of operations. Users have the flexibility to stop Swarm after training is completed. Once user restarts the SN network, the existing history can be accessed using the `get` or `list` command of SWCI management interface.
 
     **Sentinel Node** is a special SN node. The Sentinel node is responsible for initializing the blockchain network. This is the first node to start.
 
