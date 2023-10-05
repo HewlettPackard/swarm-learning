@@ -61,10 +61,13 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
   2. [Upgrading from earlier evaluation versions](/docs/Install/Versioning_and_upgrade.md)
   3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the SLM-UI installer 
-  4. Execute [MNIST example](/examples/mnist/README.md) 
-  5. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
-  6. [Troubleshooting](/docs/User/Troubleshooting.md)
-  7. [Release Notes](/docs/HPE_Swarm_learning_2.1.0_Release_Notes.pdf)
+  4. Execute [MNIST example](/examples/mnist/README.md)
+  5. [Running MNIST example using SLM-UI](/docs/User/Running_MNIST_example_using_SLM-UI.md)
+  6. [Monitoring Swarm Learning training using SLM-UI](/docs/User/Monitoring_Swarm_Learning_training_using_SLM-UI.md)
+  7. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  8. [Troubleshooting](/docs/User/Troubleshooting.md)
+  9. [Centralized Swarm diagnostic](/docs/Install/Centralized_Swarm_diagnostic.md)
+  10. [Release Notes](/docs/HPE_Swarm_learning_2.1.0_Release_Notes.pdf)
 
 <blockquote>
 
@@ -85,10 +88,13 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Using SWOP](/docs/User/Swarm_Operator_node_(SWOP).md)
   - [Running Swarm learning examples using SLM-UI](/docs/Install/Running_Swarm_Learning_examples_using_SLM-UI.md)
   - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
+  - [Running Swarm Learning with SE Linux](/docs/Install/Running_Swarm_with_SE_Linux.md)
+  - [Running Swarm Learning with Podman](/docs/Install/Running_Swarm_Learning_with_Podman.md)
   - [Examples](/examples/README.md)
   - [Swarm Learning Log Collection](/docs/User/Swarm_Log_Collector.md)
   - [Extending Swarm Learning for new ML platforms](/lib/src/README.md)
-  - [Merge Methods - Whitepaper](/docs/HPE_Merge_Methods_Whitepaper.pdf) 
+  - [Merge Methods - Whitepaper](/docs/HPE_Merge_Methods_Whitepaper.pdf)
+  - [Uninstalling Swarm Learning using SLM-UI](/docs/Install/Uninstalling_Swarm_Learning_using_SLM-UI.md)
   
 ## References
 
