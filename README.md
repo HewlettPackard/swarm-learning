@@ -88,6 +88,7 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Examples](/examples/README.md)
   - [Swarm Learning Log Collection](/docs/User/Swarm_Log_Collector.md)
   - [Extending Swarm Learning for new ML platforms](/lib/src/README.md)
+  - [Merge Methods - Whitepaper](/docs/HPE_Merge_Methods_Whitepaper.pdf) 
   
 ## References
 
