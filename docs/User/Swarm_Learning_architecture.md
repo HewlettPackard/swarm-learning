@@ -6,7 +6,7 @@ For more information on how these components interact, see [Swarm Learning compo
 
 The following illustration is the architecture of Swarm Learning components:
 
-<img src="GUID-E80D248E-E754-498E-99D6-67508092F779-high.png" width="80%" height="100%">
+<img src="GUID-899B556F-D33F-42D1-8D0D-37F191715709-high.png" width="80%" height="100%">
 
 -   SL nodes run the core of Swarm Learning. An SL node works in collaboration with all the other SL nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. SL nodes act as an interface between the user model application and other Swarm Learning components. SL nodes take care of distributing and merging model weights in a secured way.
 
