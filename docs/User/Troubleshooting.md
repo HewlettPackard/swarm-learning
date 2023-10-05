@@ -124,6 +124,8 @@ A swarm container could be unable to reach an SN node for several reasons.
 2. SN node can be reached via SN container FQDN only in a single host custom bridge network. But for all other scenarios, IP address of the host machine must be used. Ensure the correctness of `--sn-ip` and `--sn-api-port` parameters.
 3. Ensure that SN-API-port is allowed in your firewall settings. User can check this by running `sudo ufw status`. If the SN-API-port is not in the list, then add it by using sudo `ufw allow <SN-API-port>`. The same configuration is applicable for all other Swarm ports. Ignore this step if the `ufw status` is inactive, as this state allows all ports.
 4. If the certificates get expired, then the other swarm components including non-sentinel SN are not able to reach SN. User can check the expiry date of their certificates and update them accordingly.
+5. When network proxy is not set correctly, both `http_proxy` and `https_proxy` ENV variables need to be set as
+per the customers network policy.
 
 ## API server is down
 
@@ -137,9 +139,9 @@ If sentinel SN dies, SLM-UI stops working.
 
 **Resolution**
 
-If sentinel SN crashes, it is better to delete SWCI container and recreate SN to ensure SLM-UI continues to work.
+If sentinel SN crashes, it is better to delete SWCI container that is implicitly started (named as `slm-ui-<>-swci` and recreate SN to ensure SLM-UI continues to work. SLM-UI automatically spawns a new SWCI to work with the new SN.
 
-## 8. Failed to start thread "GC Thread\#0" - pthread\_create failed {#SECTION_FQW_QTD_XYB .section}
+## 8. Failed to start thread "GC Thread\#0" - pthread\_create failed
 
 ```
 Failed to start thread "GC Thread#0" - pthread_create failed
