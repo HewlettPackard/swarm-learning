@@ -1,4 +1,4 @@
-# <a name="GUID-04214413-16D0-4870-B55D-F22E7FB61B8F"/> Prerequisites
+## Prerequisites
 
 HPE recommends that you run each Swarm Network node, and Swarm Learning node on dedicated systems to get the best performance from the platform.
 
@@ -6,7 +6,7 @@ The recommended requirements for each system are as follows:
 
 <blockquote>
   
-NOTE:The requirements of system running the user ML node is driven by the complexity of the ML algorithm. GPUs may also be needed.
+NOTE:Configuration of the ML user nodes are driven by the complexity of the ML algorithm. GPUs may be needed.
 
 </blockquote>
 
@@ -37,7 +37,7 @@ NOTE:The requirements of system running the user ML node is driven by the comple
 
 ## <a name="SECTION_JCW_Q12_JSB"/> Container hosting platform
 
--   HPE Swarm Learning is qualified with Docker 20.10.5. Configure Docker to use IPv4.
+-   HPE Swarm Learning is qualified with Docker 24.0.5 and Podman 3.4.4. Configure Docker/Podman to use IPv4. For more details on Podman, see [Running Swarm Leaning with Podman](GUID-4C73E127-7F79-4EAD-AC02-C593EA83CBE1.md).
 
 -   Configure Docker to run as a non-root user. For more details, see [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
 

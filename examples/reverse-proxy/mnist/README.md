@@ -66,7 +66,7 @@ SNo | FQDN | IP with Port |
 2.  Run the `run-all` script from the `swarm-learning` folder with `APLS IP` argument and `Network name`. Assuming as part of reverse proxy examples [pre-requisites](../README.md) the network created is `rp-network`.
 
     ``` {#CODEBLOCK_LQT_DNY_NVB}
-    .\examples\reverse-proxy\mnist\run-all 172.1.1.1 rp-network
+    ./examples/reverse-proxy/mnist/run-all 172.1.1.1 rp-network
     ```
 
     First argument `APLS_IP` is the ip address of the APLS and is a mandatory parameter. In the above command this argument is passed as current host ip assuming apls is running on the same host. Second argument `Host_IP` is the ip address of the current host and is used for the nginx and dns configurations.
