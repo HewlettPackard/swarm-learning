@@ -1,10 +1,10 @@
-# Running MNIST example using SLM-UI {#GUID-E6431502-DE7B-4B09-9B0C-87CD892FC68A .task}
+# Running MNIST example using SLM-UI
 
 Perform the following steps to run the MNIST two node example using SLM-UI.
 
 1.  Add a Swarm host.
 
-    User can add all hosts where they want to run this project. This example needs two hosts \[ip1 and ip2\]. For more information on adding a host in SLM-UI, see *Adding a Swarm Host in SLM-UI* section in *HPE Swarm Learning Installation and Configuration Guide*.
+    This step is optional. User can use this step to install Swarm on hosts where they want to run this project. This example needs two hosts \[ip1 and ip2\]. For more information on adding a host in SLM-UI, see *Installing Swarm Learning using SLM-UI* section in *HPE Swarm Learning Installation and Configuration Guide*.
 
 2.  Create a project in SLM-UI.
 
@@ -16,7 +16,7 @@ Perform the following steps to run the MNIST two node example using SLM-UI.
 
     2.  Click on the SN container to view the logs.
 
-    The SWCI container starts automatically. Users need not to create it manually. User can see the container while clicking on the host where they added the sentinel node. User needs to provide all information as mentioned in the *Adding Swarm Nodes* section in *HPE Swarm Learning Installation and Configuration Guide* to add \[ip1\].
+    The SWCI container starts automatically. User does not have to create it manually. User can see the container while clicking on the host where they added the sentinel node. User needs to provide all information as mentioned in the *Adding Swarm Nodes* section in *HPE Swarm Learning Installation and Configuration Guide* to add \[ip1\].
 
 4.  Create a second SN node using the sentinel SN IP address from the dropdown.
 
