@@ -91,7 +91,7 @@ Please remove below directories and re-try pull images: <br> </br>
 The suggested workaround is to run the following command and then re-run the task:
 <br><br>docker tag hub.myenterpriselicense.hpe.com/hpe/swarm-learning/sl:2.0.0 hub.docker.hpecorp.net/swarm-learning/sl:2.0.0
 
-## Mismatch in the Swarm API version between ML and SL containers
+## 7. Mismatch in the Swarm API version between ML and SL containers
 
 ```
 Mismatch in the Swarm API version between ML and SL containers. Expected version 2, but the version received from the header is 1.
@@ -114,7 +114,7 @@ SL and ML containers use Google's Protobuf protocol to verify the request and re
 
 2.  Generally, HPE recommends you to match the version of Swarm Learning images with the same version of Swarm Learning wheel file before starting the model training.
 
-## 7. Unable to contact API-Server
+## 8. Unable to contact API-Server
 
 `Unable to contact API-Server`
 
@@ -127,7 +127,7 @@ A swarm container could be unable to reach an SN node for several reasons.
 5. When network proxy is not set correctly, both `http_proxy` and `https_proxy` ENV variables need to be set as
 per the customers network policy.
 
-## API server is down
+## 9. API server is down
 
 ```
 API server is down
@@ -141,7 +141,7 @@ If sentinel SN dies, SLM-UI stops working.
 
 If sentinel SN crashes, it is better to delete SWCI container that is implicitly started (named as `slm-ui-<>-swci` and recreate SN to ensure SLM-UI continues to work. SLM-UI automatically spawns a new SWCI to work with the new SN.
 
-## 8. Failed to start thread "GC Thread\#0" - pthread\_create failed
+## 10. Failed to start thread "GC Thread\#0" - pthread\_create failed
 
 ```
 Failed to start thread "GC Thread#0" - pthread_create failed
