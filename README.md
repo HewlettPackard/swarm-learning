@@ -64,6 +64,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   4. Execute [MNIST example](/examples/mnist/README.md) 
   5. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   6. [Troubleshooting](/docs/User/Troubleshooting.md)
+  7. [Release Notes](/docs/HPE_Swarm_learning_2.1.0_Release_Notes.pdf)
 
 <blockquote>
 
