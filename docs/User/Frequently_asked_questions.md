@@ -64,10 +64,15 @@ Yes, it is supported only in the enterprise version. You can even run one traini
 You need different training contracts specified in the ML programs via `Swarmcallback` API.
 
 If you are using SWOP to launch concurrent training, you need to have separate SWOP nodes each watching a different taskrunner, which is specified in their SWOP profiles.
-<blockquote>
-  
-NOTE: Concurrent swarm training (enterprise feature) is applicable only for enterprise customers and not for community users.
-</blockquote>
+
+Concurrent model training uses the same Swarm SN network across different model trainings, sharing the blockchain.
+
+If you are using SLM-UI, then you need to create different projects for each model training. You must create a new
+taskrunner and training contract in SLM-UI and use the same in the SWOP profile and ML program respectively, for each
+project.
+
+You need to spawn the SWOP nodes and execute the RUN-SWARM type task using the respective taskrunners of each
+project.
 
 ### <a name="SECTION_HH5_KNP_NSB"/> What is the IP address used in the run scripts?
 
@@ -300,12 +305,18 @@ Project artifacts are created under the `swarm-learning/slm-ui/projects/<project
 ### How can user monitor training progress?
 In Project Nodes under Projects tab, the system displays all running swarm nodes associated with the project, loss, model metric (for example, accuracy) and overall training progress for each SL-ML node pair. User can hover over the mouse on progress bar to view the total number of epochs and the total number of completed epochs.
 
-### When do we need to create multiple task runners?
-If you are running concurrent Swarm training, you need to create multiple task runners. If you are running a single training, the default task runner would be good enough.
+### When do we need to create multiple task runners and contracts (Training contracts)?
+If you are running concurrent Swarm training, you need to create multiple task runners and contracts. If you are running a single training, the default task runner and contract would be good enough.
 
 ### How to start SLM-UI manually?
 1. Run `<swarm-learning>/slm-ui/scripts/run-postgres -pw" supersecretpassword"`.<br>
 (`supersecretpassword` is a default database password. User can change this default database password using
 external tools like pgAdmin).
 2. Then, run `<swarm-learning>/slm-ui/scripts/run-slm-ui -pw" supersecretpassword"`.
+
+### What are the limitations of SLM-UI?
+Currently, SLM-UI works if you use Docker container runtime. SLM-UI does not work if you are running Podman container
+runtime on the host.<br>
+If you are using reverse proxy setup, you cannot use SLM-UI.<br>
+If you are using SPIRE based certificates, you cannot use SLM-UI.
 
