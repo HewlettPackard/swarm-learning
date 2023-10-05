@@ -43,7 +43,7 @@
 
 6.  Install the SLM-UI by providing the following details.
 
-    ![](GUID-356C3AC9-1643-4CB5-A0B8-7DA33D9394BA-high.png)
+    ![](GUID-FB764D67-EF2C-471F-B720-6CB7B1248859-high.png)
 
 7.  Click **Run**.
 
