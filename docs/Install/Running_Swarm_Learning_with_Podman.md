@@ -8,9 +8,10 @@
 
 **Note:**
 
-  - GPU based local training is not supported through Podman, will be enabled in upcoming release.
-  - No shorthand registry names may not work with podman. Podman requires full registry name. For more information, see [www.redhat.com/sysadmin/manage-container-registries](https://www.redhat.com/sysadmin/manage-container-registries).
+  - Shorthand registry names may not work with podman. For more information, see _Short-name aliases_ section in [www.redhat.com/sysadmin/manage-container-registries](https://www.redhat.com/sysadmin/manage-container-registries).
   - ML or User container running as non-root may fail due to permission issue while saving trained model file. User
-needs to precreate a directory with full permissions so that ML application can use it for saving trained model in it.
+needs to precreate a directory with full permissions.
+  - GPU based local training is not supported through Podman.
+  - SLM-UI is not supported with Podman.
 
 
