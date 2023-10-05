@@ -1,6 +1,16 @@
 # <a name="GUID-C1705ADA-8DC5-47D6-B22D-EEDD2F938059"/> Environment variables
 
-The environment variables are passed to containers or added to the environment variable through profile or configuration files. The following environment variables are available to set and modify:
+The environment variables are passed to containers or added to the environment variable through profile or configuration files. <br>
+<blockquote>
+
+**Note:**
+
+Environment variables starting with a Swarm component name (for example, SN_, SL_) are meant for those particular     components. Environment variables starting without a Swarm component name are meant for all Swarm components. 
+  
+</blockquote>
+
+
+The following environment variables are available to set and modify:
 
 |<strong>Environment variable name</strong>|<strong>Description</strong>|
 |------------------------------------------|----------------------------|
