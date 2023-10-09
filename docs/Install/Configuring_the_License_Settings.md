@@ -6,7 +6,7 @@
 
 3.  Click **Update** to update the License server.
 
-    ![License Settings](GUID-2DC5F818-A512-4A5E-AECE-C5635663C7E7-high.png)
+    ![License Settings](GUID-22FAC22D-C266-49F6-B2F9-8B0FDCE07DBD-high.png)
 
 
 **Parent topic:**[Managing the Global Settings](Managing_the_Global_Settings.md)
