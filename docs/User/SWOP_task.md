@@ -1,6 +1,6 @@
 # <a name="GUID-AF9F2109-FE92-4BFE-8566-E48DCC0B51A6"/> SWOP task
 
--   A Task is a reusable unit of work relevant for SWARM LEARNING Operations. For example, [swarm\_mnist\_task](MNIST.md#-mnist), runs the MNIST demo using SL and ML nodes.
+-   A Task is a reusable unit of work relevant for SWARM LEARNING Operations. For example, [swarm\_mnist\_task](/examples/mnist/README.md), runs the MNIST demo using SL and ML nodes.
 
 -   A Task is defined by the user.
 

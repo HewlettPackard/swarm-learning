@@ -102,5 +102,5 @@ nodes:
         privatedata : ~
 ```
 
-**Parent topic:**[Launch Swarm Learning using SWOP](GUID-B3F03E6D-20B1-473C-B846-153C03FE01CB.md)
+**Parent topic:**[Launch Swarm Learning using SWOP](Launch_Swarm_Learning_using_SWOP.md)
 
