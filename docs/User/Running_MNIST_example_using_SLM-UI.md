@@ -45,5 +45,5 @@ Perform the following steps to run the MNIST two node example using SLM-UI.
 12. Check the task runner to view the status of the task.
 
 
-**Parent topic:**[Examples](GUID-1F38FA71-0483-40E1-B6DE-1C627C3D50CD.md)
+**Parent topic:** [Examples](/examples/README.md)
 
