@@ -3,7 +3,7 @@
 
 **TIP:**
 
-|![](GUID-4D9096A6-6206-4F26-AC88-20CC85208ED3-high.png)|User can get a quick intuition and overview of SLM-UI by looking at this [video](https://youtu.be/TVYPsZs3UkY).|
+![](GUID-4D9096A6-6206-4F26-AC88-20CC85208ED3-high.png) User can get a quick intuition and overview of SLM-UI by looking at this [video](https://youtu.be/TVYPsZs3UkY).
 
 Before you start using the SLM-UI, HPE recommends you to read the [Documentation](/README.md#documentation) section to understand about the architecture     of Swarm Learning, how these nodes work, how model training happens, and Swarm Learning Concepts section.
 
