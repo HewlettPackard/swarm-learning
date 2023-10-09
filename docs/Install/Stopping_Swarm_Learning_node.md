@@ -1,6 +1,6 @@
 # <a name="GUID-AE96088D-D29A-4813-8EB6-506422459068"/> Stopping Swarm Learning node
 
-Use the `swarm-learning/bin/stop-swarm` script to stop all Swarm Network and Swarm Learning nodes that are running on a host system.
+Use the `swarm-learning/scripts/bin/stop-swarm` script to stop all Swarm Network and Swarm Learning nodes that are running on a host system.
 
 <blockquote>
 NOTE:This script does not operate across systems. It must be invoked on each host system to stop the Swarm Learning platform completely.
