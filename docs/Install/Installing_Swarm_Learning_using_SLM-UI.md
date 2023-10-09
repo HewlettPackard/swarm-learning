@@ -9,7 +9,7 @@
     
     b. The host needs to have a Docker container runtime. Podman as a container runtime is not supported using SLM-UI.
     
-    ![Hosts](GUID-C3C14B97-AFD3-490F-BEE1-C6F92F29EBF0-high.png)
+    ![Hosts](GUID-27290862-3C17-4AFD-9B60-CB9166C656F0-high.png)
 
 3.  Enter the Host address.
 
