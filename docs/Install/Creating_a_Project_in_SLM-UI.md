@@ -44,7 +44,7 @@
     -   In a two node example, the network names should be `host-1-net` for the sentinel node and `host-2-net` for the non-sentinel node, respectively.
 5.  Click **Save Project** to create the Project.
 
-    ![My Projects](GUID-18FA0377-F495-443F-BD38-76AEACC22D98-high.png)
+    ![My Projects](GUID-E0930943-5847-4F31-8231-D1AD21862F1D-high.png)
 
 
 **Parent topic:**[Running Swarm Learning examples using SLM-UI](Running_Swarm_Learning_examples_using_SLM-UI.md)

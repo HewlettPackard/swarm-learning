@@ -3,8 +3,10 @@ Credit card fraud detection
 
 This example runs a Credit Card Fraud Detection algorithm [1] on the Swarm Learning platform. It uses Keras and Tensorflow.
 
-This example uses a subset of the data from [1]. This subset is balanced and has been created as a 50:50 data set with equal distribution of fraud and non-fraud cases.
->  **_NOTE :_** Refer [Data license](data-and-scratch/app-data/Data_license.md) associated with this dataset. 
+This example uses a subset of the data from [1] for each node. These subset datasets are biased with respect to the class and the volume of data.
+This example uses four training batches and one test batch. These files are located in the respective `examples/
+fraud-detection/data-and-scratch<n>` directories.
+>  **_NOTE :_** Refer [Data license](/examples/fraud-detection/Data_license.md/) associated with this dataset. 
 
 
 The ML program, after conversion to Swarm Learning, is in `examples/fraud-detection/model` and is called `fraud-detection.py`.
@@ -84,7 +86,7 @@ The cluster setup for this example uses only one host, as shown in the figure be
    docker volume rm sl-cli-lib
    docker volume create sl-cli-lib
    docker container create --name helper -v sl-cli-lib:/data hello-world
-   docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
+   docker cp lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
    docker rm helper
    ```
 
@@ -126,7 +128,8 @@ The cluster setup for this example uses only one host, as shown in the figure be
     Four node Swarm training will be automatically started when the run task (swarm_fd_task) gets assigned and executed. User can open a new terminal on host-1 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
     `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
     
-    Final Swarm model will be saved in each user's specific directory inside `workspace/fraud-detection/data-and-scratch/<userN>` directory. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
+    Final Swarm model will be saved in each node specific scratch directory, which is `workspace/fraud-detection/
+data-and-scratch<n>/user<n>` directory. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
 12. *On host-1*:  
     To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker network (`host-1-net`) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.

@@ -31,17 +31,12 @@ def getXY(dataSet):
 
 
 # Constants
-testFileName = 'SB19_CCFDUBL_BAL_TEST_2C.csv'
-fileNameList = [
-    'SB19_CCFDUBL_BAL_TRAIN_2C.csv'
-  , 'SB19_CCFDUBL_BAL_P1_2C.csv'
-  , 'SB19_CCFDUBL_BAL_P2_2C.csv'
-  , 'SB19_CCFDUBL_BAL_P3_2C.csv'
-]
+testFileName = 'SB19_CCFDUBL_TEST.csv'
+trainFileName = 'SB19_CCFDUBL_TRAIN.csv'
 
 part = 0
 batchSize = 32
-defaultMaxEpoch = 1000
+defaultMaxEpoch = 100
 defaultMinPeers = 2
 
 def main():
@@ -54,8 +49,8 @@ def main():
   print('***** Starting model =', modelName)
   # ================== load test and train Data =========================
   print('-' * 64)
-  fname = fileNameList[part]
-  trainFile = dataDir + '/' + fname
+
+  trainFile = dataDir + '/' + trainFileName
   print("loading train dataset %s .." % trainFile)
   with open(trainFile, 'r') as f:
     # first line is the header row so remove it
@@ -68,6 +63,7 @@ def main():
   with open(testFile, 'r') as f:
     # first line is the header row so remove it
     testData = np.array(list(csv.reader(f, delimiter=","))[1:], dtype=float)
+    print('size of test Data set : %s' % np.size(testData,0))
 
   print('-' * 64)
   # ================== Model to train and evaluate =========================
@@ -75,8 +71,10 @@ def main():
   model = tf.keras.models.Sequential()
   model.add(tf.keras.layers.Dense(1, input_shape=(30,), activation='sigmoid',
     kernel_initializer='random_uniform', bias_initializer='zeros'))
-  sgd = tf.keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-  model.compile(loss = 'binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
+  sgd = tf.keras.optimizers.SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+  model.compile(loss = 'binary_crossentropy',
+                optimizer=sgd,
+                metrics=[tf.keras.metrics.AUC()])
   print(model.summary())
 
   print('Starting training ...')
@@ -84,7 +82,16 @@ def main():
   x_test, y_test = getXY(testData)
 
   # Adding swarm callback
-  swarmCallback = SwarmCallback(syncFrequency=128, minPeers=minPeers)
+
+  # In SwarmCallBack following parameter is provided to enable displaying training
+  # progress or ETA of training on the SLM UI.
+  # 'totalEpochs' - Total epochs used in local training.
+  swarmCallback = SwarmCallback(syncFrequency=128,
+                                minPeers=minPeers,
+                                adsValData=(x_test, y_test),
+                                adsValBatchSize=batchSize,
+                                mergeMethod='mean',
+                                totalEpochs=maxEpoch)
 
   # Model training
   model.fit(
@@ -102,7 +109,7 @@ def main():
   # Evaluate
   scores = model.evaluate(x_test, y_test, verbose=1)
   print('***** Test loss:', scores[0])
-  print('***** Test accuracy:', scores[1])
+  print('***** Test auc:', scores[1])
 
   # Save
   model_path = os.path.join(scratchDir, modelName)

@@ -8,13 +8,13 @@ FROM ubuntu:22.04
 
 RUN apt-get update                              \
  && apt-get install                             \
-    bind9=1:9.18.12-0ubuntu0.22.04.1            \
-    bind9-dnsutils=1:9.18.12-0ubuntu0.22.04.1   \
-    ca-certificates=20211016ubuntu0.22.04.1     \
-    curl=7.81.0-1ubuntu1.10                     \
-    gnupg2=2.2.27-3ubuntu2.1                    \
-    lsb-release=11.1.0ubuntu4                   \
-    ubuntu-keyring=2021.03.26                   \
+    bind9                                       \
+    bind9-dnsutils                              \
+    ca-certificates                             \
+    curl                                        \
+    gnupg2                                      \
+    lsb-release                                 \
+    ubuntu-keyring                              \
     --no-install-recommends -y
 
 

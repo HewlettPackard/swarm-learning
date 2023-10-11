@@ -67,6 +67,10 @@ printComponentUsage()
     printf -- "\tThis file should be located inside the user directory, at the top-level itself.\n"
     printf -- "\tMandatory Parameter\n\n" 
 
+    printf -- "--docker-socket-file <docker socket file>\n"
+    printf -- "\tname of docker sock file.\n"
+    printf -- "\tDefault: ${containerDockerSock}\n\n"
+
     printf -- "--docker-group-id <numeric group-id>\n"
     printf -- "\tnumeric group id of the docker group \n"
     printf -- "\tthe docker group id to be used for SWOP user\n"
@@ -111,6 +115,11 @@ processComponentBatchOpt()
     case "${opt}" in
         --usr-dir) checkAndAssign "${opt}" "${optarg}";;            
         --profile-file-name) checkAndAssign "${opt}" "${optarg}";;
+        --docker-socket-file)
+            checkAndAssign "${opt}" "${optarg}"
+            dockerSocketFile="$(realpath -m "${optarg}")"
+            [[ ! -S "${dockerSocketFile}" ]] && error "${opt}: ${optarg}: bad docker socket file"
+            ;;            
         --docker-group-id) 
             checkAndAssign "${opt}" "${optarg}"
             re='^[0-9]+$'
@@ -143,8 +152,19 @@ onTrainEnd()
 
     [[ -n "$(realpath "${usrDir}")" ]] && appendArrayVar "" dockerOpts            \
         "--volume="$(realpath "${usrDir}")":${containerUsrDir}:rw"
-    
-    appendArrayVar "" dockerOpts "--volume=${containerDockerSock}:${containerDockerSock}:rw"
+
+    # If dockerSocketFile variable is empty and container runtime is podman try to set
+    # dockerSocketFile automatically from `podman info` command
+    # else set it to default path of docker runtime
+    if [[ -z ${dockerSocketFile} ]] && command -v podman &>/dev/null; then
+        dockerSocketFile=`podman info --format '{{.Host.RemoteSocket.Path}}'`
+    elif [[ -z ${dockerSocketFile} ]]; then
+        dockerSocketFile=${containerDockerSock}
+    fi
+
+    # -S Checks if socket exists and is of socket type
+    [[ -S "${dockerSocketFile}" ]] && appendArrayVar "" dockerOpts  \
+        "--volume=${dockerSocketFile}:${containerDockerSock}:rw"
 
     # If not passed assign the invoking user as the SWOP_UID
     [[ -z "${swopUid}" ]] && swopUid=$(id -u)

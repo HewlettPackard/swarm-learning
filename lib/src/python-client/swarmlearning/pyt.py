@@ -25,6 +25,9 @@ from __future__ import print_function
 import torch
 from swarmlearning.client.swarm import SwarmCallbackBase, SLPlatforms
 
+import torchmetrics
+import sys
+
 # Default Training contract used for learning if not specified by user. 
 # Any update to default contract needs similar modifications 
 # in all applicable ML platforms (TF, PYT, etc)
@@ -66,6 +69,7 @@ class SwarmCallback(SwarmCallbackBase):
                                            local model training ends at a node.
                                            Allowed values: ['inactive', 'snapshot', 
                                            'active']
+        :param mergeMethod: Indicates the type of merge technique used for swarm merge. 
         :param nodeWeightage: A number between 1-100 to indicate the relative 
                                importance of this node compared to others
         :param mlPlatform: 'Pytorch' ML Platform
@@ -80,10 +84,79 @@ class SwarmCallback(SwarmCallbackBase):
                        from swarmlearning.pyt import SwarmCallback                       
                        swCallback = SwarmCallback(syncFrequency=128, minPeers=3)
                        swCallback.logger.setLevel(logging.DEBUG)
+        :param totalEpochs: Total epochs used in local training. 
+                            This is needed to display training progress or ETA of training.
+                            WARNING: "With out this, training progress display might have some limitations."
+        :param lossFunction: Name of the loss function to be used for loss computation.
+                             Loss computed will be used for display and adaptive sync frequency.
+                             WARNING : "User is responsible to pass the same loss function used for 
+                             local training. If the loss function is not matching, it can result in differences 
+                             in loss displayed by Swarm and actual loss used in the local model training."
+                             lossFunction string should match with loss function class defined in pyTorch
+                             https://pytorch.org/docs/stable/nn.html#loss-functions
+                             For example, to use CLASS torch.nn.NLLLoss() - lossFunction value is "NLLLoss"
+        :param lossFunctionArgs: Dictionary with parameters (as keys) to be used in lossFunction.
+                                 https://pytorch.org/docs/stable/nn.html#loss-functions
+                                 For example, to use CLASS torch.nn.NLLLoss(weight=None, size_average=None, 
+                                                           ignore_index=- 100, reduce=None, reduction='mean')
+                                 lossFunctionArgs is used to pass any mandatory parameters or 
+                                 overwrite any default parameters defined in class. 
+                                 If 'reduction' needs to be of 'sum', then 
+                                 create dictionary - lFArgsDict={} ; lFArgsDict['reduction']='sum' 
+                                 pass it through SwarmCallback - 
+                                 SwarmCallback(...
+                                    lossFunction="NLLLoss",
+                                    lossFunctionArgs=lFArgsDict
+                                    ...)
+        :param metricFunction: Name of metric function to be used for metrics computation.
+                               Metrics computed will be used for display.
+                               WARNING : "User is responsible to pass the same metric function used for 
+                               local training. If the metric function is not matching, it can result in differences 
+                               in metrics displayed by Swarm and actual metrics used in the local model training."
+                               metricFunction string should match with metric function class defined in 
+                               torchmetrics - https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
+                               For example, to use CLASS torchmetrics.Accuracy() - metricFucntion value is "Accuracy"
+        :param metricFunctionArgs: Dictionary with parameters (as keys) to be used in metricFunction.
+                                   https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
+                                   For example, to use 
+                                   CLASS torchmetrics.Accuracy(task: Literal['binary', 'multiclass', 'multilabel'], 
+                                                               threshold: float= 0.5, 
+                                                               num_classes: Optional[int] = None, 
+                                                              ...)
+                                    metricFunctionArgs is used to pass any mandatory parameters or 
+                                    overwrite any default parameters defined in class. 
+                                    While running mnist training which is a multi class with 10 classes application,
+                                    dictionary should be created like below. 
+                                    create dictionary -  mFArgsDict={}
+                                                         mFArgsDict['task']="multiclass"
+                                                         mFArgsDict['num_classes']=10
+                                    pass it through SwarmCallback - 
+                                    SwarmCallback(...
+                                        metricFunction="Accuracy",
+                                        metricFunctionArgs=mFArgsDict
+                                     ...)
+
         '''
         SwarmCallbackBase.__init__(self, syncFrequency, minPeers, trainingContract, kwargs)        
         self._verifyAndSetPlatformContext(kwargs)
         self._swarmInitialize()
+        
+        # lossFunction and lossFunctionArgs requested through swarm callback should match with 
+        # loss function class defined in pyTorch
+        # https://pytorch.org/docs/stable/nn.html#loss-functions
+        self.lossFunction = kwargs.get('lossFunction', None)
+        self.lossFunctionArgs = kwargs.get('lossFunctionArgs', None)
+        
+        # metricFunction and metricFunctionArgs requested through swarm callback should match with 
+        # metric function class defined in torchmetrics.
+        # https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
+        self.metricFunction = kwargs.get('metricFunction', None)
+        self.metricFunctionArgs = kwargs.get('metricFunctionArgs', None)
+        
+        if(self.valData == None):
+            self.logger.info("=============================================================")
+            self.logger.info("WARNING: valData is not available to compute Loss and metrics")
+            self.logger.info("=============================================================")
 
     
     def on_train_begin(self):
@@ -136,9 +209,22 @@ class SwarmCallback(SwarmCallbackBase):
         '''
         Pytorch specific implementation of abstract method
         _getValidationDataForAdaptiveSync in SwarmCallbackBase class.
-        Currently swarm does not support this for Pytorch.
         '''
-        self._logAndRaiseError("Adaptive sync for Pytorch is not supported")
+        valGen = validationSteps = valX = valY = valSampleWeight = None
+        
+        if(not valData):
+            #valData is an optional parameter if not available, then performance data won't be supported
+            return valGen, validationSteps, valX, valY, valSampleWeight
+        
+        # No need to unpack valData for pyTorch. 
+        # pyTorch supports only DataLoader object as valData
+        # expecting valdata of type "torch.utils.data.DataLoader"
+        if(not isinstance(valData, torch.utils.data.DataLoader)):
+            self._logAndRaiseError("adsValData type passed is %s, not matching with torch.utils.data.DataLoader" %(type(valData)))
+        
+        # Following return of all Nones is to be in consistency with other ML platforms
+        # valData object will be unpacked during loss/metrics computations
+        return valGen, validationSteps, valX, valY, valSampleWeight
 
 
     def _saveModelWeightsToDict(self):
@@ -206,12 +292,76 @@ class SwarmCallback(SwarmCallbackBase):
         # use model.training to check status
 
 
-    def _calculateLocalLoss(self):
+    def _calculateLocalLossAndMetrics(self):
         '''
         Pytorch specific implementation of abstract method
-        _calculateLocalLoss in SwarmCallbackBase class.
+        _calculateLocalLossAndMetrics in SwarmCallbackBase class.
         '''
-        return 0
+        valLoss = 0
+        totalMetrics = 0
+        
+        if(self.valData == None):
+            return valLoss, totalMetrics
+        
+        try: 
+            # LOSS FUNCTION in pyTorch
+            # requested lossFunction string should match with loss function class defined in pyTorch
+            # https://pytorch.org/docs/stable/nn.html#loss-functions
+            # Logic is to construct callable loss function using passed in lossFunction string. 
+            lossModName = "torch.nn"
+            lossFunctionClass = getattr(sys.modules[lossModName], self.lossFunction)
+            # loss functions are defined as classes, so create object for lossfuntion
+            # **self.lossFunctionArgs - is used for unpacking a dictionary and passing it as 
+            # keyword arguments during the call
+            lossFunctionObj = lossFunctionClass(**self.lossFunctionArgs)
+            
+            # METRICS FUNCTION in pyTorch
+            # requested metricsFunction string should match with metric function class defined in torchmetrics
+            # https://torchmetrics.readthedocs.io/en/stable/all-metrics.html
+            # Logic is to construct callable metric function using passed in metricFunction string. 
+            metricsModName = "torchmetrics"
+            metricFunctionClass = getattr(sys.modules[metricsModName], self.metricFunction)
+            # metric functions are defined as classes, so create object for metric funtion
+            # **self.metricFunctionArgs - is used for unpacking a dictionary and passing it as 
+            # keyword arguments during the call
+            metricFunctionObj = metricFunctionClass(**self.metricFunctionArgs)
+
+
+            testLoader = self.valData
+            useCuda = torch.cuda.is_available()
+            device = torch.device("cuda" if useCuda else "cpu")  
+            # Update the model, mertic and loss also to device specific object
+            metricFunctionObj = metricFunctionObj.to(device)
+            lossFunctionObj = lossFunctionObj.to(device)
+            model = self.mlCtx.model.to(device)
+            model.eval()
+            
+            with torch.no_grad():
+                for data, target in testLoader:
+                    data, target = data.to(device), target.to(device)
+                    output = model(data)
+                    batchLoss = lossFunctionObj(output, target)
+                    self.logger.debug("batch loss : ", batchLoss)
+                    valLoss += batchLoss
+                    
+                    # metric on current batch
+                    batchMetrics = metricFunctionObj.forward(output, target)
+                    #If printing batch metrics is not needed, just replace metric.forward with metric.update(preds, target)
+                    self.logger.debug(f"{self.metricFunction} on this batch : {batchMetrics}")
+                    
+            valLoss /= len(testLoader.dataset)
+            self.logger.debug(f"\n Local Loss : {self.lossFunction} on ValData: {valLoss}")
+            
+            # metrics on all batches using custom accumulation
+            totalMetrics = metricFunctionObj.compute()
+            self.logger.debug(f" Local Metrics: {self.metricFunction} on valData : {totalMetrics} \n")
+            # Resetting internal state such that metric is ready for new data
+            metricFunctionObj.reset()
+        
+        except Exception as emsg:
+            self._logAndRaiseError("Exception in method pyt.py:_calculateLocalLossAndMetrics, error message - %s"%(emsg))
+        
+        return valLoss, totalMetrics
 
 
     def __setMLContext(self, **params):

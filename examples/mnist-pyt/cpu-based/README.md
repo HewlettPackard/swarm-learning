@@ -77,7 +77,7 @@ The following image illustrates a cluster setup for the MNIST example:
     docker volume rm sl-cli-lib
     docker volume create sl-cli-lib
     docker container create --name helper -v sl-cli-lib:/data hello-world
-    docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
+    docker cp lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
     docker rm helper
     ```
 
@@ -103,7 +103,7 @@ The following image illustrates a cluster setup for the MNIST example:
     -e http_proxy= -e https_proxy= --apls-ip=${APLS_IP}
     ```
 <blockquote>
-    NOTE: If required, modify proxy, according to environment, either in the above command or in the swop profile file under `workspace/mnist-pyt/cpu-based/swop` folder.
+    NOTE: If required, according to environment, modify IP and proxy either in the above command or in the swop profile file under `workspace/mnist-pyt/swop` folder.
 </blockquote>
 
 <blockquote>
