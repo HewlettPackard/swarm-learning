@@ -1,0 +1,18 @@
+######################################################################
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+######################################################################
+Name: swarm_mnist_task
+TaskType: RUN_SWARM
+Author: HPESwarm
+Prereq: user_env_tf_build_task
+Outcome: swarm_mnist_task
+Body:
+    Command: model/mnist_tf.py
+    Entrypoint: python3
+    WorkingDir: /tmp/test
+    Envvars: ["MODEL_DIR": model, "MAX_EPOCHS": 2, "MIN_PEERS": 2]
+    PrivateContent: /tmp/test/
+    SharedContent:
+    -   Src: <PROJECT-MODEL>
+        Tgt: /tmp/test/model
+        MType: BIND

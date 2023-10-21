@@ -1,9 +1,0 @@
-######################################################################
-# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
-######################################################################
-### Dependent python packages for user's model training ###
-
-keras
-pandas
-protobuf==3.15.6
-opencv-python

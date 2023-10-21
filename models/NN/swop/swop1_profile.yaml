@@ -1,0 +1,60 @@
+---
+######################################################################
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+######################################################################
+groupname: demo
+taskrunner: defaulttaskbb.taskdb.sml.hpe
+policyuri: ~
+resourcemgr:
+    mgrtype: DOCKER
+    accessinfo:
+      accesstype: FROMENV
+network: host-1-net
+apls:
+  locator:
+    host: <LICENSE-SERVER-ADDRESS>
+    port: ~
+apisrv:
+  locator:
+    host: ~
+    port: ~
+    service: ~
+envvars:
+  - SL_LOG_LEVEL: INFO
+  - http_proxy: ~
+  - https_proxy: ~
+  - no_proxy: ~
+  - HTTP_PROXY: ~
+  - HTTPS_PROXY: ~
+  - NO_PROXY: ~
+nodes:
+  - slnodedef:
+      idx: 0
+      identity:
+        - attribute:
+            aType: KEY
+            mType: BIND
+            src: "<PROJECT-CERTS>/sl-1-key.pem"
+            tgt: "/swarm-cert/sl-1-key.pem"
+            subPath: null
+        - attribute:
+            aType: CERT
+            mType: BIND
+            src: "<PROJECT-CERTS>/sl-1-cert.pem"
+            tgt: "/swarm-cert/sl-1-cert.pem"
+            subPath: null
+        - attribute:
+            aType: CAPATH
+            mType: BIND
+            src: "<PROJECT-CACERTS>"
+            tgt: "/swarm-cert/capath"
+            subPath: null
+      slhostname: sl1
+      slhostip: <HOST_ADDRESS>
+      slport: 16000
+      usrhostname: user1
+      privatedata:
+        src: "<PROJECT>"
+        mType: BIND
+      slenvvars: null
+      usrenvvars : [SCRATCH_DIR : "user1"]
