@@ -61,7 +61,13 @@ cp -r examples/utils/gen-cert workspace/breakhis/
 5. Preparing the dataset -
 -   The dataset used can be obtained [here](https://www.kaggle.com/datasets/ambarish/breakhis/). After downloading the dataset, extract the contents to a suitable location and copy the location of the first ```BreakHis_v1``` folder from the extracted contents.
 
--   Run the following script which pre-processes the dataset and creates two NumPy zip files to be used by the ML Node containers. 
+-   install all the requirements for running the dataset_split.py.
+ ``` 
+cd ./workspace/breakhis/ml-context
+pip3 install -r requirements.txt
+pip3 install tensorflow
+```
+-   Run the following script which pre-processes the dataset and creates two NumPy zip files to be used by the ML Node containers.
 ``` 
 python ./workspace/breakhis/dataset_split.py "<COPIED LOCATION OF THE DATASET FOLDER>"
 ```
@@ -72,6 +78,7 @@ python ./workspace/breakhis/dataset_split.py "<COPIED LOCATION OF THE DATASET FO
 
 6.  On both host-1 and host-2, copy Swarm Learning wheel file inside build context and build Docker image for ML that contains environment to run Swarm training of user models.
 
+change the docker file: replace "FROM tensorflow/tensorflow:latest" with "FROM tensorflow/tensorflow:2.7.1-gpu".
 ```
 cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl workspace/breakhis/ml-context/
 docker build -t user-ml-env-tf2.7.0 workspace/breakhis/ml-context
@@ -103,7 +110,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
 --key=workspace/breakhis/cert/sl-1-key.pem \
 --cert=workspace/breakhis/cert/sl-1-cert.pem \
---capath=workspace/breakhis/cert/ca/capath --ml-it \
+--capath=workspace/breakhis/cert/ca/capath \
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/breakhis.py \
 --ml-v=workspace/breakhis/model:/tmp/test/model \
@@ -121,7 +128,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --sl-fs-port=17000 --key=workspace/breakhis/cert/sl-2-key.pem \
 --cert=workspace/breakhis/cert/sl-2-cert.pem \
 --capath=workspace/breakhis/cert/ca/capath \
---ml-it --ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
+--ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/breakhis.py \
 --ml-v=workspace/breakhis/model:/tmp/test/model \
 --ml-e MODEL_DIR=model \
