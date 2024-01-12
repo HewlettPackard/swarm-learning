@@ -1,5 +1,5 @@
 ############################################################################
-## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -89,11 +89,16 @@ x_train /= 255
 x_test /= 255
 
 # Create SwarmCallback
+
+# In SwarmCallBack following parameter is provided to enable displaying training
+# progress or ETA of training on the SLM UI.
+# 'totalEpochs' - Total epochs used in local training.
 swarmCallback = SwarmCallback(syncFrequency=128,
                               minPeers=min_peers,
                               useAdaptiveSync=False,
                               adsValData=(x_test, y_test),
-                              adsValBatchSize=batch_size)
+                              adsValBatchSize=batch_size,
+                              totalEpochs=epochs)
 swarmCallback.logger.setLevel(logging.DEBUG)
 
 # Add SwarmCallback during training

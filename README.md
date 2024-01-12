@@ -66,8 +66,7 @@ NOTE: All the ML nodes must use the same ML platform either Keras (based on Tens
   6. [Monitoring Swarm Learning training using SLM-UI](/docs/User/Monitoring_Swarm_Learning_training_using_SLM-UI.md)
   7. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
   8. [Troubleshooting](/docs/User/Troubleshooting.md)
-  9. [Centralized Swarm diagnostic](/docs/Install/Centralized_Swarm_diagnostic.md)
-  10. [Release Notes](/docs/HPE_Swarm_learning_2.1.0_Release_Notes.pdf)
+  9. [Release Notes](/docs/HPE_Swarm_learning_2.1.0_Release_Notes.pdf)
 
 <blockquote>
 
@@ -91,7 +90,8 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Running Swarm Learning with SE Linux](/docs/Install/Running_Swarm_with_SE_Linux.md)
   - [Running Swarm Learning with Podman](/docs/Install/Running_Swarm_Learning_with_Podman.md)
   - [Examples](/examples/README.md)
-  - [Swarm Learning Log Collection using CLI](/docs/User/Swarm_Log_Collector.md)
+  - [Swarm Learning diagnostics using CLI](/docs/User/Swarm_Log_Collector.md)
+  - [Centralized Swarm diagnostics using SLM-UI](/docs/Install/Centralized_Swarm_diagnostic.md)
   - [Extending Swarm Learning for new ML platforms](/lib/src/README.md)
   - [Merge Methods - Whitepaper](/docs/HPE_Merge_Methods_Whitepaper.pdf)
   - [Uninstalling Swarm Learning using SLM-UI](/docs/Install/Uninstalling_Swarm_Learning_using_SLM-UI.md)

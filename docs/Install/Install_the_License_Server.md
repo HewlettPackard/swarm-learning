@@ -104,4 +104,4 @@
     For more information on installing and managing licenses, see the chapter *HPE AutoPass License Server License Management* in *AutoPass License Server User Guide*.
 
 
-**Parent topic:**[HPE Swarm Learning Installation](GUID-01199457-73B6-45F3-99FC-164E4B25A0A3.md)
+**Parent topic:**[HPE Swarm Learning Installation](HPE_Swarm_Learning_installation.md)

@@ -21,5 +21,6 @@ Centralized Swarm diagnostics utility can be used to collect and upload the logs
     ![Log Collection Completed](GUID-5383ABE4-9B19-40A1-83CB-47F605828833-high.png)
 
 
-**Parent topic:**[Running Swarm Learning examples using SLM-UI](GUID-A2B92980-7281-4B0A-989F-33097B7C96A5.md)
+**Parent topic:**[Running Swarm Learning examples using SLM-UI](Running_Swarm_Learning_examples_using_SLM-UI.md
+)
 

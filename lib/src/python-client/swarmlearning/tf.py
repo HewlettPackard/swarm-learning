@@ -82,6 +82,7 @@ class SwarmCallback(Callback, SwarmCallbackBase):
                                            local model training ends at a node.
                                            Allowed values: ['inactive', 'snapshot', 
                                            'active']
+        :param mergeMethod: Indicates the type of merge technique used for swarm merge. 
         :param nodeWeightage: A number between 1-100 to indicate the relative 
                                importance of this node compared to others
         :param mlPlatform: 'TF' or 'KERAS' ML Platform
@@ -97,11 +98,19 @@ class SwarmCallback(Callback, SwarmCallbackBase):
                        from swarmlearning.tf import SwarmCallback                       
                        swCallback = SwarmCallback(syncFrequency=128, minPeers=3)
                        swCallback.logger.setLevel(logging.DEBUG)
+        :param totalEpochs: Total epochs used in local training. 
+                            This is needed to display training progress or ETA of training.
+                            WARNING: "With out this, training progress display might have some limitations."
         '''
         Callback.__init__(self)
         SwarmCallbackBase.__init__(self, syncFrequency, minPeers, trainingContract, kwargs)        
         self._verifyAndSetPlatformContext(kwargs)
         self._swarmInitialize()
+        if(self.valData == None):
+            self.logger.info("=============================================================")
+            self.logger.info("WARNING: adsValData and adsValBatchSize are not available ")
+            self.logger.info("to compute Loss and metrics")
+            self.logger.info("=============================================================")
 
     
     def on_train_begin(self, logs=None):
@@ -126,6 +135,12 @@ class SwarmCallback(Callback, SwarmCallbackBase):
             if not self.mlCtx.model.stop_training:
                 self.logger.info('Swarm training is over. Stopping local training')
                 self.mlCtx.model.stop_training = True
+
+    def on_epoch_end(self, epoch=None, logs=None):
+        '''
+        Overridden method on_epoch_end of Keras Callback.
+        '''
+        self._swarmOnEpochEnd()
 
 
     def on_train_end(self, logs=None):
@@ -157,26 +172,12 @@ class SwarmCallback(Callback, SwarmCallbackBase):
 
 
     def _getValidationDataForAdaptiveSync(self, valData, valBatchSize):
-        '''
-        TF and Keras specific implementation of abstract method
-        _getValidationDataForAdaptiveSync in SwarmCallbackBase class.
-        It returns the details of X and Y of validation data.
-        '''
+
         valGen = validationSteps = valX = valY = valSampleWeight = None
-        if hasattr(valData, 'next') or hasattr(valData, '__next__'):
-            # valData is a generator
-            valGen = valData
-            validationSteps = int(len(valData) // valBatchSize)
-        else:
-            if len(valData) == 2:
-                valX, valY = valData
-            elif len(valData) == 3:
-                valX, valY, valSampleWeight = valData
-            else:
-                raise ValueError('`valData` should be a tuple '
-                                    '`(valX, valY, valSampleWeight)` '
-                                    'or `(valX, valY)`. Found: ' +
-                                    str(valData))
+        self.logger.info("Allow valData for evaluation")
+        self.logger.info("val data type is %s" %(type(valData)))
+        if(valBatchSize is not None):
+            self.logger.info("valBatchSize is %s" %(valBatchSize))
         return valGen, validationSteps, valX, valY, valSampleWeight
 
 
@@ -244,7 +245,7 @@ class SwarmCallback(Callback, SwarmCallbackBase):
             self.logger.debug('Executed Tensorflow Trainable variable Assignments')
 
 
-    def _calculateLocalLoss(self):
+    def _calculateLocalLossAndMetrics(self):
         '''
         TF and Keras specific implementation of abstract method
         _calculateLocalLoss in SwarmCallbackBase class.
@@ -255,30 +256,44 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         keras platform.
         '''
         valLoss = 0
+        totalMetrics = 0
+        scores = None
+        if(self.valData == None):
+            return valLoss, totalMetrics
+        
+        #Refer - https://www.tensorflow.org/api_docs/python/tf/keras/Model
         if self.mlPlatform == SLPlatforms.KERAS:
-            if self.valX is not None:
-                scores = self.mlCtx.model.evaluate(
-                                            x=self.valX,
-                                            y=self.valY, 
-                                            batch_size=self.valBatchSize)
-            elif self.valGen is not None:
-                scores = self.mlCtx.model.evaluate_generator(
-                                                self.valGen,
-                                                steps=self.validationSteps,
-                                                max_queue_size=self.max_queue_size,
-                                                workers=self.workers,
-                                                use_multiprocessing=self.use_multiprocessing,
-                                                verbose=self.verbose)
-            # The first element in the scores list is loss
-            # Scale the loss to get an integer value, as smart contract 
-            # doesn't support floats. Need to make it normalized to factor
-            # in examples, by dividing it with x_train.size
+            # If the valData is tuple it should be arranged in 
+            #  (inputs, targets) or (inputs, targets, sample_weights).
+            # If valData length is not 2 or 3, means valData might be 
+            # tf.Dataset or Generator so use it as is in evaluate call.
+            if(len(self.valData) == 2):
+                self.logger.debug("valData has 2 args")
+                valX, valY = self.valData
+                scores = self.mlCtx.model.evaluate( x=valX,
+                                                    y=valY, 
+                                                    batch_size=self.valBatchSize)
+            elif (len(self.valData) == 3):
+                self.logger.debug("valData has 3 arg")
+                valX, valY, valSampleWeight = self.valData
+                scores = self.mlCtx.model.evaluate( x=valX,
+                                                    y=valY, 
+                                                    sample_weight = valSampleWeight,
+                                                    batch_size=self.valBatchSize)
+            else:
+                self.logger.debug("valData has 1 arg")
+                scores = self.mlCtx.model.evaluate( self.valData, 
+                                                    batch_size=self.valBatchSize)
+
+            # The first element in the scores list is loss, second element is metrics
+            self.logger.debug("\n loss, metrics are :{}".format(scores))
             if scores:
-                # Scaling done as Solidity contract cannot handle floats
                 valLoss = scores[0]
+                totalMetrics = scores[1]
         elif self.mlPlatform == SLPlatforms.TF:
             valLoss = 0
-        return valLoss
+            totalMetrics = 0
+        return valLoss, totalMetrics
 
 
     def __setMLContext(self, **params):

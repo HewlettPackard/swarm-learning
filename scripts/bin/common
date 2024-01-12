@@ -78,7 +78,7 @@ trap "exit 1" SIGUSR1 SIGUSR2
 
 
 # Swarm product version.
-swarmVer="2.0.0"
+swarmVer="2.1.0"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
 swarmOrg="hpe/swarm-learning"
@@ -93,11 +93,15 @@ snImage="${swarmDockerHub}/${swarmOrg}/${snRepoName}:${swarmVer}"
 swciImage="${swarmDockerHub}/${swarmOrg}/${swciRepoName}:${swarmVer}"
 swopImage="${swarmDockerHub}/${swarmOrg}/${swopRepoName}:${swarmVer}"
 
-# We need elevated privileges to run docker commands, if the current user is not
-# a member of the docker group. Given, the user has configured password-less
-# sudo.
-id -Gn 2> /dev/null | grep "\(\<docker\>\)\|\(\<root\>\)" > /dev/null 2>&1
-[[ ${?} -ne 0 ]] && sudo="sudo"
+# If podman is installed we don't need elevate privileges so sudo or docker group not required 
+# else we need elevated privileges to run docker commands, if the current user is not
+# a member of the docker group. 
+# Given, the user has configured password-less sudo
+
+if ! command -v podman &>/dev/null; then
+    id -Gn 2> /dev/null | grep "\(\<docker\>\)\|\(\<root\>\)" > /dev/null 2>&1
+    [[ ${?} -ne 0 ]] && sudo="sudo"
+fi
 
 
 # Order of process and usage functions to call.
@@ -1226,6 +1230,7 @@ dockerRun()
         ${sudo} docker inspect -f '{{.Config.Image}}' ${containerIDVar}  >> ${CONTAINER_INFO_FILE}
         # .Image returns image id in format of sha256:<id>.
         ${sudo} docker inspect -f '{{.Image}}' ${containerIDVar}  >> ${CONTAINER_INFO_FILE}
+        chmod +r ${CONTAINER_INFO_FILE}  #so that non root user can also read it inside container e.g. in podman env
         # docker cp can copy to stopped container too
         ${sudo} docker cp ${CONTAINER_INFO_FILE} ${containerIDVar}:/tmp/container_info_file
         # Following are the sample contents of container_info_file file

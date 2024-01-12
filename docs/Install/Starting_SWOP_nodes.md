@@ -1,6 +1,6 @@
 # <a name="GUID-22BEDDA1-E98D-4722-A2AC-EB69DBF2E97B"/> Starting SWOP nodes
 
-Use the `swarm-learning/bin/run-swop` script to start SWOP nodes. This script accepts the following parameters:
+Use the `swarm-learning/scripts/bin/run-swop` script to start SWOP nodes. This script accepts the following parameters:
 
 |Parameter name|Description|Default value|
 |--------------|-----------|-------------|

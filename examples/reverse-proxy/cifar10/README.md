@@ -116,10 +116,9 @@ SNo | FQDN | IP Address |
    - `Host_1_INSTALL_DIR` is the location where swarm-learning is installed on host-1(Ex: /home/test1/swarm-learning) and if not passed it will use the default installation directory of swarm which is /opt/hpe/swarm-learning. 
    - `Network_Name` is the custom bridge network created as part of the [pre-requisites](../README.md) to reverse proxy examples. 
    
-   Lets say if `Host_2_DNS_IP` is 172.4.4.4, Host_1_USER is test1, `Host_1_INSTALL_DIR` is /home/test1/swarm-learning and `Network_Name` is rp-network-2 is the network created in host 2. Run command will looks like below 
-      
+   Lets say if `Host_2_DNS_IP` is 172.4.4.4, Host_1_USER is test1, `Host_1_INSTALL_DIR` is /home/test1/swarm-learning and `Network_Name` is rp-network-2 is the network created in host 2. Run command will looks like below  
    ```
-      ./examples/reverse-proxy/cifar10/run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 172.4.4.4 test1 /home/test1/swarm-learning rp-network-2
+   ./examples/reverse-proxy/cifar10/run-on-host-2 172.1.1.1 172.1.1.1 172.2.2.2 172.4.4.4 test1 /home/test1/swarm-learning rp-network-2
    ```
       Above step will create workspace directory, moves files from examples to workspace, create a common path between hosts for ml program, generate certificates, creates volume for the wheel file and shares certificate releated pem files. It will also starts Bind9 container, Nginx container and rest of all the swarm containers specific to *host-2* in the sequential manner. All the run-script commands will now take FQDN's as service parameter arguments instead of ports. 
       

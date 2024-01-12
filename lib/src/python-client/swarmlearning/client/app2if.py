@@ -44,6 +44,7 @@ class APP2IF:
       , checkinModelOnTrainEnd: str
       , nodeWeightage: int
       , trainingContract: str
+      , mergeMethod: str
       , callbackLossFunc: Callable
       , logger: logging.Logger
       , **kwargs
@@ -64,6 +65,7 @@ class APP2IF:
           , checkinModelOnTrainEnd
           , nodeWeightage
           , trainingContract
+          , mergeMethod
         )
 
         return
@@ -114,6 +116,7 @@ class APP2IF:
       , checkinModelOnTrainEnd: str
       , nodeWeightage: int
       , trainingContract: str
+      , mergeMethod: str
     ) -> None:
         sessionReq = spb.SessionRequest(
             syncInterval=syncInterval
@@ -123,6 +126,7 @@ class APP2IF:
           , checkinModelOnTrainEnd=checkinModelOnTrainEnd
           , nodeWeightage=nodeWeightage
           , trainingContract=trainingContract
+          , mergeMethod=mergeMethod
         )
 
         _, sessionResp = self.__sendRecv(
@@ -184,7 +188,10 @@ class APP2IF:
         while isinstance(resp, spb.LossRequest):
             lossReq = resp
             try:
-                loss = self.__computeLoss(lossReq, syncReq, sequenceNames, counter)
+                loss, metrics, epochsdone, totalepochs = self.__computeLoss(lossReq, syncReq, sequenceNames, counter)
+                #print("APP2IF__sendParams - loss : {}, metrics : {}, epochsdone :{}, total epochs : {}".format(
+                #    loss, metrics, epochsdone, totalepochs))
+                
                 status = spb.Status(code=spb.Status.StatusOK, msg="StatusOK")
                 lossResp = spb.LossResponse(
                     sessionID=lossReq.sessionID
@@ -192,6 +199,9 @@ class APP2IF:
                   , lossSeqNum=lossReq.lossSeqNum
                   , status=status
                   , loss=loss
+                  , metrics=metrics
+                  , epochsdone=epochsdone
+                  , totalepochs=totalepochs
                   )
                   # Send response and wait again to recv
                 _, resp = self.__sendRecv(
@@ -218,6 +228,8 @@ class APP2IF:
                       , lossResp
                       )
                 except Exception as eignore:
+                    # Suppress the context i.e. "during handling another exception"
+                    # Details - https://stackoverflow.com/questions/24752395/python-raise-from-usage
                     raise e from None
                 else:
                     raise
@@ -249,13 +261,19 @@ class APP2IF:
         # Swarm sync call was successful
         return resp.nextSyncInterval, resp.trainingOver
 
+    # This method returns local performance data of individual model. 
+    # Performance data includes following
+    # 1. Loss
+    # 2. Metrics
+    # 3. Epochs completed
+    # 4. Total Epochs used in training
     def __computeLoss(
         self
       , lossReq: spb.LossRequest
       , syncReq: spb.SyncRequest
       , sequenceNames: List[str]
       , counter: str
-    ) -> float:
+    ) -> (float, float, int, int):
         if lossReq.sessionID != syncReq.sessionID:
             raise RuntimeError(
                 "{}: get-loss: bad session ID: wanted {}, got {}".format(
@@ -271,10 +289,11 @@ class APP2IF:
             )
 
         mergedParams = slutil.fromWeights(lossReq.mergedParams)
-        loss = self.__callbackLossFunc(mergedParams)
+        loss, metrics, epochsdone, totalepochs  = self.__callbackLossFunc(mergedParams)
+        
         # self.__log(f"{counter} Loss = {loss}")
 
-        return loss
+        return loss, metrics, epochsdone, totalepochs
 
     def __sendRecv(
         self, msgType: spb.MessageType, msgBody: MessageBody

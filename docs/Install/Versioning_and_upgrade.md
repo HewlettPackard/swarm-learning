@@ -21,6 +21,6 @@ The following image shows the SLM-UI installer with **Upgrade** option:
 
 ![](GUID-54257D6A-B7EB-46AF-85CB-DE91D7BA6F72-high.png)
 
-**Parent topic:**[HPE Swarm Learning Installation](GUID-01199457-73B6-45F3-99FC-164E4B25A0A3.md)
+**Parent topic:**[HPE Swarm Learning Installation](HPE_Swarm_Learning_installation.md)
 
 

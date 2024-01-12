@@ -10,7 +10,7 @@
 
 5.  Select the **Set as evaluation** checkbox if you are using the community version of Swarm Learning.
 
-    For more information, see [Versioning and upgrade](GUID-2E350669-7E5A-47BC-AB15-58AC4CFAD9C1.md) section.
+    For more information, see [Versioning and upgrade](Versioning_and_upgrade.md) section.
 
 6.  Click **Create** to create the Swarm version.
 

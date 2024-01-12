@@ -6,7 +6,7 @@ This example runs a Credit Card Fraud Detection algorithm [1] on the Swarm Learn
 This example uses a subset of the data from [1] for each node. These subset datasets are biased with respect to the class and the volume of data.
 This example uses four training batches and one test batch. These files are located in the respective `examples/
 fraud-detection/data-and-scratch<n>` directories.
->  **_NOTE :_** Refer [Data license](data-and-scratch/app-data/Data_license.md) associated with this dataset. 
+>  **_NOTE :_** Refer [Data license](/examples/fraud-detection/Data_license.md/) associated with this dataset. 
 
 
 The ML program, after conversion to Swarm Learning, is in `examples/fraud-detection/model` and is called `fraud-detection.py`.
@@ -86,7 +86,7 @@ The cluster setup for this example uses only one host, as shown in the figure be
    docker volume rm sl-cli-lib
    docker volume create sl-cli-lib
    docker container create --name helper -v sl-cli-lib:/data hello-world
-   docker cp -L lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
+   docker cp lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl helper:/data
    docker rm helper
    ```
 

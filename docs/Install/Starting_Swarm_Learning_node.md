@@ -1,6 +1,6 @@
 # <a name="GUID-E6440875-7663-49AD-B00E-C767A41CB1B6"/> Starting Swarm Learning node
 
-Use the `swarm-learning/bin/run-sl` script to start a Swarm Learning \(SL\) node. This script accepts the following parameters:
+Use the `swarm-learning/scripts/bin/run-sl` script to start a Swarm Learning \(SL\) node. This script accepts the following parameters:
 
 <blockquote>
 NOTE:

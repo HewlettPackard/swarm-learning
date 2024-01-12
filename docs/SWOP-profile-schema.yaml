@@ -209,7 +209,10 @@ properties  :
                           oneOf:
                               - const: ~
                               - type: string
-                                description: "FQDN and optional port of the FS service for the SL Container"
+                                description: "FQDN and optional port of the FS service for the SL Container. If this optional 
+                                              port is passed along with the service then it gets publised on the host where 
+                                              corresponding container port being default 30305. 
+                                              Ex: If slfsservice is fs.sl1.swarm:30331 then publish happens as -p 30305:30331"
                                 # https://stackoverflow.com/a/32294443.
                                 maxLength: 253
                                 minLength: 2
