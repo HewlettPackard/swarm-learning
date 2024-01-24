@@ -69,3 +69,11 @@ else
     exit 1; 
 fi
 moveWhlToVolume
+
+
+removeRunningSpireContainers()
+{
+    docker rm -f spire-server spire-agent
+}
+
+removeRunningSpireContainers
