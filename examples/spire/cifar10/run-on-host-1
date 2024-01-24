@@ -77,7 +77,7 @@ sed -i "s+<OTHER_TRUST_DOMAIN>+${org_2_trust_domain}+g" "${workingDir}"/spire-se
 sed -i "s+<OTHER_IP_ADDRESS>+${Host_2_IP}+g" "${workingDir}"/spire-server/server.conf
 
 startSpireServer
-sleep 5
+sleep 10
 
 # Generate crt file for agent to connect securely. This will avoid the use of insecure bootstrap.
 if [[ ! -f "${workingDir}/spire-server/spire.crt" ]] 
@@ -171,7 +171,7 @@ startSpireAgent()
 }
 
 startSpireAgent
-sleep 5
+sleep 10
 
 # Create an entry into the spire-server via spire agent
 docker exec spire-server /opt/spire/bin/spire-server entry create   \
