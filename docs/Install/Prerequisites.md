@@ -30,7 +30,7 @@ NOTE:Configuration of the ML user nodes are driven by the complexity of the ML a
 
 ## <a name="SECTION_DXX_P12_JSB"/> Operating systems
 
--   Linux - Qualified on Ubuntu 20.04, RHEL 8.5, SLES 15.
+-   Linux - Qualified on Ubuntu 22.04, RHEL 8.5, SLES 15.
 
 -   For Swarm SLM-UI installer, any x86-64 hardware running Linux, Windows, or Mac.
 
