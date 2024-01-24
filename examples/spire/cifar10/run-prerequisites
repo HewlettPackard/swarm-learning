@@ -38,19 +38,19 @@ fi
 # Create a workspace to run this example
 workingDir=$(pwd)/workspace/spire/cifar10
 mkdir -p ${workingDir}
-reverseProxyCifarDir=$(pwd)/examples/spire/cifar10
+spireCifarDir=$(pwd)/examples/spire/cifar10
 
 # Copy files into the worksapce
-cp -r ${reverseProxyCifarDir}/swci ${workingDir}/
-cp -r ${reverseProxyCifarDir}/swop ${workingDir}/
-cp -r ${reverseProxyCifarDir}/model ${workingDir}/
-cp -r ${reverseProxyCifarDir}/spire-server ${workingDir}/
-cp -r ${reverseProxyCifarDir}/spire-agent ${workingDir}/
+cp -r ${spireCifarDir}/swci ${workingDir}/
+cp -r ${spireCifarDir}/swop ${workingDir}/
+cp -r ${spireCifarDir}/model ${workingDir}/
+cp -r ${spireCifarDir}/spire-server ${workingDir}/
+cp -r ${spireCifarDir}/spire-agent ${workingDir}/
 
 # Copy run task file to tmp location. To keep the path same between the hosts.
 mkdir -p /tmp/spire/cifar10/model
-cp ${reverseProxyCifarDir}/model/cifar10.py /tmp/spire/cifar10/model/cifar10.py
-#cp -r ${reverseProxyCifarDir}/model/ /tmp/reverse-proxy/cifar10/
+cp ${spireCifarDir}/model/cifar10.py /tmp/spire/cifar10/model/cifar10.py
+#cp -r ${spireCifarDir}/model/ /tmp/reverse-proxy/cifar10/
 
 # Creates volume sl-cli-lib and moves the whl file in to it.
 moveWhlToVolume()
