@@ -139,7 +139,7 @@ docker exec spire-server bin/spire-server bundle set        \
     -path /opt/spire/conf/server/${org_2_trust_domain}.bundle 
 
 # Generate the join token for the spire agent.
-token_op=docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_1_trust_domain}/agent
+token_op=`docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_1_trust_domain}/agent`
 join_token_arr=($token_op)
 if [[ "${array[@]}" =~ 'Token' ]]; then
     join_token= ${join_token_arr[1]}
