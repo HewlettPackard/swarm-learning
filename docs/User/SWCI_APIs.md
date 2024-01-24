@@ -72,8 +72,14 @@ import swarmlearning.swci as sw
 swciServerName = 'SWCI Server Name or IP'
 snServerName = 'SN Server Name or IP'
 
-# Connect to the SWCI via SWCI_WEB_PORT
-s = sw.Swci(swciServerName,port=30306) #30306 is the default port
+# Provide certificates for secured connection to the SWCI container.
+clCert='<Full path of SWCI public certificate>'
+clPKey='<Full path of SWCI private certificate path>'
+clCABundle='<Full path of SWCI CA certificate directory>'
+
+# Secured connection to the SWCI via SWCI_WEB_PORT
+s = sw.Swci(swciSrvName,port=30306,clientCert=clCert,clientPKey=clPKey,clientCABundle=clCABundle)
+#30306 is the default port
 # Connect to SN and create context
 print(s.createContext('testContext', ip=snServerName))
 # Switches the context to testContext
@@ -84,4 +90,3 @@ print(s.createTrainingContract('testContract'))
 print(s.listContexts())
 # Lists all the tasks that includes root task
 print(s.listTasks())
-```
