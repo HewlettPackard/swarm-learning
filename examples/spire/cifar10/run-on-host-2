@@ -76,6 +76,7 @@ sed -i "s+<TRUST_DOMAIN>+${org_2_trust_domain}+g" "${workingDir}"/spire-server/s
 sed -i "s+<OTHER_TRUST_DOMAIN>+${org_1_trust_domain}+g" "${workingDir}"/spire-server/server.conf
 sed -i "s+<OTHER_IP_ADDRESS>+${Host_1_IP}+g" "${workingDir}"/spire-server/server.conf
 
+echo "Starting Spire Server"
 startSpireServer
 sleep 10
 
@@ -169,6 +170,7 @@ startSpireAgent()
     return 0
 }
 
+echo "Starting Spire Agent"
 startSpireAgent
 sleep 10
 
@@ -198,8 +200,6 @@ sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 
 
-export SL_DEVMODE_KEY=`docker run --rm --entrypoint python3 hub.docker.hpecorp.net/swarm-learning/swci:2.1.0 -c 'from swarmdefaults import SwarmDefaults as sd; print(sd.getDeveloperModeKey());'|tr -d "\r"`
-
 # To let sentinel start first.
 sleep 10    
 # Start Swarm components.
@@ -214,9 +214,7 @@ echo "############### Starting SN node ##################"
     --apls-ip=${APLS_IP}                                \
     -e no_proxy=                                        \
     -e swarm_node_type=sn                               \
-    --socket-path /tmp/spire-agent/agent.sock           \
-    -e SWARM_LOG_LEVEL="DEBUG"                          \
-    -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}
+    --socket-path /tmp/spire-agent/agent.sock           
               
 [[ $? -ne 0 ]] && exit 1
 
@@ -250,7 +248,6 @@ then
 fi
 
 
-
 echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \
     -d                                                  \
@@ -264,7 +261,4 @@ echo "#################### Starting SWOP ####################"
     -e SWOP_UID=1000                                    \
     -e SWOP_GID=998                                     \
     -e swarm_node_type=swop                             \
-    --socket-path /tmp/spire-agent/agent.sock           \
-    -e SWARM_LOG_LEVEL="DEBUG"                          \
-    -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}             
- 
+    --socket-path /tmp/spire-agent/agent.sock           
