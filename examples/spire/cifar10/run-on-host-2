@@ -175,9 +175,21 @@ sleep 5
 # Create an entry into the spire-server via spire agent
 docker exec spire-server /opt/spire/bin/spire-server entry create   \
     -parentID spiffe://${org_2_trust_domain}/agent                  \
-    -spiffeID spiffe://${org_2_trust_domain}/sl                     \
-    -selector "docker:env:swarm_node_type=swarm"                    \
+    -spiffeID spiffe://${org_2_trust_domain}/sn                     \
+    -selector "docker:env:swarm_node_type=sn"                       \
     -federatesWith "spiffe://${org_1_trust_domain}"
+
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_2_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_2_trust_domain}/swop                   \
+    -selector "docker:env:swarm_node_type=swop"                     \
+    -federatesWith "spiffe://${org_1_trust_domain}"
+
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_2_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_2_trust_domain}/sl                     \
+    -selector "docker:env:swarm_node_type=sl"                       \
+    -federatesWith "spiffe://${org_1_trust_domain}"    
 
 
 # Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
@@ -201,7 +213,7 @@ echo "############### Starting SN node ##################"
     --sentinel-ip=${Host_1_IP}                          \
     --apls-ip=${APLS_IP}                                \
     -e no_proxy=                                        \
-    -e swarm_node_type=swarm                            \
+    -e swarm_node_type=sn                               \
     --socket-path /tmp/spire-agent/agent.sock           \
     -e SWARM_LOG_LEVEL="DEBUG"                          \
     -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}
@@ -245,7 +257,7 @@ echo "#################### Starting SWOP ####################"
     -e SWOP_KEEP_CONTAINERS=1                           \
     -e SWOP_UID=1000                                    \
     -e SWOP_GID=998                                     \
-    -e swarm_node_type=swarm                            \
+    -e swarm_node_type=swop                             \
     --socket-path /tmp/spire-agent/agent.sock           \
     -e SWARM_LOG_LEVEL="DEBUG"                          \
     -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}             

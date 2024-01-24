@@ -41,7 +41,7 @@ nodes:
         slhostip: <HOST-IP>
         slport: 16000
         slfsservice: ~
-        slenvvars: [swarm_node_type : swarm]
+        slenvvars: [swarm_node_type : sl]
         slnetworkopts: ~
         usrhostname: ml-1
         usrenvvars: null
@@ -60,7 +60,7 @@ nodes:
         slhostip: <HOST-IP>
         slport: 17000
         slfsservice: ~
-        slenvvars: [swarm_node_type : swarm]
+        slenvvars: [swarm_node_type : sl]
         slnetworkopts: ~
         usrhostname: ml-2
         usrenvvars: null

@@ -176,8 +176,29 @@ sleep 5
 # Create an entry into the spire-server via spire agent
 docker exec spire-server /opt/spire/bin/spire-server entry create   \
     -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/sn                     \
+    -selector "docker:env:swarm_node_type=sn"                       \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+
+# Create an entry into the spire-server via spire agent
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/swop                   \
+    -selector "docker:env:swarm_node_type=swop"                     \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+
+# Create an entry into the spire-server via spire agent
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/swci                   \
+    -selector "docker:env:swarm_node_type=swci"                     \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+
+# Create an entry into the spire-server via spire agent
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
     -spiffeID spiffe://${org_1_trust_domain}/sl                     \
-    -selector "docker:env:swarm_node_type=swarm"                    \
+    -selector "docker:env:swarm_node_type=sl"                       \
     -federatesWith "spiffe://${org_2_trust_domain}"
 
 
@@ -202,7 +223,7 @@ echo "############### Starting Sentinel SN ##################"
     --sentinel                                          \
     --apls-ip=${APLS_IP}                                \
     -e no_proxy=                                        \
-    -e swarm_node_type=swarm                            \
+    -e swarm_node_type=sn                               \
     --socket-path /tmp/spire-agent/agent.sock           \
     -e SWARM_LOG_LEVEL="DEBUG"                          \
     -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}
@@ -246,7 +267,7 @@ echo "#################### Starting SWOP ####################"
     -e SWOP_KEEP_CONTAINERS=1                           \
     -e SWOP_UID=1000                                    \
     -e SWOP_GID=998                                     \
-    -e swarm_node_type=swarm                            \
+    -e swarm_node_type=swop                             \
     --socket-path /tmp/spire-agent/agent.sock           \
     -e SWARM_LOG_LEVEL="DEBUG"                          \
     -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}             
@@ -260,5 +281,5 @@ echo "#################### Starting SWCI ####################"
     --apls-ip=${APLS_IP}                                \
     --usr-dir=${workingDir}/swci                        \
     --init-script-name=swci-init                        \
-    -e swarm_node_type=swarm                            \
+    -e swarm_node_type=swci                             \
     --socket-path /tmp/spire-agent/agent.sock 
