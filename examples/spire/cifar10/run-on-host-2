@@ -1,0 +1,246 @@
+#!/usr/bin/env bash
+
+######################################################################
+## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+######################################################################
+
+
+## runs 1-SN, 1-SL, and 1-SWOP with 1-SpireServer and 1-SpireAgent
+
+
+# All examples assumes APLS is already running. User needs to pass this IP accordingly
+APLS_IP=$1
+[[ -z "$1" ]] && { echo "APLS IP is empty" ; exit 1; }
+echo "APLS IP: "${APLS_IP}
+
+Host_1_IP=$2
+[[ -z "$2" ]] && { echo "IP address of the Host 1 is empty" ; exit 1; }
+echo "HOST 1 IP: "${Host_1_IP}
+
+Host_2_IP=$3
+[[ -z "$3" ]] && { echo "IP address of the Host 2 is empty" ; exit 1; }
+echo "HOST 2 IP: "${Host_2_IP}
+
+
+# User logged in the another host. If not passed it will be default user. 
+[[ -n "${5}" ]] && Host_1_USER=${5} || Host_1_USER=""
+
+# Directory path of this repository on the another host. If not passed script assumes default installation directory of swarm. 
+[[ -n "${6}" ]] && Host_1_INSTALL_DIR=${6} || Host_1_INSTALL_DIR="/opt/hpe/swarm-learning"
+
+
+
+# This step will also ensure if in correct directory
+if [[ -f "$(pwd)/scripts/bin/common" ]]
+then
+    # Pulling swarm images version without using entire common file.
+    swarmVersion=$(grep -m1 swarmVer scripts/bin/common | cut -c 11- | cut -d '"' -f1)
+    echo "Swarm Version : ${swarmVersion}"
+else
+    echo "It is mandatory to run these scripts in the base(swarm-learning) directory of this repository. Please cd(change directory) to base directory."
+    exit 1; 
+fi
+
+#Run Pre-requisites
+./examples/spire/cifar10/run-prerequisites
+# Check the outcome of pre-requisite script and proceed
+if [[ $? -ne 0 ]]
+then
+    exit 1;
+fi
+
+spireDir=$(pwd)/examples/spire
+spireCifarDir=$(pwd)/examples/spire/cifar10
+workingDir=$(pwd)/workspace/spire/cifar10
+org_1_trust_domain="org1.swarm.learning"
+org_2_trust_domain="org2.swarm.learning"
+
+# Starts the Spire Server container to serve as DNS server
+startSpireServer()
+{
+    docker run                                                  \
+        -d                                                      \
+        -p 30355:8081                                           \
+        -p 8443:8443                                            \
+        --name spire-server                                     \
+        -network-alias spire-server                             \
+        -v ${workingDir}/spire-server:/opt/spire/conf/server    \
+        ${SpireServerImage}
+    return 0
+}
+
+# Starts the NGINX container with the desired nginx.conf configuration
+startSpireAgent()
+{
+    docker run                                                          \
+        -d                                                              \
+        --name spire-agent                                              \
+        --network-alias spire-agent                                     \
+        -v /var/run/docker.sock:/var/run/docker.sock                    \
+        -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
+        -v /tmp:/tmp                                                    \
+        --pid host                                                      \
+        ${SpireServerImage}
+    return 0
+}
+
+# Before starting the spire server modify the server.conf file to the needs of host-1 (aka Org-1) 
+sed -i "s+<TRUST_DOMAIN>+${org_2_trust_domain}+g" "${workingDir}"/spire-server/server.conf
+sed -i "s+<OTHER_TRUST_DOMAIN>+${org_1_trust_domain}+g" "${workingDir}"/spire-server/server.conf
+sed -i "s+<OTHER_IP_ADDRESS>+${Host_1_IP}+g" "${workingDir}"/spire-server/server.conf
+
+startSpireServer
+
+# Generate crt file for agent to connect securely. This will avoid the use of insecure bootstrap.
+if [[ -f "${workingDir}/spire-server/spire.crt" ]] then
+    docker exec spire-server bin/spire-server bundle show > ${workingDir}/spire-agent/spire.crt 
+fi
+# Generate certificate bundle file to run spire in bootstrap federation. 
+# This bundle file will be shared to other host/hosts and vice versa.
+if [[ -f "${workingDir}/spire-server/${org_2_trust_domain}.bundle" ]] then
+    docker exec spire-server bin/spire-server bundle show -format spiffe > ${workingDir}/spire-server/${org_2_trust_domain}.bundle 
+fi
+
+# Check if Certificate Bundle file exists on another host
+Host_1_Cert_Bundle_Path="${Host_1_INSTALL_DIR}"/workspace/spire/cifar10/spire-server/${org_1_trust_domain}.bundle
+
+# Wait and transfer certificate bundles between hosts. This is require make spire work in federation.
+Host1CertBundleExists="false"
+
+# Checking if certificate bundle is available on host-1
+if [[ "${Host_1_USER}" = "" ]]
+then
+    ssh ${Host_1_IP} [[ -f "${Host_1_Cert_Bundle_Path}" ]]
+else
+    ssh ${Host_1_USER}@${Host_1_IP} [[ -f "${Host_1_Cert_Bundle_Path}" ]]
+fi
+# Checking if ssh command went through successfully
+if [[ $? -eq 0 ]]
+then
+    Host1CertBundleExists="true"
+fi
+
+echo "Host1CertBundleExists:"${Host1CertBundleExists}
+# If certificate bundle on the host-1 exists, then copy the file from host 1 to host 2 ca path 
+if [ "$Host1CertBundleExists" = "true" ]
+then
+    if [[ "${Host_1_USER}" = "" ]]
+    then
+        scp ${Host_1_IP}:${Host_1_Cert_Bundle_Path} "${workingDir}"/spire-server
+    else
+        scp ${Host_1_USER}@${Host_1_IP}:${Host_1_Cert_Bundle_Path} "${workingDir}"/spire-server
+    fi
+    # Checking if SCP command went through successfully
+    if [[ $? -eq 0 ]]
+    then
+        echo "Certificate bundle transfer completed."
+    fi
+else
+    echo "Exiting: Please run 'run-on-host-1' script before running 'run-on-host-2'"
+    exit 1;
+fi
+
+
+# Run the bundle set command on spire server 2 for bootstrap federation 
+docker exec spire-server bin/spire-server bundle set        \
+    -format spiffe                                          \
+    -id spiffe://${org_1_trust_domain}                        \
+    -path /opt/spire/conf/server/${org_1_trust_domain}.bundle 
+
+# Generate the join token for the spire agent.
+token_op=docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_2_trust_domain}/agent
+join_token_arr=($token_op)
+if [[ "${array[@]}" =~ 'Token' ]]; then
+    join_token= ${join_token_arr[1]}
+    echo ${join_token}
+else
+    echo "Exiting: Failed to generate token for spire-agent"
+    exit 1;
+fi
+
+# Before starting the spire agent modify the agent.conf file to the needs of host-1 (aka Org-1) 
+sed -i "s+<TRUST_DOMAIN>+${org_2_trust_domain}+g" "${workingDir}"/spire-agent/agent.conf
+sed -i "s+<SERVER_IP_ADDRESS>+${Host_2_IP}+g" "${workingDir}"/spire-agent/agent.conf
+sed -i "s+<JOIN_TOKEN>+${join_token}+g" "${workingDir}"/spire-agent/agent.conf
+
+startSpireAgent
+
+
+# Create an entry into the spire-server via spire agent
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_2_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_2_trust_domain}/sl                     \
+    -selector "docker:env:swarm_node_type=swarm"                    \
+    -federatesWith "spiffe://${org_1_trust_domain}"
+
+
+# Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
+# Also Modifies the <CURRENT-PATH> in swarm_cifar10_task file
+sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swci/swci-init
+
+
+export SL_DEVMODE_KEY=`docker run --rm --entrypoint python3 hub.docker.hpecorp.net/swarm-learning/swci:2.1.0 -c 'from swarmdefaults import SwarmDefaults as sd; print(sd.getDeveloperModeKey());'|tr -d "\r"`
+
+    
+# Start Swarm components.
+echo "############### Starting Sentinel SN ##################"
+"./scripts/bin/run-sn"                                  \
+    -d                                                  \
+    --name=sn-2                                         \
+    --host-ip=${Host_2_IP}                              \
+    --sn-api-port=30304                                 \
+    --sn-p2p-port=30303                                 \
+    --sentinel                                          \
+    --apls-ip=${APLS_IP}                                \
+    -e no_proxy=                                        \
+    -e swarm_node_type=swarm                            \
+    --socket-path /tmp/spire-agent/agent.sock           \
+    -e SWARM_LOG_LEVEL="DEBUG"                          \
+    -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}
+              
+[[ $? -ne 0 ]] && exit 1
+
+# wait for Sentinel API service to start
+retries=1
+isUp=''
+while [[ ${isUp} != "OK" ]]
+do
+    isUp=`curl -sk --noproxy ${Host_2_IP} --cert ${workingDir}/spire-server/spire.crt "https://${Host_2_IP}:30304/is_up"`
+    if [[ ${retries} -gt 20 ]] 
+    then
+        echo "Exiting: Failed to start SN node within the time limit of 10 minutes" 
+        exit 1;
+    fi 
+    if [[ ${isUp} != "OK" ]]
+    then
+        echo "Waiting for the SN node to start ....."
+        retries=$((retries+1)) 
+        sleep 30 
+    fi
+done
+
+if [[ ${isUp} == "OK" ]]
+then
+    echo "SN node is Started"
+fi
+
+
+echo "#################### Starting SWOP ####################"
+"./scripts/bin/run-swop"                                \
+    -d                                                  \
+    --name=swop-2                                       \
+    --usr-dir=${workingDir}/swop                        \
+    --profile-file-name=swop2_profile.yaml              \
+    --sn-ip=${Host_2_IP}                                \
+    --sn-api-port=30304                                 \
+    --apls-ip={APLS_IP}                                 \
+    -e SWOP_KEEP_CONTAINERS=1                           \
+    -e SWOP_UID=1000                                    \
+    -e SWOP_GID=998                                     \
+    -e swarm_node_type=swarm                            \
+    --socket-path /tmp/spire-agent/agent.sock           \
+    -e SWARM_LOG_LEVEL="DEBUG"                          \
+    -e SL_DEVMODE_KEY=${SL_DEVMODE_KEY}             
+ 
