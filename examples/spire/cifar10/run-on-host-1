@@ -99,7 +99,7 @@ Host2CertBundleExists="false"
 while [ "${Host2CertBundleExists}" = "false" ]
 do
     echo "Waiting for the user to start 'run-on-host-2' script on host 2 machine"
-    sleep 30
+    sleep 10
     # Checking if certificate is available on host-2
     if [[ "${Host_2_USER}" = "" ]]
     then
@@ -230,12 +230,17 @@ echo "############### Starting Sentinel SN ##################"
               
 [[ $? -ne 0 ]] && exit 1
 
-# wait for Sentinel API service to start
+# wait for Sentinel node to start
 retries=1
+search_string="INFO : Starting SWARM-API-SERVER on port:"
 isUp=''
 while [[ ${isUp} != "OK" ]]
 do
-    isUp=`curl -sk --noproxy ${Host_1_IP} --cert ${workingDir}/spire-server/spire.crt "https://${Host_1_IP}:30304/is_up"`
+    if docker logs sn-1 | grep -q "$search_string"; then
+        isUp='OK'
+        echo "Search string found in logs"
+    fi
+    
     if [[ ${retries} -gt 20 ]] 
     then
         echo "Exiting: Failed to start Sentinel node within the time limit of 10 minutes" 
@@ -253,7 +258,6 @@ if [[ ${isUp} == "OK" ]]
 then
     echo "Sentinel node is Started"
 fi
-
 
 echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \

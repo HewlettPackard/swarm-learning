@@ -220,12 +220,17 @@ echo "############### Starting SN node ##################"
               
 [[ $? -ne 0 ]] && exit 1
 
-# wait for Sentinel API service to start
+# wait for SN node to start
 retries=1
+search_string="INFO : Starting SWARM-API-SERVER on port:"
 isUp=''
 while [[ ${isUp} != "OK" ]]
 do
-    isUp=`curl -sk --noproxy ${Host_2_IP} --cert ${workingDir}/spire-server/spire.crt "https://${Host_2_IP}:30304/is_up"`
+    if docker logs sn-2 | grep -q "$search_string"; then
+        isUp='OK'
+        echo "Search string found in logs"
+    fi
+    
     if [[ ${retries} -gt 20 ]] 
     then
         echo "Exiting: Failed to start SN node within the time limit of 10 minutes" 
@@ -243,6 +248,7 @@ if [[ ${isUp} == "OK" ]]
 then
     echo "SN node is Started"
 fi
+
 
 
 echo "#################### Starting SWOP ####################"
