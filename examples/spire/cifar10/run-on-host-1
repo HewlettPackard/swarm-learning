@@ -99,7 +99,7 @@ Host2CertBundleExists="false"
 while [ "${Host2CertBundleExists}" = "false" ]
 do
     echo "Waiting for the user to start 'run-on-host-2' script on host 2 machine"
-    sleep 10
+    sleep 5
     # Checking if certificate is available on host-2
     if [[ "${Host_2_USER}" = "" ]]
     then
@@ -267,7 +267,7 @@ echo "#################### Starting SWOP ####################"
     --profile-file-name=swop1_profile.yaml              \
     --sn-ip=${Host_1_IP}                                \
     --sn-api-port=30304                                 \
-    --apls-ip={APLS_IP}                                 \
+    --apls-ip=${APLS_IP}                                \
     -e SWOP_KEEP_CONTAINERS=1                           \
     -e SWOP_UID=1000                                    \
     -e SWOP_GID=998                                     \

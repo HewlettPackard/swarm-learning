@@ -196,12 +196,12 @@ docker exec spire-server /opt/spire/bin/spire-server entry create   \
 # Also Modifies the <CURRENT-PATH> in swarm_cifar10_task file
 sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
-sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swci/swci-init
 
 
 export SL_DEVMODE_KEY=`docker run --rm --entrypoint python3 hub.docker.hpecorp.net/swarm-learning/swci:2.1.0 -c 'from swarmdefaults import SwarmDefaults as sd; print(sd.getDeveloperModeKey());'|tr -d "\r"`
 
-    
+# To let sentinel start first.
+sleep 10    
 # Start Swarm components.
 echo "############### Starting SN node ##################"
 "./scripts/bin/run-sn"                                  \
@@ -259,7 +259,7 @@ echo "#################### Starting SWOP ####################"
     --profile-file-name=swop2_profile.yaml              \
     --sn-ip=${Host_2_IP}                                \
     --sn-api-port=30304                                 \
-    --apls-ip={APLS_IP}                                 \
+    --apls-ip=${APLS_IP}                                 \
     -e SWOP_KEEP_CONTAINERS=1                           \
     -e SWOP_UID=1000                                    \
     -e SWOP_GID=998                                     \
