@@ -23,10 +23,10 @@ echo "HOST 2 IP: "${Host_2_IP}
 
 
 # User logged in the another host. If not passed it will be default user. 
-[[ -n "${5}" ]] && Host_2_USER=${5} || Host_2_USER=""
+[[ -n "${4}" ]] && Host_2_USER=${4} || Host_2_USER=""
 
 # Directory path of this repository on the another host. If not passed script assumes default installation directory of swarm. 
-[[ -n "${6}" ]] && Host_2_INSTALL_DIR=${6} || Host_2_INSTALL_DIR="/opt/hpe/swarm-learning"
+[[ -n "${5}" ]] && Host_2_INSTALL_DIR=${5} || Host_2_INSTALL_DIR="/opt/hpe/swarm-learning"
 
 
 
