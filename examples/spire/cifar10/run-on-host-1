@@ -140,14 +140,13 @@ docker exec spire-server bin/spire-server bundle set        \
 
 # Generate the join token for the spire agent.
 token_op=`docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_1_trust_domain}/agent`
-join_token_arr=($token_op)
-if [[ "${array[@]}" =~ 'Token' ]]; then
-    join_token= ${join_token_arr[1]}
+join_token_arr=(${token_op})
+if [[ "${join_token_arr[@]}" =~ 'Token:' ]]; then
+    join_token=${join_token_arr[1]}
     echo ${join_token}
 else
     echo "Exiting: Failed to generate token for spire-agent"
     exit 1;
-
 fi
 
 # Before starting the spire agent modify the agent.conf file to the needs of host-1 (aka Org-1) 
