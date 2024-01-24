@@ -166,7 +166,7 @@ startSpireAgent()
         -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
         -v /tmp:/tmp                                                    \
         --pid host                                                      \
-        ${SpireServerImage}
+        ${SpireAgentImage}
     return 0
 }
 

@@ -165,7 +165,7 @@ startSpireAgent()
         -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
         -v /tmp:/tmp                                                    \
         --pid host                                                      \
-        ${SpireServerImage}
+        ${SpireAgentImage}
     return 0
 }
 
@@ -191,14 +191,14 @@ export SL_DEVMODE_KEY=`docker run --rm --entrypoint python3 hub.docker.hpecorp.n
 
     
 # Start Swarm components.
-echo "############### Starting Sentinel SN ##################"
+echo "############### Starting SN node ##################"
 "./scripts/bin/run-sn"                                  \
     -d                                                  \
     --name=sn-2                                         \
     --host-ip=${Host_2_IP}                              \
     --sn-api-port=30304                                 \
     --sn-p2p-port=30303                                 \
-    --sentinel                                          \
+    --sentinel-ip=${Host_1_IP}                          \
     --apls-ip=${APLS_IP}                                \
     -e no_proxy=                                        \
     -e swarm_node_type=swarm                            \
