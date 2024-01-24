@@ -63,7 +63,7 @@ startSpireServer()
         -p 30355:8081                                           \
         -p 8443:8443                                            \
         --name spire-server                                     \
-        -network-alias spire-server                             \
+        --network-alias spire-server                             \
         -v ${workingDir}/spire-server:/opt/spire/conf/server    \
         ${SpireServerImage}
     return 0
