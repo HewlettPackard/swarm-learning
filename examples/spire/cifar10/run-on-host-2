@@ -92,12 +92,14 @@ sed -i "s+<OTHER_IP_ADDRESS>+${Host_1_IP}+g" "${workingDir}"/spire-server/server
 startSpireServer
 
 # Generate crt file for agent to connect securely. This will avoid the use of insecure bootstrap.
-if [[ -f "${workingDir}/spire-server/spire.crt" ]] then
+if [[ -f "${workingDir}/spire-server/spire.crt" ]] 
+then
     docker exec spire-server bin/spire-server bundle show > ${workingDir}/spire-agent/spire.crt 
 fi
 # Generate certificate bundle file to run spire in bootstrap federation. 
 # This bundle file will be shared to other host/hosts and vice versa.
-if [[ -f "${workingDir}/spire-server/${org_2_trust_domain}.bundle" ]] then
+if [[ -f "${workingDir}/spire-server/${org_2_trust_domain}.bundle" ]] 
+then
     docker exec spire-server bin/spire-server bundle show -format spiffe > ${workingDir}/spire-server/${org_2_trust_domain}.bundle 
 fi
 
