@@ -159,6 +159,7 @@ startSpireAgent()
         -v /var/run/docker.sock:/var/run/docker.sock                    \
         -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
         --pid host                                                      \
+        -v /tmp:/tmp                                                    \
         ${SpireAgentImage}
     return 0
 }
