@@ -29,7 +29,7 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
 
 
 ## Pre-requisites for this example
-1. Hosts should be able to pull spire-server and spire-agent docker images from the git hub container registry.
+1. Hosts should be able to pull spire-server and spire-agent docker images from the git hub container registry [3].
 2. Please make sure the password less SSH setup is done on both the machines. These automated scripts uses SSH and SCP to check and transfer certificate related pem files between the hosts.
 
 ## Running the CIFAR-10 example using Spire
@@ -47,7 +47,7 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
    
    Lets say if `Host_2_USER` is test2 and `Host_2_INSTALL_DIR` is /home/test2/swarm-learning. Run command will looks like below 
    ```
-   ./examples/reverse-proxy/cifar10/run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 test2 /home/test2/swarm-learning
+   ./examples/spire/cifar10/run-on-host-1 172.1.1.1 172.1.1.1 172.2.2.2 test2 /home/test2/swarm-learning
    ```
    Above step will create workspace directory, moves files from examples to workspace, create a common path between hosts for ml program, creates volume for the wheel file and shares certificate releated bundle files. It will also starts spire server container, spire agent container and rest of all the swarm containers specific to *host-1* in the sequential manner. 
    
@@ -61,7 +61,7 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
    
    Lets say if Host_1_USER is test1 and `Host_1_INSTALL_DIR` is /home/test1/swarm-learning. Run command will looks like below  
    ```
-   ./examples/reverse-proxy/cifar10/run-on-host-2 172.1.1.1 172.1.1.1 172.2.2.2 test1 /home/test1/swarm-learning
+   ./examples/spire/cifar10/run-on-host-2 172.1.1.1 172.1.1.1 172.2.2.2 test1 /home/test1/swarm-learning
    ```
       Above step will create workspace directory, moves files from examples to workspace, create a common path between hosts for ml program, creates volume for the wheel file and shares certificate releated bundle files. It will also starts spire server container, spire agent container and rest of all the swarm containers specific to *host-2* in the sequential manner. 
       
@@ -76,3 +76,5 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
 [1] V.N. a. G. H. Alex Krizhevsky, "CIFAR-10 and CIFAR-100 datasets," [Online]. Available: https://www.cs.toronto.edu/~kriz/cifar.html
 
 [2] https://spiffe.io/docs/latest/spire-about/spire-concepts/ 
+
+[3] https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry

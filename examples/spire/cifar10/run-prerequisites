@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ######################################################################
-## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2024 Hewlett Packard Enterprise Development LP
 ######################################################################
 
 
@@ -39,6 +39,9 @@ fi
 workingDir=$(pwd)/workspace/spire/cifar10
 mkdir -p ${workingDir}
 spireCifarDir=$(pwd)/examples/spire/cifar10
+spireDir=$(pwd)/examples/spire
+org_1_trust_domain="org1.swarm.learning"
+org_2_trust_domain="org2.swarm.learning"
 
 # Copy files into the worksapce
 cp -r ${spireCifarDir}/swci ${workingDir}/
@@ -68,12 +71,9 @@ else
     echo "Error: It is required to keep the whl file and its symbolic link in the lib folder of this base(swarm-learning) directory."
     exit 1; 
 fi
-moveWhlToVolume
-
-
 removeRunningSpireContainers()
 {
     docker rm -f spire-server spire-agent
 }
-
+moveWhlToVolume
 removeRunningSpireContainers

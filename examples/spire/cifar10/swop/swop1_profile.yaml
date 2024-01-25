@@ -1,6 +1,6 @@
 ---
 ######################################################################
-## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2024 Hewlett Packard Enterprise Development LP
 ######################################################################
 
 groupname: demo
@@ -28,6 +28,10 @@ envvars:
     - HTTP_PROXY : ~
     - HTTPS_PROXY : ~
     - NO_PROXY : ~
+# Spire is used as identity provider in this example, and hence we use
+# spiffe socket path and pass on the path of the agent.sock file.  
+# In order to assure that sl node is also a swarm based spiffe workload, 
+# we pass swarm_node_type environmental variable via slenvvars field.  
 nodes:
     - slnodedef:
         idx: 0

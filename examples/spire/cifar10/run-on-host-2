@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ######################################################################
-## (C)Copyright 2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2024 Hewlett Packard Enterprise Development LP
 ######################################################################
 
 
@@ -42,27 +42,20 @@ else
 fi
 
 #Run Pre-requisites
-./examples/spire/cifar10/run-prerequisites
+source ./examples/spire/cifar10/run-prerequisites
 # Check the outcome of pre-requisite script and proceed
 if [[ $? -ne 0 ]]
 then
     exit 1;
 fi
 
-SpireServerImage="ghcr.io/spiffe/spire-server:1.8.4"
-SpireAgentImage="ghcr.io/spiffe/spire-agent:1.8.4"
-spireDir=$(pwd)/examples/spire
-spireCifarDir=$(pwd)/examples/spire/cifar10
-workingDir=$(pwd)/workspace/spire/cifar10
-org_1_trust_domain="org1.swarm.learning"
-org_2_trust_domain="org2.swarm.learning"
 
 # Starts the spire server container
 startSpireServer()
 {
     docker run                                                  \
         -d                                                      \
-        -p 30355:8081                                           \
+        -p 30307:8081                                           \
         -p 8443:8443                                            \
         --name spire-server                                     \
         --network-alias spire-server                            \
@@ -78,6 +71,7 @@ sed -i "s+<OTHER_IP_ADDRESS>+${Host_1_IP}+g" "${workingDir}"/spire-server/server
 
 echo "Starting Spire Server"
 startSpireServer
+# wait time to fully load the spire server
 sleep 10
 
 # Generate crt file for agent to connect securely. This will avoid the use of insecure bootstrap.
@@ -164,7 +158,6 @@ startSpireAgent()
         --network-alias spire-agent                                     \
         -v /var/run/docker.sock:/var/run/docker.sock                    \
         -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
-        -v /tmp:/tmp                                                    \
         --pid host                                                      \
         ${SpireAgentImage}
     return 0
@@ -172,9 +165,11 @@ startSpireAgent()
 
 echo "Starting Spire Agent"
 startSpireAgent
+# wait time to fully load the spire agent
 sleep 10
 
-# Create an entry into the spire-server via spire agent
+# Create an entry into the spire-server via spire agent. For each component 
+# we have created seperate entry with unique selector and spiffe id
 docker exec spire-server /opt/spire/bin/spire-server entry create   \
     -parentID spiffe://${org_2_trust_domain}/agent                  \
     -spiffeID spiffe://${org_2_trust_domain}/sn                     \
@@ -256,9 +251,7 @@ echo "#################### Starting SWOP ####################"
     --profile-file-name=swop2_profile.yaml              \
     --sn-ip=${Host_2_IP}                                \
     --sn-api-port=30304                                 \
-    --apls-ip=${APLS_IP}                                 \
+    --apls-ip=${APLS_IP}                                \
     -e SWOP_KEEP_CONTAINERS=1                           \
-    -e SWOP_UID=1000                                    \
-    -e SWOP_GID=998                                     \
     -e swarm_node_type=swop                             \
     --socket-path /tmp/spire-agent/agent.sock           
