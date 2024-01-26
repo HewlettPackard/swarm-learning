@@ -358,11 +358,11 @@ class SwarmCallback(SwarmCallbackBase):
             self.logger.debug(f" Local Metrics: {self.metricFunction} on valData : {totalMetrics} \n")
             # Resetting internal state such that metric is ready for new data
             metricFunctionObj.reset()
-            # set model mode to train so that application code will continue its train process
+            # set model mode to train so that application code can continue its train process
             model.train() 
         
         except Exception as emsg:
-            # set model mode to train so that application code will continue its train process
+            # set model mode to train so that application code can continue its train process
             model.train()
             self._logAndRaiseError("Exception in method pyt.py:_calculateLocalLossAndMetrics, error message - %s"%(emsg))
         
