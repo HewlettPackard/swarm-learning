@@ -299,6 +299,7 @@ class SwarmCallback(SwarmCallbackBase):
         '''
         valLoss = 0
         totalMetrics = 0
+        model = self.mlCtx.model
         
         if(self.valData == None):
             return valLoss, totalMetrics
@@ -333,7 +334,7 @@ class SwarmCallback(SwarmCallbackBase):
             # Update the model, mertic and loss also to device specific object
             metricFunctionObj = metricFunctionObj.to(device)
             lossFunctionObj = lossFunctionObj.to(device)
-            model = self.mlCtx.model.to(device)
+            model = model.to(device)
             model.eval()
             
             with torch.no_grad():
@@ -357,8 +358,12 @@ class SwarmCallback(SwarmCallbackBase):
             self.logger.debug(f" Local Metrics: {self.metricFunction} on valData : {totalMetrics} \n")
             # Resetting internal state such that metric is ready for new data
             metricFunctionObj.reset()
+            # set model mode to train so that application code will continue its train process
+            model.train() 
         
         except Exception as emsg:
+            # set model mode to train so that application code will continue its train process
+            model.train()
             self._logAndRaiseError("Exception in method pyt.py:_calculateLocalLossAndMetrics, error message - %s"%(emsg))
         
         return valLoss, totalMetrics
