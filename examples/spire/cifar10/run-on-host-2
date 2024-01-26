@@ -148,6 +148,8 @@ sed -i "s+<TRUST_DOMAIN>+${org_2_trust_domain}+g" "${workingDir}"/spire-agent/ag
 sed -i "s+<SERVER_IP_ADDRESS>+${Host_2_IP}+g" "${workingDir}"/spire-agent/agent.conf
 sed -i "s+<JOIN_TOKEN>+${join_token}+g" "${workingDir}"/spire-agent/agent.conf
 
+# wait time to load other spire agenr
+sleep 10
 
 # Starts the spire agent container
 startSpireAgent()
@@ -159,7 +161,6 @@ startSpireAgent()
         -v /var/run/docker.sock:/var/run/docker.sock                    \
         -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
         --pid host                                                      \
-        -v /tmp:/tmp                                                    \
         ${SpireAgentImage}
     return 0
 }
@@ -169,35 +170,23 @@ startSpireAgent
 # wait time to fully load the spire agent
 sleep 10
 
-# Create an entry into the spire-server via spire agent. For each component 
-# we have created seperate entry with unique selector and spiffe id
-docker exec spire-server /opt/spire/bin/spire-server entry create   \
-    -parentID spiffe://${org_2_trust_domain}/agent                  \
-    -spiffeID spiffe://${org_2_trust_domain}/sn                     \
-    -selector "docker:env:swarm_node_type=sn"                       \
-    -federatesWith "spiffe://${org_1_trust_domain}"
-
-docker exec spire-server /opt/spire/bin/spire-server entry create   \
-    -parentID spiffe://${org_2_trust_domain}/agent                  \
-    -spiffeID spiffe://${org_2_trust_domain}/swop                   \
-    -selector "docker:env:swarm_node_type=swop"                     \
-    -federatesWith "spiffe://${org_1_trust_domain}"
-
-docker exec spire-server /opt/spire/bin/spire-server entry create   \
-    -parentID spiffe://${org_2_trust_domain}/agent                  \
-    -spiffeID spiffe://${org_2_trust_domain}/sl                     \
-    -selector "docker:env:swarm_node_type=sl"                       \
-    -federatesWith "spiffe://${org_1_trust_domain}"    
-
 
 # Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
 # Also Modifies the <CURRENT-PATH> in swarm_cifar10_task file
 sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<WORKING-DIR>+${workingDir}+g" "${workingDir}"/swop/swop2_profile.yaml
 
-
-# To let sentinel start first.
-sleep 10    
+# Create an entry into the spire-server via spire agent. For each component 
+# we have created seperate entry with unique selector and spiffe id. It is 
+# recommended to create an entry before the start of each contianer and 
+# additional sleep of 5 seconds added to get the entry to spire federation.
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_2_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_2_trust_domain}/sn                     \
+    -selector "docker:env:swarm_node_type=sn"                       \
+    -federatesWith "spiffe://${org_1_trust_domain}"
+sleep 10
 # Start Swarm components.
 echo "############### Starting SN node ##################"
 "./scripts/bin/run-sn"                                  \
@@ -210,7 +199,7 @@ echo "############### Starting SN node ##################"
     --apls-ip=${APLS_IP}                                \
     -e no_proxy=                                        \
     -e swarm_node_type=sn                               \
-    --socket-path /tmp/spire-agent/agent.sock           
+    --socket-path ${workingDir}/spire-agent/agent.sock      
               
 [[ $? -ne 0 ]] && exit 1
 
@@ -243,6 +232,19 @@ then
     echo "SN node is Started"
 fi
 
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_2_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_2_trust_domain}/swop                   \
+    -selector "docker:env:swarm_node_type=swop"                     \
+    -federatesWith "spiffe://${org_1_trust_domain}"
+sleep 5
+# SL entry also added here because swop is responsible for the creation
+# of SL nodes.
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_2_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_2_trust_domain}/sl                     \
+    -selector "docker:env:swarm_node_type=sl"                       \
+    -federatesWith "spiffe://${org_1_trust_domain}"    
 
 echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \
@@ -255,4 +257,4 @@ echo "#################### Starting SWOP ####################"
     --apls-ip=${APLS_IP}                                \
     -e SWOP_KEEP_CONTAINERS=1                           \
     -e swarm_node_type=swop                             \
-    --socket-path /tmp/spire-agent/agent.sock           
+    --socket-path ${workingDir}/spire-agent/agent.sock

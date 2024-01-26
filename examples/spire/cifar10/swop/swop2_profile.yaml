@@ -39,8 +39,8 @@ nodes:
             - attribute:
                 aType: SPIFFE_SOCKETPATH
                 mType: BIND
-                src: "/tmp/spire-agent/agent.sock"
-                tgt: "/tmp/spire-agent/agent.sock"
+                src: "<WORKING-DIR>/spire-agent/agent.sock"
+                tgt: "<WORKING-DIR>/spire-agent/agent.sock"
         slhostname: sl-3
         slhostip: <HOST-IP>
         slport: 16000
@@ -58,8 +58,8 @@ nodes:
             - attribute:
                 aType: SPIFFE_SOCKETPATH
                 mType: BIND
-                src: "/tmp/spire-agent/agent.sock"
-                tgt: "/tmp/spire-agent/agent.sock"
+                src: "<WORKING-DIR>/spire-agent/agent.sock"
+                tgt: "<WORKING-DIR>/spire-agent/agent.sock"
         slhostname: sl-4
         slhostip: <HOST-IP>
         slport: 17000
