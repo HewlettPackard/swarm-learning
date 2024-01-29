@@ -1,7 +1,7 @@
 NIH
 ========
 
-This example runs MNIST [1] on the Swarm Learning platform. It uses TensorFlow as the backend.
+This example runs NIH dataset [1] on the Swarm Learning platform. It uses TensorFlow as the backend.
 
 The code for this example has been taken from multiple kaggle kernels and modified to run on a Swarm Learning platform.
 
@@ -15,11 +15,7 @@ This example shows the Swarm training of NIH model using two Machine Learning (M
 
 The cluster setup for this example uses 2 hosts, as shown in the figure below:  
 - host-1: 172.1.1.1  
-- host-2: 172.2.2.2  
 
-|![mnist-cluster-setup](../figs/mnist-cluster-setup.png)|
-|:--:|
-|<b>Figure 1: Cluster setup for the MNIST example</b>|
 
 1. This example uses one Swarm Network (SN) node. The names of the docker containers representing these two nodes are **sn1** . sn1 is the Sentinel Node. sn1 runs on host 172.1.1.1. 
 2. Swarm Learning (SL) and Machine Learning (ML) nodes are automatically spawned by Swarm Operators (SWOP) nodes during training and removed after training. Example one SWOP node named **swop1**. swop1 runs on host 172.1.1.1.
