@@ -69,7 +69,7 @@ The cluster setup for this example uses 1 host, as shown in the figure below:
     - `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
    Final Swarm model will be saved inside `/tmp/spire/cifar10/model/saved_models` directory on both host-1 and host-2. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
-5. To clean-up, run the `scripts/bin/stop-swarm` script on the host system to stop and remove the swarm container nodes of the previous run. If needed, take backup of the container logs. As this example builds and starts spire server and spire agent containers, please remove their respective images and containers. Finally remove docker volume (`sl-cli-lib`) and delete the `workspace` directory. Also remove the agent socket file that gets created on starting spire agent from `/tmp/spire-agent/agent.sock` path.
+5. To clean-up, run the `scripts/bin/stop-swarm` script on the host system to stop and remove the swarm container nodes of the previous run. If needed, take backup of the container logs. As this example builds and starts spire server and spire agent containers, please remove their respective images and containers. Finally remove docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
 
 
