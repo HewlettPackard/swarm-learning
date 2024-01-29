@@ -1,0 +1,18 @@
+######################################################################
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+######################################################################
+Name: swarm_ind_task
+TaskType: RUN_SWARM
+Author: HPESwarm
+Prereq: user_env_tf_build_task
+Outcome: swarm_ind_task
+Body:
+    Command: model/nih_tf.py
+    Entrypoint: python3
+    WorkingDir: /tmp/test
+    Envvars: ["DATA_DIR": DATA, "MAX_EPOCHS": 200, "MIN_PEERS": 3, "SWARM_LOOPBACK" : True]
+    PrivateContent: /tmp/test/
+    SharedContent:
+    -   Src: <PROJECT-MODEL>
+        Tgt: /tmp/test
+        MType: BIND
