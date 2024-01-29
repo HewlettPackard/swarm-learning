@@ -13,7 +13,7 @@ if [ -z "$(docker images -q ${SpireServerImage} 2> /dev/null)" ]; then
   echo "=================================================================="
   echo "Pulling spire-server docker image from git hub container registry"
   echo "=================================================================="
-  docker pull ghcr.io/spiffe/spire-server:1.8.4
+  docker pull ${SpireServerImage}
 fi
 # Exit if image does not exist by now
 if [ -z "$(docker images -q ${SpireServerImage} 2> /dev/null)" ]; then
@@ -26,7 +26,7 @@ if [ -z "$(docker images -q ${SpireAgentImage} 2> /dev/null)" ]; then
   echo "=================================================================="
   echo "Pulling spire-agent docker image from git hub container registry"
   echo "=================================================================="
-  docker pull ghcr.io/spiffe/spire-agent:1.8.4
+  docker pull ${SpireAgentImage}
 fi
 
 # Exit if image does not exist by now
@@ -53,7 +53,6 @@ cp -r ${spireCifarDir}/spire-agent ${workingDir}/
 # Copy run task file to tmp location. To keep the path same between the hosts.
 mkdir -p /tmp/spire/cifar10/model
 cp ${spireCifarDir}/model/cifar10.py /tmp/spire/cifar10/model/cifar10.py
-#cp -r ${spireCifarDir}/model/ /tmp/reverse-proxy/cifar10/
 
 # Creates volume sl-cli-lib and moves the whl file in to it.
 moveWhlToVolume()
@@ -68,7 +67,7 @@ if [[ -f "$(pwd)/lib/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl" ]]
 then
     echo "Wheel file found in the desired location."
 else
-    echo "Error: It is required to keep the whl file and its symbolic link in the lib folder of this base(swarm-learning) directory."
+    echo "Error: It is required to keep the whl file in the lib folder of this base(swarm-learning) directory."
     exit 1; 
 fi
 removeRunningSpireContainers()

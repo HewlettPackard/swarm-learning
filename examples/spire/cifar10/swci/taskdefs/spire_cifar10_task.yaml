@@ -2,11 +2,11 @@
 ## (C)Copyright 2024 Hewlett Packard Enterprise Development LP
 ######################################################################
 
-Name: swarm_cifar10_task
+Name: spire_cifar10_task
 TaskType: RUN_SWARM
 Author: "HPESwarm"
 Prereq: user_env_tf_build_task
-Outcome: swarm_cifar10_task
+Outcome: spire_cifar10_task
 Body:
     Command: model/cifar10.py
     Entrypoint: python3

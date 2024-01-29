@@ -34,17 +34,17 @@ EXIT ON FAILURE OFF
 
 # Create and finalize swarm run task
 EXIT ON FAILURE
-create task from taskdefs/swarm_cifar10_task.yaml
-finalize task swarm_cifar10_task
-get task info swarm_cifar10_task
-get task body swarm_cifar10_task
+create task from taskdefs/spire_cifar10_task.yaml
+finalize task spire_cifar10_task
+get task info spire_cifar10_task
+get task body spire_cifar10_task
 list tasks
 EXIT ON FAILURE OFF
 
 # Assign run task
 EXIT ON FAILURE
 reset TASKRUNNER defaulttaskbb.taskdb.sml.hpe
-ASSIGN TASK swarm_cifar10_task TO defaulttaskbb.taskdb.sml.hpe WITH 4 PEERS
+ASSIGN TASK spire_cifar10_task TO defaulttaskbb.taskdb.sml.hpe WITH 4 PEERS
 WAIT FOR TASKRUNNER defaulttaskbb.taskdb.sml.hpe
 # Grace period for ML container to save the model,
 # before the below reset command cleans up the ML and SL Containers.

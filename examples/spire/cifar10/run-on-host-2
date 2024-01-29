@@ -172,7 +172,7 @@ sleep 10
 
 
 # Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
-# Also Modifies the <CURRENT-PATH> in swarm_cifar10_task file
+# Also Modifies the <CURRENT-PATH> in spire_cifar10_task file
 sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<WORKING-DIR>+${workingDir}+g" "${workingDir}"/swop/swop2_profile.yaml
