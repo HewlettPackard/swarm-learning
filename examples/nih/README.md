@@ -26,34 +26,29 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 
 ## Running the MNIST example
 
-1. *On host-1 *:  
-   cd to `swarm-learning` folder (i.e. parent to examples directory). 
+1. cd to `swarm-learning` folder (i.e. parent to examples directory). 
    
 
-2. *On host-1 *:  
-   Create a temporary `workspace` directory and copy 	`nih` example and `gen-cert` utility there.
+2. Create a temporary `workspace` directory and copy 	`nih` example and `gen-cert` utility there.
    ```
    mkdir workspace
    cp -r examples/nih workspace/
    cp -r examples/utils/gen-cert workspace/nih/
    ```
 
-3. *On both host-1 and host-2*:  
-   Run the `gen-cert` utility to generate certificates for each Swarm component using the command: `gen-cert -e <EXAMPLE-NAME> -i <HOST-INDEX>`  
-   *On host-1*:  
+3. Run the `gen-cert` utility to generate certificates for each Swarm component using the command: `gen-cert -e <EXAMPLE-NAME> -i <HOST-INDEX>`  
+ 
    ```
    ./workspace/mnist/gen-cert -e mnist -i 1
    ```  
    
-5. *On both host-1 *:  
-   Create a docker network for SN, SWOP, SWCI, SL and user containers running in a host  
-   *On host-1*:  
+4. Create a docker network for SN, SWOP, SWCI, SL and user containers running in a host  
+
    ```
    docker network create host-1-net
    ```  
 
-5. *On both host-1 *:  
-   Declare and assign values to the variables like APLS_IP, SN_IP, HOST_IP and SN_API_PORT. The values mentioned here are for understanding purpose only. Use appropriate values as per your swarm network.
+5. Declare and assign values to the variables like APLS_IP, SN_IP, HOST_IP and SN_API_PORT. The values mentioned here are for understanding purpose only. Use appropriate values as per your swarm network.
    
     ```
     APLS_IP=172.1.1.1
@@ -63,8 +58,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
     SN_P2P_PORT=30303
     ```
 
-6. *On both host-1*:  
-   Search and replace all occurrences of placeholders and replace them with appropriate values.
+6. Search and replace all occurrences of placeholders and replace them with appropriate values.
    ```
    sed -i "s+<PROJECT-MODEL>+$(pwd)/workspace/nih/model+g" workspace/nih/swci/taskdefs/swarm_mnist_task.yaml
    sed -i "s+<SWARM-NETWORK>+host-1-net+g" workspace/nih/swop/swop1_profile.yaml
@@ -76,8 +70,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    ```
   
 
-7. *On both host-1 *:  
-   Create a docker volume and copy SwarmLearning wheel file there
+7. Create a docker volume and copy SwarmLearning wheel file there
    ```
    docker volume rm sl-cli-lib
    docker volume create sl-cli-lib
@@ -86,8 +79,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    docker rm helper
    ```
 
-8. *On host-1*:  
-   Run Swarm Network node (sn1) - sentinel node  
+8. Run Swarm Network node (sn1) - sentinel node  
    ```
    ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel --sn-p2p-port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} \
    --key=workspace/mnist/cert/sn-1-key.pem --cert=workspace/mnist/cert/sn-1-cert.pem --capath=workspace/mnist/cert/ca/capath --apls-ip=${APLS_IP}
@@ -96,8 +88,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    `swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304`
 
 
-10.	*On host-1*:  
-    Run Swarm Operator node (swop1)  
+9.	Run Swarm Operator node (swop1)  
     
     Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/mnist/swop` folder.  
    ```
@@ -107,9 +98,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    --apls-ip=${APLS_IP}
    ```
 
-
-12.	*On host-1*:  
-    Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
+10.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
     - user_env_tf_build_task: Builds Tensorflow based docker image for ML node to run model training  
     - swarm_mnist_task: Create containers out of ML image and mount model and data path to run Swarm training  
     
@@ -120,13 +109,11 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    -e http_proxy= -e https_proxy= --apls-ip=${APLS_IP}
    ```
 
-13.	*On both host-1*:  
-    Two node Swarm training is automatically started when the run task (swarm_mnist_task) gets assigned and executed. User can open a new terminal on both host-1 and host-2 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
+11.	Three nodes Swarm training is automatically started when the run task gets assigned and executed. User can open a new terminal on both host-1 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
     `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
     Final Swarm model will be saved inside \<PROJECT\> location which will likely be user's specific as `workspace/mnist/<userN>` directory on both the hosts. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
-14.	*On both host-1*:  
-    To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` ) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
+12.	To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` ) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
 
 
