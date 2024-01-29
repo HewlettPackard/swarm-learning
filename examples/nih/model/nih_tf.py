@@ -18,21 +18,6 @@
 #https://www.kaggle.com/code/adamjgoren/nih-chest-x-ray-multi-classification
 
 
-# Much of this work is inspired by the wonderful kernel 'Train Simple XRay CNN' by Kevin Mader
-# Some code fragments are sourced or adapted directly from this Kernel
-# I cite his work when appropriate, including URL/Dates, and it can also be referenced here: https://www.kaggle.com/kmader/train-simple-xray-cnn
-
-# Much of my thinking is also guided by Google's nice explanation of AutoML for Vision. General principles are quite useful
-# https://cloud.google.com/vision/automl/docs/beginners-guide
-
-# Lastly, I found this article on how AI is changing radiology imaging quite interesting
-# https://healthitanalytics.com/news/how-artificial-intelligence-is-changing-radiology-pathology
-
-
-
-# This Python 3 environment comes with many helpful analytics libraries installed
-# It is defined by the kaggle/python docker image: https://github.com/kaggle/docker-python
-
 # load help packages
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)

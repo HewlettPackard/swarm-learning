@@ -1,9 +1,9 @@
 NIH
 ========
 
-This example runs NIH dataset [1] on the Swarm Learning platform. It uses TensorFlow as the backend.
+The purpose is this example is to show case Swarm usecase with real world NIH dataset [1]. NIH dataset is a well known health care dataset. NIH dataset has complex xray images, it is a challenge task to meet better metrics on this datset.
 
-The code for this example has been taken from multiple kaggle kernels and modified to run on a Swarm Learning platform.
+The data processing and model code for this example has been taken from multiple kaggle kernels and modified to run on a Swarm Learning platform.
 
 This example uses node specific biased data and one common test data. The Machine Learning program, after conversion to Swarm Learning for the TensorFlow-based Keras platform, is in `examples/nih/model`. The TensorFlow-based file is called `nih_tf.py`.
 
