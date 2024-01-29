@@ -21,8 +21,13 @@ For details of running each example, see the below:
 -   [CIFAR-10](/examples/cifar10/README.md)
 -   [Credit card fraud detection](/examples/fraud-detection/README.md)
 -   [Reverse Proxy based examples](/examples/reverse-proxy/README.md)
+-   [Spire based example](/examples/spire/cifar10/README.md)
 
 They use different models, data, ML platforms, and Swarm cluster configurations. All examples require valid X.509 certificates to be used by different Swarm Learning components. A certificate generation utility (`gen-cert`) is provided to enable users to run the examples quickly.
+<blockquote>
+NOTE: Spire based example is automated and doesn't need any certificates to be generated. Spire agent and server containers will manage the certificates internally. 
+
+</blockquote>
 
 ``` {#CODEBLOCK_WLX_CZN_WWB}
 ./swarm-learning/examples/utils/gen-cert -h
