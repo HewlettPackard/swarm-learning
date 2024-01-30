@@ -107,7 +107,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 ./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net --sn-ip=${SN_1_IP} --sn-api-port=${SN_API_PORT}       \
 --usr-dir=workspace/nih/swop --profile-file-name=swop1_profile.yaml --key=workspace/nih/cert/swop-1-key.pem        \
 --cert=workspace/nih/cert/swop-1-cert.pem --capath=workspace/nih/cert/ca/capath -e http_proxy= -e https_proxy=     \
---apls-ip=${APLS_IP}
+-e SWOP_KEEP_CONTAINERS=True --apls-ip=${APLS_IP}
    ```
 
 11.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
