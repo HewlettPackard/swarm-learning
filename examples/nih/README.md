@@ -42,10 +42,13 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    ./workspace/nih/gen-cert -e nih -i 1
    ```  
 4. Create train, test data for each node.
-   Navigate to workspace/nih/data folder
-   execute data processing script
-   verify Node1, Node2, Node3, Test folders are generated
-   come back to swarm-learning folder
+
+      a. Navigate to workspace/nih/data folder
+      b. Execute data processing script
+      c. Verify Node1, Node2, Node3, Test folders are generated
+      d. Come back to swarm-learning folder
+
+   NOTE: nih_nodes_data_processing.py references data_generator.yaml to get the path of NIH data. Path provided in data_generator.yaml should contain images folder (with nih images as .png files) and master sheet of data description (Data_Entry_2017.csv - informtaion about all the images). Refer NIH Chest X-rays for more details. 
    ```
    cd workspace/nih/data
    python3 nih_nodes_data_processing.py
@@ -53,13 +56,13 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    cd ../../..
    ```  
    
-5. Create a docker network for SN, SWOP, SWCI, SL and user containers running in a host  
+6. Create a docker network for SN, SWOP, SWCI, SL and user containers running in a host  
 
    ```
    docker network create host-1-net
    ```  
 
-6. Declare and assign values to the variables like APLS_IP, SN_IP, HOST_IP and SN_API_PORT. The values mentioned here are for understanding purpose only. Use appropriate values as per your swarm network.
+7. Declare and assign values to the variables like APLS_IP, SN_IP, HOST_IP and SN_API_PORT. The values mentioned here are for understanding purpose only. Use appropriate values as per your swarm network.
    
     ```
     APLS_IP=172.1.1.1
@@ -69,7 +72,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
     SN_P2P_PORT=30303
     ```
 
-7. Search and replace all occurrences of placeholders and replace them with appropriate values.
+8. Search and replace all occurrences of placeholders and replace them with appropriate values.
    ```
    sed -i "s+<PROJECT-MODEL>+$(pwd)/workspace/nih+g" workspace/nih/swci/taskdefs/swarm_nih_task.yaml
    sed -i "s+<PROJECT-MODEL>+$(pwd)/workspace/nih+g" workspace/nih/swci/taskdefs/swarm_ind_task.yaml
@@ -81,7 +84,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    sed -i "s+<PROJECT-CACERTS>+$(pwd)/workspace/nih/cert/ca/capath+g" workspace/nih/swop/swop*_profile.yaml
    ```
   
-8. Create a docker volume and copy SwarmLearning wheel file there
+9. Create a docker volume and copy SwarmLearning wheel file there
    ```
    docker volume rm sl-cli-lib
    docker volume create sl-cli-lib
@@ -90,7 +93,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    docker rm helper
    ```
 
-9. Run Swarm Network node (sn1) - sentinel node  
+10. Run Swarm Network node (sn1) - sentinel node  
    ```
    ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel \
    --sn-p2p-port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} --key=workspace/nih/cert/sn-1-key.pem \
@@ -100,7 +103,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    `swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304`
 
 
-10.	Run Swarm Operator node (swop1)  
+11.	Run Swarm Operator node (swop1)  
     
     Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/mnist/swop` folder.  
    ```
