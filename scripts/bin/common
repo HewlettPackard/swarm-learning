@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ######################################################################
-## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2024 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -78,7 +78,7 @@ trap "exit 1" SIGUSR1 SIGUSR2
 
 
 # Swarm product version.
-swarmVer="2.1.0"
+swarmVer="2.2.0-rc1"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
 swarmOrg="hpe/swarm-learning"
