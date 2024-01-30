@@ -27,19 +27,40 @@ import seaborn as sns # additional plotting functionality
 # Input data files are available in the "input/" directory.
 # For example, running the below code (by clicking run or pressing Shift+Enter) will list the files in the input directory
 import os
+import sys
+import yaml
 
 print("CURRENT WORKING DIRECTORY :", os.getcwd())
-print(os.listdir("input"))
+
+
+profdata = None
+profileFile = "data_generator.yaml"
+try: 
+    if os.path.isfile(profileFile):  
+        with open(profileFile, "r") as p: 
+            # loads only the first document in the stream 
+            # so prof will always be an object , not a list
+            profdata = yaml.safe_load(p)
+            print(" data generator yaml file loaded")
+
+except Exception as e:
+    print("exception in loading yaml" , (str(e)))
+    sys.exit(1)
+
+databasedir = profdata['inputpathofnihdata']
+print("nih databasedir is :", databasedir)
+print(os.listdir(databasedir))
+
+databasedirimages = os.path.join(databasedir, "images")
 
 
 from glob import glob
-#import os # already imported earlier
-my_glob = glob('input/images/*.png')
+my_glob = glob(databasedirimages+"/*.png")
 print('Number of Observations: ', len(my_glob)) # check to make sure I've captured every pathway, should equal 112,120
 
 
 # load data
-xray_data = pd.read_csv('input/Data_Entry_2017.csv')
+xray_data = pd.read_csv(databasedir + '/Data_Entry_2017.csv')
 # see how many observations there are
 num_obs = len(xray_data)
 print('Number of observations:',num_obs)
@@ -53,7 +74,7 @@ xray_data.head(5) # view first 5 rows
 # Depends on how much data is downloaded.
 # Get the list of all images extracted.
 file_list = []
-for file in os.listdir("input/images/"):
+for file in os.listdir(databasedirimages):
     file_list.append(file)
     
 # Drop records from main csv (Data_Entry_2017.csv) for which images are not extracted
@@ -84,7 +105,7 @@ sns.barplot(x = 'Finding Labels' , y="count", data=df_count_per_unique_label[:20
 print(type(df_count_per_unique_label))
 print(df_count_per_unique_label.columns)
 #Intersted_labels = df_count_per_unique_label['Finding Labels'].tolist()[ :5]
-Intersted_labels = ['Atelectasis', 'Infiltration', 'Effusion']
+Intersted_labels = profdata['interestedlabels']
 print(Intersted_labels)
 
 
@@ -121,18 +142,16 @@ def copy_files(basedir, labelStr, srcPath):
     destPath = os.path.join(basedir, str(labelStr))
     copy(srcPath, destPath)
 
-trainDir="TRAINING"
-testDir="TESTING"
-create_dir_for_each_label(trainDir)
+#trainDir="TRAINING"
+testDir="TEST"
+#create_dir_for_each_label(trainDir)
 create_dir_for_each_label(testDir)
 
-train_df.apply(lambda x: copy_files(trainDir, x['Finding Labels'], x['org_full_path']), axis=1)
+#train_df.apply(lambda x: copy_files(trainDir, x['Finding Labels'], x['org_full_path']), axis=1)
 test_df.apply(lambda x: copy_files(testDir, x['Finding Labels'], x['org_full_path']), axis=1)
 
-train_df.to_csv("train_dataset.csv", index=False)
-test_df.to_csv("test_dataset.csv", index=False)
-
-
+#train_df.to_csv("train_dataset.csv", index=False)
+#test_df.to_csv("test_dataset.csv", index=False)
 
 
 #Further Data preparation. 
@@ -167,13 +186,13 @@ for eachLabel in Intersted_labels:
         trainDFNodesInfo = df_temp
     else:
         trainDFNodesInfo = trainDFNodesInfo._append(df_temp)
-trainDFNodesInfo.to_csv("ALLNODES.csv", index=False)
+#trainDFNodesInfo.to_csv("ALLNODES.csv", index=False)
 
 
 #copy training files to Node specific folder
 #create directories for Node1,2,3
-create_dir_for_each_label("NODES_WORK/Node1")
-create_dir_for_each_label("NODES_WORK/Node2")
-create_dir_for_each_label("NODES_WORK/Node3")
-trainDFNodesInfo.apply(lambda x: copy_files("NODES_WORK/"+x['NodeInfo'], x['Finding Labels'], x['org_full_path']), axis=1)
+create_dir_for_each_label("Node1")
+create_dir_for_each_label("Node2")
+create_dir_for_each_label("Node3")
+trainDFNodesInfo.apply(lambda x: copy_files(x['NodeInfo'], x['Finding Labels'], x['org_full_path']), axis=1)
 

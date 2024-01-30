@@ -1,0 +1,9 @@
+######################################################################
+# (C)Copyright 2024 Hewlett Packard Enterprise Development LP
+######################################################################
+yamlfilename  : nih_data_generator
+inputpathofnihdata : /home/radhakrishnaj/Radha/NIHRAWDATA/input
+interestedlabels : ['Atelectasis', 'Infiltration', 'Effusion']
+
+
+

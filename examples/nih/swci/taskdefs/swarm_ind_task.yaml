@@ -10,7 +10,7 @@ Body:
     Command: model/nih_tf.py
     Entrypoint: python3
     WorkingDir: /tmp/test
-    Envvars: ["DATA_DIR": DATA, "MAX_EPOCHS": 200, "MIN_PEERS": 3, "SWARM_LOOPBACK" : True]
+    Envvars: ["DATA_DIR": data, "MAX_EPOCHS": 10, "MIN_PEERS": 3, "SWARM_LOOPBACK" : True]
     PrivateContent: /tmp/test/
     SharedContent:
     -   Src: <PROJECT-MODEL>
