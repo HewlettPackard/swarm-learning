@@ -47,7 +47,6 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    verify Node1, Node2, Node3, Test folders are generated
    come back to swarm-learning folder
    ```
-   cd
    cd workspace/nih/data
    python3 nih_nodes_data_processing.py
 
