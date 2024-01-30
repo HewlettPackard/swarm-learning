@@ -39,16 +39,28 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 3. Run the `gen-cert` utility to generate certificates for each Swarm component using the command: `gen-cert -e <EXAMPLE-NAME> -i <HOST-INDEX>`  
  
    ```
-   ./workspace/mnist/gen-cert -e mnist -i 1
+   ./workspace/nih/gen-cert -e nih -i 1
+   ```  
+4. Create train, test data for each node.
+   Navigate to workspace/nih/data folder
+   execute data processing script
+   verify Node1, Node2, Node3, Test folders are generated
+   come back to swarm-learning folder
+   ```
+   cd
+   cd workspace/nih/data
+   python3 nih_nodes_data_processing.py
+
+   cd ../../..
    ```  
    
-4. Create a docker network for SN, SWOP, SWCI, SL and user containers running in a host  
+5. Create a docker network for SN, SWOP, SWCI, SL and user containers running in a host  
 
    ```
    docker network create host-1-net
    ```  
 
-5. Declare and assign values to the variables like APLS_IP, SN_IP, HOST_IP and SN_API_PORT. The values mentioned here are for understanding purpose only. Use appropriate values as per your swarm network.
+6. Declare and assign values to the variables like APLS_IP, SN_IP, HOST_IP and SN_API_PORT. The values mentioned here are for understanding purpose only. Use appropriate values as per your swarm network.
    
     ```
     APLS_IP=172.1.1.1
@@ -58,19 +70,19 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
     SN_P2P_PORT=30303
     ```
 
-6. Search and replace all occurrences of placeholders and replace them with appropriate values.
+7. Search and replace all occurrences of placeholders and replace them with appropriate values.
    ```
-   sed -i "s+<PROJECT-MODEL>+$(pwd)/workspace/nih/model+g" workspace/nih/swci/taskdefs/swarm_mnist_task.yaml
+   sed -i "s+<PROJECT-MODEL>+$(pwd)/workspace/nih+g" workspace/nih/swci/taskdefs/swarm_nih_task.yaml
+   sed -i "s+<PROJECT-MODEL>+$(pwd)/workspace/nih+g" workspace/nih/swci/taskdefs/swarm_ind_task.yaml
    sed -i "s+<SWARM-NETWORK>+host-1-net+g" workspace/nih/swop/swop1_profile.yaml
-   sed -i "s+<HOST_ADDRESS>+${HOST_1_IP}+g" workspace/mnist/swop/swop1_profile.yaml
-   sed -i "s+<LICENSE-SERVER-ADDRESS>+${APLS_IP}+g" workspace/mnist/swop/swop*_profile.yaml
+   sed -i "s+<HOST_ADDRESS>+${HOST_1_IP}+g" workspace/nih/swop/swop1_profile.yaml
+   sed -i "s+<LICENSE-SERVER-ADDRESS>+${APLS_IP}+g" workspace/nih/swop/swop*_profile.yaml
    sed -i "s+<PROJECT>+$(pwd)/workspace/nih+g" workspace/nih/swop/swop*_profile.yaml
    sed -i "s+<PROJECT-CERTS>+$(pwd)/workspace/nih/cert+g" workspace/nih/swop/swop*_profile.yaml
    sed -i "s+<PROJECT-CACERTS>+$(pwd)/workspace/nih/cert/ca/capath+g" workspace/nih/swop/swop*_profile.yaml
    ```
   
-
-7. Create a docker volume and copy SwarmLearning wheel file there
+8. Create a docker volume and copy SwarmLearning wheel file there
    ```
    docker volume rm sl-cli-lib
    docker volume create sl-cli-lib
@@ -79,41 +91,42 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
    docker rm helper
    ```
 
-8. Run Swarm Network node (sn1) - sentinel node  
+9. Run Swarm Network node (sn1) - sentinel node  
    ```
-   ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel --sn-p2p-port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} \
-   --key=workspace/mnist/cert/sn-1-key.pem --cert=workspace/mnist/cert/sn-1-cert.pem --capath=workspace/mnist/cert/ca/capath --apls-ip=${APLS_IP}
+   ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel --sn-p2p port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} \
+   --key=workspace/nih/cert/sn-1-key.pem --cert=workspace/nih/cert/sn-1-cert.pem --capath=workspace/nih/cert/ca/capath --apls-ip=${APLS_IP}
    ```
    Use the docker logs command to monitor the Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:  
    `swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304`
 
 
-9.	Run Swarm Operator node (swop1)  
+10.	Run Swarm Operator node (swop1)  
     
     Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/mnist/swop` folder.  
    ```
-   ./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net --sn-ip=${SN_1_IP} --sn-api-port=${SN_API_PORT}       \
-   --usr-dir=workspace/mnist/swop --profile-file-name=swop1_profile.yaml --key=workspace/mnist/cert/swop-1-key.pem        \
-   --cert=workspace/mnist/cert/swop-1-cert.pem --capath=workspace/mnist/cert/ca/capath -e http_proxy= -e https_proxy=     \
-   --apls-ip=${APLS_IP}
+./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net --sn-ip=${SN_1_IP} --sn-api-port=${SN_API_PORT}       \
+--usr-dir=workspace/nih/swop --profile-file-name=swop1_profile.yaml --key=workspace/nih/cert/swop-1-key.pem        \
+--cert=workspace/nih/cert/swop-1-cert.pem --capath=workspace/nih/cert/ca/capath -e http_proxy= -e https_proxy=     \
+--apls-ip=${APLS_IP}
    ```
 
-10.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
+11.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
     - user_env_tf_build_task: Builds Tensorflow based docker image for ML node to run model training  
     - swarm_mnist_task: Create containers out of ML image and mount model and data path to run Swarm training  
     
     Note: If required, modify IP, according to environment, in `workspace/mnist/swci/swci-init` file.  
    ```
-   ./scripts/bin/run-swci --rm --name=swci1 --network=host-1-net --usr-dir=workspace/mnist/swci --init-script-name=swci-init       \
-   --key=workspace/mnist/cert/swci-1-key.pem --cert=workspace/mnist/cert/swci-1-cert.pem --capath=workspace/mnist/cert/ca/capath   \
-   -e http_proxy= -e https_proxy= --apls-ip=${APLS_IP}
+./scripts/bin/run-swci --rm --name=swci1 --network=host-1-net --usr-dir=workspace/nih/swci --init-script-name=swci-init       \
+--key=workspace/nih/cert/swci-1-key.pem --cert=workspace/nih/cert/swci-1-cert.pem --capath=workspace/nih/cert/ca/capath   \
+-e http_proxy= -e https_proxy= --apls-ip=${APLS_IP}
+
    ```
 
-11.	Three nodes Swarm training is automatically started when the run task gets assigned and executed. User can open a new terminal on both host-1 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
+12.	Three nodes Swarm training is automatically started when the run task gets assigned and executed. User can open a new terminal on both host-1 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
     `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
     Final Swarm model will be saved inside \<PROJECT\> location which will likely be user's specific as `workspace/mnist/<userN>` directory on both the hosts. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
-12.	To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` ) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
+13.	To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` ) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
 
 
