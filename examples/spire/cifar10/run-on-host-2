@@ -179,7 +179,7 @@ sed -i "s+<WORKING-DIR>+${workingDir}+g" "${workingDir}"/swop/swop2_profile.yaml
 
 # Create an entry into the spire-server via spire agent. For each component 
 # we have created seperate entry with unique selector and spiffe id. It is 
-# recommended to create an entry before the start of each contianer and 
+# recommended to create an entry before the start of each container and 
 # additional sleep of 5 seconds added to get the entry to spire federation.
 docker exec spire-server /opt/spire/bin/spire-server entry create   \
     -parentID spiffe://${org_2_trust_domain}/agent                  \
