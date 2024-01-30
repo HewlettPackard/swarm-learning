@@ -92,8 +92,9 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 
 9. Run Swarm Network node (sn1) - sentinel node  
    ```
-   ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel --sn-p2p port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} \
-   --key=workspace/nih/cert/sn-1-key.pem --cert=workspace/nih/cert/sn-1-cert.pem --capath=workspace/nih/cert/ca/capath --apls-ip=${APLS_IP}
+   ./scripts/bin/run-sn -d --rm --name=sn1 --network=host-1-net --host-ip=${HOST_1_IP} --sentinel \
+   --sn-p2p-port=${SN_P2P_PORT} --sn-api-port=${SN_API_PORT} --key=workspace/nih/cert/sn-1-key.pem \
+   --cert=workspace/nih/cert/sn-1-cert.pem --capath=workspace/nih/cert/ca/capath --apls-ip=${APLS_IP}
    ```
    Use the docker logs command to monitor the Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:  
    `swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304`
