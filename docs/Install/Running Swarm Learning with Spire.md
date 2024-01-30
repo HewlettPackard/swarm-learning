@@ -26,13 +26,13 @@ Spire can be used in 3 different ways
 - Docker Compose / Docker - Installing it in a docker container.
 - Kubernetes – Installing in K8S via kubectl.
   
-Although the spire can be run in multiple ways, being swarm core components are of docker images, it is ideal to make use of the spire via the docker images itself. Docker images are available for both spire-agent and spire-server via ghcr(git hub container registry) or cgr(chain guard registry). Both the docker images can be easily started by setting up the respective configuration files (`server.conf`, `agent.conf`) appropriately. One can try the quick start example[3] that uses docker-compose Or can refer to the vanilla docker[4] way of spire execution. To understand the concepts in detail, one can refer to the book called Solving the Bottom Turtle [5].
+Although the spire can be run in multiple ways, since Swarm core components are docker images, it is ideal to make use of the spire via the docker images itself. Docker images are available for both spire-agent and spire-server via ghcr(git hub container registry) or cgr(chain guard registry). Both the docker images can be easily started by setting up the respective configuration files (`server.conf`, `agent.conf`) appropriately. One can try the quick start example[3] that uses docker-compose Or can refer to the vanilla docker[4] way of spire execution. To understand the concepts in detail, one can refer to the book called Solving the Bottom Turtle [5].
 
 # Running Swarm Learning with Spire
 
 Due to the federative nature of Swarm Learning, it will mostly have multiple hosts and multiple organizations involved in swarm training. To make the concepts clear, a CLI-based federated spire example is provided under examples [Spire with CIFAR-10](../../examples/spire/cifar10/README.md).
 
-To run the swarm learning using spire on a multi-host setup one must remember the below steps:
+To run swarm learning using spire on a multi-host setup one must remember the below steps:
 - Each host should have its own spire-agent container running.
 - Each spire agent should have its own join token to connect with its respective spire server.
 - Entry creation is specific to each swarm component. No need to create multiple entries into the spire server for the same component.

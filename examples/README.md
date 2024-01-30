@@ -11,7 +11,7 @@ In this section, examples use different models, data, ML platforms, and Swarm cl
 NOTE: Spire based example is automated and doesn't need any certificates to be generated. Spire agent and server containers will manage the certificates internally. 
 </blockquote>
 
-A certificate generation utility (`gen-cert`) is provided with each example to enable users to run the examples quickly.
+A certificate generation utility (`gen-cert`) is provided with each example to enable users to run the examples quickly, using self-signed certificates.
 ``` {#CODEBLOCK_WLX_CZN_WWB}
 ./swarm-learning/examples/utils/gen-cert -h
 Usage: gen-cert -e EXAMPLE-NAME -i HOST-INDEX
