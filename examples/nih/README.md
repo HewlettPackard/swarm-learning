@@ -1,19 +1,19 @@
 NIH
 ========
 
-The purpose of this example is to show case Swarm use case with real world NIH dataset [1]. NIH dataset is a well-known health care dataset. NIH dataset has complex xray images, it is a challenge task to meet better metrics on this dataset.
+The purpose of this example is to show case Swarm use case with real world NIH dataset [1]. NIH dataset is a well-known health care dataset. NIH dataset has complex xray images, it is a challenging task to meet better metrics on this dataset.
 
 The data processing and model code for this example has been taken from multiple kaggle kernels and modified to run on a Swarm Learning platform.
 
 This example uses node specific biased data and one common test data. The Machine Learning program, after conversion to Swarm Learning for the TensorFlow-based Keras platform, is in `examples/nih/model`. The TensorFlow-based file is called `nih_tf.py`.
 
-This example shows the Swarm training of NIH model using two Machine Learning (ML) nodes. Machine Learning nodes are automatically spawned by Swarm Operators (SWOP) nodes running on two different hosts. Swarm training is initiated by Swarm Command Interface (SWCI) node and orchestrated by two Swarm Network (SN) nodes running in different hosts. This example also shows how private data and shared model can be mounted to Machine Learning nodes for Swarm training. For details, see the profile files and task definition files placed under `examples/nih/swop` and `examples/nih/swci` folders respectively.
+This example shows the Swarm training of NIH model using three Machine Learning (ML) nodes. Machine Learning nodes are automatically spawned by Swarm Operator (SWOP) node running on single host. Swarm training is initiated by Swarm Command Interface (SWCI) node and orchestrated by one Swarm Network (SN) node running in single host. This example also shows how private data and shared model can be mounted to Machine Learning nodes for Swarm training. For details, see the profile files and task definition files placed under `examples/nih/swop` and `examples/nih/swci` folders respectively.
 
 
 
 ## Cluster Setup
 
-The cluster setup for this example uses 2 hosts, as shown in the figure below:  
+The cluster setup for this example uses one host, as shown in the figure below:  
 - host-1: 172.1.1.1  
 
 
@@ -24,7 +24,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 
 
 
-## Running the MNIST example
+## Running the NIH example
 
 1. cd to `swarm-learning` folder (i.e. parent to examples directory). 
    
@@ -105,7 +105,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 
 11.	Run Swarm Operator node (swop1)  
     
-    Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/mnist/swop` folder.  
+    Note: If required, modify proxy, according to environment, either in the below command or in the swop profile files under `workspace/nih/swop` folder.  
    ```
 ./scripts/bin/run-swop -d --rm --name=swop1 --network=host-1-net --sn-ip=${SN_1_IP} --sn-api-port=${SN_API_PORT}       \
 --usr-dir=workspace/nih/swop --profile-file-name=swop1_profile.yaml --key=workspace/nih/cert/swop-1-key.pem        \
@@ -113,11 +113,12 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 -e SWOP_KEEP_CONTAINERS=True --apls-ip=${APLS_IP}
    ```
 
-11.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
+12.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
     - user_env_tf_build_task: Builds Tensorflow based docker image for ML node to run model training  
-    - swarm_mnist_task: Create containers out of ML image and mount model and data path to run Swarm training  
+    - swarm_nih_task: Create containers out of ML image and mount model and data path to run Swarm training
+    - swarm_ind_task:   
     
-    Note: If required, modify IP, according to environment, in `workspace/mnist/swci/swci-init` file.  
+    Note: If required, modify IP, according to environment, in `workspace/nih/swci/swci-init` file.  
    ```
 ./scripts/bin/run-swci --rm --name=swci1 --network=host-1-net --usr-dir=workspace/nih/swci --init-script-name=swci-init       \
 --key=workspace/nih/cert/swci-1-key.pem --cert=workspace/nih/cert/swci-1-cert.pem --capath=workspace/nih/cert/ca/capath   \
@@ -125,11 +126,11 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
 
    ```
 
-12.	Three nodes Swarm training is automatically started when the run task gets assigned and executed. User can open a new terminal on both host-1 and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
+13.	Three nodes Swarm training is automatically started when the run task gets assigned and executed. User can open a new terminal and monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end –  
     `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
-    Final Swarm model will be saved inside \<PROJECT\> location which will likely be user's specific as `workspace/mnist/<userN>` directory on both the hosts. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
+    Final Swarm model will be saved inside \<PROJECT\> location which will likely be user's specific as `workspace/nih/<userN>` directory. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
-13.	To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` ) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
+14.	To clean-up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If needed, take backup of the container logs. Finally remove docker networks (`host-1-net` ) and docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
 
 
