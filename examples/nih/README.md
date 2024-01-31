@@ -115,8 +115,8 @@ The cluster setup for this example uses one host, as shown in the figure below:
 
 12.	Run Swarm Command Interface node (swci1). It will create, finalize and assign below tasks to task-framework for sequential execution –  
     - user_env_tf_build_task: Builds Tensorflow based docker image for ML node to run model training  
-    - swarm_nih_task: Create containers out of ML image and mount model and data path to run Swarm training
-    - swarm_ind_task:   
+    - swarm_nih_task: Create containers out of ML image and mount model and data path to run Swarm training with nih data.
+    - swarm_ind_task: Create containers out of ML image and mount model and data path to run individual training of each node using nih data.  
     
     Note: If required, modify IP, according to environment, in `workspace/nih/swci/swci-init` file.  
    ```
