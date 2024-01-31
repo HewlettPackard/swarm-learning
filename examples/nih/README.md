@@ -1,7 +1,7 @@
 NIH
 ========
 
-The purpose is this example is to show case Swarm usecase with real world NIH dataset [1]. NIH dataset is a well known health care dataset. NIH dataset has complex xray images, it is a challenge task to meet better metrics on this datset.
+The purpose of this example is to show case Swarm use case with real world NIH dataset [1]. NIH dataset is a well-known health care dataset. NIH dataset has complex xray images, it is a challenge task to meet better metrics on this dataset.
 
 The data processing and model code for this example has been taken from multiple kaggle kernels and modified to run on a Swarm Learning platform.
 
@@ -48,7 +48,7 @@ The cluster setup for this example uses 2 hosts, as shown in the figure below:
       c. Verify Node1, Node2, Node3, Test folders are generated
       d. Come back to swarm-learning folder
 
-   NOTE: nih_nodes_data_processing.py references data_generator.yaml to get the path of NIH data. Path provided in data_generator.yaml should contain images folder (with nih images as .png files) and master sheet of data description (Data_Entry_2017.csv - informtaion about all the images). Refer NIH Chest X-rays for more details. 
+   NOTE: nih_nodes_data_processing.py references data_generator.yaml to get the path of NIH data. Path provided in data_generator.yaml should contain images folder (with nih images as .png files) and master sheet of data description (Data_Entry_2017.csv - information about all the images). Refer NIH Chest X-rays for more details. 
    ```
    cd workspace/nih/data
    python3 nih_nodes_data_processing.py
