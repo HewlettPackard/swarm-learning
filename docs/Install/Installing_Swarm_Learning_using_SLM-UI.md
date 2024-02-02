@@ -11,19 +11,28 @@
     
     ![Hosts](GUID-27290862-3C17-4AFD-9B60-CB9166C656F0-high.png)
 
-3.  Enter the Host address.
+2.  Enter the Host address or Range of IPs.<br>
+   Multiple host addresses can be added by providing comma seperated IPs or range of IPs. Range is supported only for
+    last octet. For example,<br>
+    Format 1: 127.1.1.11-20, 127.2.1.1<br>
+    Format 2: 127.1.1.11-20, 127.2.1.15-20<br>
+    Format 3: 127.1.1.1, 127.2.1.1, 128.1.2.2
 
-4.  Select the Swarm version number from the drop-down menu.
+    **NOTE:**
+    The Host installation popup displays the status of the host installation. If any of the host is failed to install,
+    retry the host installation process.
+   
+3.  Select the Swarm version number from the drop-down menu.
 
-5.  Enter the Swarm Install Path.
+4.  Enter the Swarm Install Path.
 
     The default installation directory is `/opt/hpe/swarm-learning`. This directory path must have write permission.
 
-6.  Enter the Host username and password.
+5.  Enter the Host username and password.
 
-7.  Enter the HPE Passport username.
+6.  Enter the HPE Passport username.
 
-8.  Click **Create** to create the Swarm host.
+7.  Click **Create** to create the Swarm host.
 
 
 **Parent topic:**[HPE Swarm Learning installation](HPE_Swarm_Learning_installation.md)
