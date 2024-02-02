@@ -14,7 +14,7 @@
 ############################################################################
 
 
-# Some the code are being used from below kaggle kernel
+# This code has been inspired from the below kaggle kernel
 #https://www.kaggle.com/code/adamjgoren/nih-chest-x-ray-multi-classification
 
 
