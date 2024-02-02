@@ -34,15 +34,19 @@
 
         ![SWOP Profile](GUID-43581832-D249-4C2E-AD17-8F797BAC33D6-high.png)
 
+        Click on the open icon to view the uploaded file.
+        
     5.  Upload the SWCI tasks file.
 
     ![SWCI Tasks](GUID-E1505B54-9732-450E-9FA2-ACD84DB70233-high.png)
+
+    Click on the open icon to view the uploaded file.
 
     **NOTE:**
 
     -   For standard examples, this artifacts are available as part of tar file. User can extract the examples on their laptop.
     -   In a two node example, the network names should be `host-1-net` for the sentinel node and `host-2-net` for the non-sentinel node, respectively.
-5.  Click **Save Project** to create the Project.
+6.  Click **Save Project** to create the Project.
 
     ![My Projects](GUID-E0930943-5847-4F31-8231-D1AD21862F1D-high.png)
 
