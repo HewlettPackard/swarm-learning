@@ -3,17 +3,16 @@ Spire with CIFAR-10
 
 This example runs CIFAR-10 [1] example using Spire[2] as a certificate manager on the Swarm Learning platform. It uses TensorFlow as the backend.
 
-The code for this example has been modified to run on a Swarm Learning platform.
 
-This example uses CIFAR-10 dataset distributed along with tensorflow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/spire/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code to Swarm Learning. 
+This example uses CIFAR-10 dataset distributed along with tensorflow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/spire/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code for Swarm Learning. 
 
-For user convenience, this example has automated the flow of running CIFAR-10 example that includes starting of the Spire server and agent containers. Please refer to `run-on-host-1` and `run-on-host-2` scripts and their arguments required to run the respective run scripts of swarm components.
+For user convenience, this example has automated the flow of running CIFAR-10 example that includes starting of the Spire server and Spire agent containers. Please refer to `run-on-host-1` and `run-on-host-2` scripts and their arguments required to run the respective run scripts of swarm components.
 
 This example shows the Swarm training of CIFAR-10 model using four Machine Learning (ML) nodes. Machine Learning nodes are automatically spawned by Swarm Operators (SWOP) nodes running on two different hosts. Swarm training is initiated by Swarm Command Interface (SWCI) node and orchestrated by two Swarm Network (SN) nodes.
 
 ## Cluster Setup
 
-The cluster setup for this example uses 1 host, as shown in the figure below:  
+The following image illustrates the cluster setup for the CIFAR-10 example which uses two hosts:  
 - host-1: 172.1.1.1
 - host-2: 172.2.2.2  
 

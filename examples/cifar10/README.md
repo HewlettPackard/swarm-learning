@@ -3,9 +3,8 @@ CIFAR-10
 
 This example runs CIFAR-10 [1] on the Swarm Learning platform. It uses Tensorflow as the backend.
 
-The code for this example has been modified to run on a Swarm Learning platform.
 
-This example uses cifar10 dataset distributed along with tensorflow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code to Swarm Learning. 
+This example uses cifar10 dataset distributed along with tensorflow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code for Swarm Learning. 
 
 This example shows the Swarm training of Keras based CIFAR-10 model using two Machine Learning (ML) nodes. It also shows how ML environment can be built manually using run-sl command and how Swarm training can be launched without Swarm Command Interface (SWCI) or Swarm Operator (SWOP) nodes. Here `scripts/bin/run-sl` script is used to spawn each ML node to run CIFAR-10 model as a "sidecar" container of each Swarm Learning (SL) node.
 
@@ -13,7 +12,7 @@ This example shows the Swarm training of Keras based CIFAR-10 model using two Ma
 
 ## Cluster Setup
 
-The cluster setup for this example uses 2 hosts, as shown in the figure below:  
+The following image illustrates the cluster setup for the CIFAR-10 example which uses two hosts:
 - host-1: 172.1.1.1  
 - host-2: 172.2.2.2  
 
