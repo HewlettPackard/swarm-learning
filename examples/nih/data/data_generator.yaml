@@ -1,0 +1,9 @@
+######################################################################
+# (C)Copyright 2024 Hewlett Packard Enterprise Development LP
+######################################################################
+yamlfilename  : nih_data_generator
+inputpathofnihdata : <SWARM_USER_DIRECTORY>/input
+interestedlabels : ['Atelectasis', 'Infiltration', 'Effusion']
+
+
+
