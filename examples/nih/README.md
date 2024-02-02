@@ -16,6 +16,9 @@ This example shows the Swarm training of NIH model using three Machine Learning 
 The cluster setup for this example uses one host, as shown in the figure below:  
 - host-1: 172.1.1.1  
 
+|![nih-cluster-setup](../figs/nih_cluster_setup.png)|
+|:--:|
+|<b>Figure 1: Cluster setup for the NIH example</b>|
 
 1. This example uses one Swarm Network (SN) node. The names of the docker containers representing these two nodes are **sn1** . sn1 is the Sentinel Node. sn1 runs on host 172.1.1.1. 
 2. Swarm Learning (SL) and Machine Learning (ML) nodes are automatically spawned by Swarm Operators (SWOP) nodes during training and removed after training. Example one SWOP node named **swop1**. swop1 runs on host 172.1.1.1.
