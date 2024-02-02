@@ -101,7 +101,7 @@ print(df_count_per_unique_label)
 sns.barplot(x = 'Finding Labels' , y="count", data=df_count_per_unique_label[:20], color = "green"), plt.xticks(rotation = 90) # visualize results graphically
 
 
-# define labels of our ineterest
+# define labels of our interest
 print(type(df_count_per_unique_label))
 print(df_count_per_unique_label.columns)
 #Intersted_labels = df_count_per_unique_label['Finding Labels'].tolist()[ :5]
