@@ -3,9 +3,8 @@ Reverse Proxy with CIFAR-10
 
 This example runs Reverse Proxy with CIFAR-10 [1] on the Swarm Learning platform. It uses TensorFlow as the backend.
 
-The code for this example has been modified to run on a Swarm Learning platform.
 
-This example uses CIFAR-10 dataset distributed along with tensorflow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/reverse-proxy/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code to Swarm Learning. 
+This example uses CIFAR-10 dataset distributed along with tensorflow package. The ML program, after conversion to Swarm Learning, is in `swarm-learning/examples/reverse-proxy/cifar10/model` and is called `cifar10.py`. It contains a tiny ML model for the purpose of showing steps of converting ML code for Swarm Learning. 
 
 As this example runs CIFAR-10 example using reverse proxy, to mimic the real world behaviour this example uses BIND9 [2] as DNS server and NGINX [3] as the reverse proxy server and builds both the  docker images with suitable configurations (Please refer to the respective docker files). For user convenience, this example has automated the flow of running CIFAR-10 example that includes starting of the BIND9 and NGINX containers. Please refer to `run-on-host-1` and `run-on-host-2` scripts and their arguments required to run the respective run scripts of swarm components.
 
@@ -13,7 +12,7 @@ This example shows the Swarm training of CIFAR-10 model using four Machine Learn
 
 ## Cluster Setup
 
-The cluster setup for this example uses 1 host, as shown in the figure below:  
+The following image illustrates the cluster setup for the CIFAR-10 example which uses two hosts: 
 - host-1: 172.1.1.1
 - host-2: 172.2.2.2  
 
@@ -124,7 +123,7 @@ SNo | FQDN | IP Address |
       
 4. Swarm training is automatically started when the run task (swarm_mnist_task) gets assigned and executed. User can open a new terminal on either host-1 or host-2 to monitor the docker logs of ML nodes for Swarm training. Swarm training will end with the following log message at the end
     - `SwarmCallback : INFO : All peers and Swarm training rounds finished. Final Swarm model was loaded.`  
-   Final Swarm model will be saved inside `workspace/reverse-proxy/cifar10/model` directory on both host-1 and host-2. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
+   Final Swarm model will be saved inside `/tmp/reverse-proxy/cifar10/model` directory on both host-1 and host-2. All the dynamically spawned SL and ML nodes will exit after Swarm training. The SN and SWOP nodes continue running.
 
 5. To clean-up, run the `scripts/bin/stop-swarm` script on the host system to stop and remove the swarm container nodes of the previous run. If needed, take backup of the container logs. As this example builds and starts Bind9 and Nginx, please remove their respective images and containers. Finally remove docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
