@@ -16,7 +16,8 @@ The following image illustrates the cluster setup for the CIFAR-10 example which
 - host-1: 172.1.1.1
 - host-2: 172.2.2.2  
 
-|<img width="60%" height="50%" src="../../figs/reverse-proxy-cifar-setup.png">|
+
+|<img width="60%" height="50%" src="../../figs/spire-cifar-setup.png">|
 |:--:|
 |<b>Figure 1: Cluster setup for the CIFAR-10 example with Spire</b>|
 
