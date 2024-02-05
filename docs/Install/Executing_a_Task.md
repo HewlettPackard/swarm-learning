@@ -1,4 +1,4 @@
-# Executing a task {#GUID-5F64446D-CE0E-4465-A33D-F307BF266DAD .concept}
+# Executing a task
 
 Once you create the task, there are two options \(**Execute** and **Targeted Execute**\) available to execute the task as follows.
 
