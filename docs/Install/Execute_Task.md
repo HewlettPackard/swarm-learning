@@ -12,11 +12,11 @@ User can use the **Execute Task** to initiate execution of various types of Swar
 
     User can select either **All Peers** or **\# of Peers** to execute the task. If user selects **All Peers** option, it schedules the task on all the SWOPs listening on the selected Task Runner.
 
-3.  Enter unique description and select **Save Experiment** to save a particular execution of an experiment.
+3.  Enter unique description and select **Save Experiment** to save a particular execution of an experiment. If this option is not chosen, then the details of this particular experiment is not saved in experiment tracking table.
 
     **NOTE:**
 
-    The **Contract\*** field is displayed only if the **Task Type** is set as **RUN\_SWARM**.
+    The **Contract\*** field is displayed only if the **Task Type** is set as **RUN\_SWARM**. 
 
 4.  Click **Create** to execute the task.
 
