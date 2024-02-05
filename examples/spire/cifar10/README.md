@@ -16,7 +16,8 @@ The following image illustrates the cluster setup for the CIFAR-10 example which
 - host-1: 172.1.1.1
 - host-2: 172.2.2.2  
 
-|<img width="60%" height="50%" src="../../figs/reverse-proxy-cifar-setup.png">|
+
+|<img width="60%" height="50%" src="../../figs/spire-cifar-setup.png">|
 |:--:|
 |<b>Figure 1: Cluster setup for the CIFAR-10 example with Spire</b>|
 
@@ -70,6 +71,7 @@ The following image illustrates the cluster setup for the CIFAR-10 example which
 
 5. To clean-up, run the `scripts/bin/stop-swarm` script on the host system to stop and remove the swarm container nodes of the previous run. If needed, take backup of the container logs. As this example builds and starts spire server and spire agent containers, please remove their respective images and containers. Finally remove docker volume (`sl-cli-lib`) and delete the `workspace` directory.
         
+**Parent topic:**[Running Swarm Learning with Spire](../../../docs/Install/Running_Swarm_Learning_with_Spire.md)
 
 
 [1] V.N. a. G. H. Alex Krizhevsky, "CIFAR-10 and CIFAR-100 datasets," [Online]. Available: https://www.cs.toronto.edu/~kriz/cifar.html

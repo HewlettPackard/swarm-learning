@@ -255,6 +255,8 @@ echo "#################### Starting SWOP ####################"
     --sn-ip=${Host_2_IP}                                \
     --sn-api-port=30304                                 \
     --apls-ip=${APLS_IP}                                \
+    -e http_proxy=                                      \
+    -e https_proxy=                                     \
     -e SWOP_KEEP_CONTAINERS=1                           \
     -e swarm_node_type=swop                             \
     --socket-path ${workingDir}/spire-agent/agent.sock

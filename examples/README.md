@@ -34,6 +34,7 @@ For details of running each example, see the below:
 -   [MNIST-PYT](/examples/mnist-pyt/README.md)
 -   [CIFAR-10](/examples/cifar10/README.md)
 -   [Credit card fraud detection](/examples/fraud-detection/README.md)
+-   [NIH](/examples/nih/README.md)
 -   [Reverse Proxy based examples](/examples/reverse-proxy/README.md)
 -   [Spire based example](/examples/spire/cifar10/README.md)
 

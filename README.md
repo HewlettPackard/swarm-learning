@@ -91,6 +91,7 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   - [Running Swarm Learning using CLI](/docs/Install/Running_Swarm_Learning_using_CLI.md)
   - [Running Swarm Learning with SE Linux](/docs/Install/Running_Swarm_with_SE_Linux.md)
   - [Running Swarm Learning with Podman](/docs/Install/Running_Swarm_Learning_with_Podman.md)
+  - [Running Swarm Learning with Spire](/docs/Install/Running_Swarm_Learning_with_Spire.md)
   - [Examples](/examples/README.md)
   - [Swarm Learning diagnostics using CLI](/docs/User/Swarm_Log_Collector.md)
   - [Centralized Swarm diagnostics using SLM-UI](/docs/Install/Centralized_Swarm_diagnostic.md)
