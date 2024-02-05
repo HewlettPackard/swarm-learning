@@ -1,4 +1,4 @@
-# Targeted execute {#GUID-C11178F0-5AFF-45B9-A055-46E1196D26B2 .task}
+# Targeted execute
 
 User can use **Targeted Execute** to initiate execution of various types of Swarm tasks on a specific SWOP or to add a specific SWOP to an already executing task runner. This targeted execute command helps in retrying a failed task on a particular SWOP.
 
@@ -10,17 +10,17 @@ User can use **Targeted Execute** to initiate execution of various types of Swar
 
     ![Targetted Task](GUID-C3D39086-B667-40C5-864C-416623D496A4-high.png)
 
-    1.  Enter unique description and select **Save Experiment**.
+    a.  Enter unique description and select **Save Experiment**.
 
         The save experiment will be enabled only if it is a new experiment.
 
-    2.  Select SWOP ID to execute the task on that SWOP.
+    b.  Select SWOP ID to execute the task on that SWOP.
 
         Targeted Execute on a SWOP can be used to add the selected SWOP to an already executing Task runner or to initiate a new execution of the selected SWOP.
 
-    3.  Select **New Experiment/Training** checkbox if this is a new training task targeting SWOP.
+    c.  Select **New Experiment/Training** checkbox if this is a new training task targeting SWOP.
 
-        **NOTE:**
+        NOTE:
 
         The **Contract\*** field is displayed only if the **Task Type** is set as **RUN\_SWARM**.
 
@@ -28,7 +28,7 @@ User can use **Targeted Execute** to initiate execution of various types of Swar
 
         ![Targeted Execute](GUID-5D229064-BA48-41A1-AA6B-26EBA76F5683-high.png)
 
-    4.  Select **Reset Task Runner** only if this is the first task on the taskrunner.
+    d.  Select **Reset Task Runner** only if this is the first task on the taskrunner.
 
 3.  Click **Create** to execute the task.
 
