@@ -154,3 +154,35 @@ This error is displayed in the container logs when the Swarm containers are not 
 **Resolution**
 
 User needs to upgrade the Docker version to the latest version.
+
+## 11. sudo groupadd docker
+
+```
+sudo groupadd docker
+```
+
+**Problem description**
+
+This error is displayed if the user is not part of `docker` group where the swarm learning is getting installed.
+
+**Resolution**
+
+User needs to run the following commands:
+```
+sudo groupadd docker
+sudo usermod -aG docker [USER]
+```
+
+## 12. Emulate Docker CLI using podman
+
+```
+Emulate Docker CLI using podman
+```
+
+**Problem description**
+
+UI container runs on port 80 which is privileged port and not allowed by default.
+
+**Resolution**
+
+User needs to choose different port during SLM-UI installation.
