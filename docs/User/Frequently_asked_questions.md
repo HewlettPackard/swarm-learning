@@ -343,7 +343,6 @@ external tools like pgAdmin).
 2. Then, run `<swarm-learning>/slm-ui/scripts/run-slm-ui -pw" supersecretpassword"`.
 
 ### What are the limitations of SLM-UI?
-Currently, SLM-UI works if you use Docker container runtime.<br>
 If you are using reverse proxy setup, you cannot use SLM-UI.<br>
 If you are using SPIRE based certificates, you cannot use SLM-UI.
 
