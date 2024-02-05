@@ -26,7 +26,7 @@ User can use **Targeted Execute** to initiate execution of various types of Swar
 
         If the **Task Type** is selected other than **RUN\_SWARM**, Targeted Execute panel is shown as follows.
 
-        ![Targeted Execute](GUID-5D229064-BA48-41A1-AA6B-26EBA76F5683-high.png)
+    ![Targeted Execute](GUID-5D229064-BA48-41A1-AA6B-26EBA76F5683-high.png)
 
     d.  Select **Reset Task Runner** only if this is the first task on the taskrunner.
 

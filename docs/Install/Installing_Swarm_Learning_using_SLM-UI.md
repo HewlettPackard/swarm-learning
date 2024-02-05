@@ -19,7 +19,7 @@
     Format 3: 127.1.1.1, 127.2.1.1, 128.1.2.2
 
     **NOTE:**
-    The Host installation popup displays the status of the host installation. If any of the host is failed to install,
+    The Host installation popup displays the status of the host installation. If any of the hosts fail to install,
     retry the host installation process.
    
 3.  Select the Swarm version number from the drop-down menu.
