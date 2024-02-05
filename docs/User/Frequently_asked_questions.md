@@ -131,6 +131,20 @@ Use the docker log command to save any container log output that you want to pre
 
 Use the `swarm-learning/bin/uninstall` script to uninstall the Swarm Learning package. This script does not accept any command line parameters. It should run on every node where Swarm Learning package is installed. While running, it stops all Swarm Learning components that are running on that host, removes the docker container images, and deletes the Swarm Learning installation directory.
 
+### When to pass proxy as environment variables while running Swarm Learning?
+All Swarm components accepts proxy as environment variables. If the network configuration has a proxy server, user can
+easily pass it through the `-e http_proxy`, `-e https_proxy`, and `-e no_proxy` values from UI or from CLI
+commands. SWOP being an orchestrator, performs tasks that sometimes needs proxy for building images and starting SLML
+pairs. In this case, SWOP additionally accepts the proxy values from the SWOP profile under env section. These are
+available on secured environments.
+
+In non-proxy environments, user can use these variables with empty values so that Swarm containers can also start with
+the same non-proxy configuration.
+
+### Can any user in the system run swarm training?
+HPE recommends to run with the same user who installed Swarm. Otherwise, ensure adequate access privilege for the
+'other user' on the directories used to run the swarm training.
+
 ## Swarm Network (SN) node
 
 ### <a name="SECTION_O5D_S2S_HSB"/> What is the Sentinel node?
@@ -294,6 +308,20 @@ One can also use “GET TASKRUNNER PEER STATUS” to display the status for the 
 
 -   For RUN_SWARM task type, the status summary reports SWOP node UID, Number of SL PEERs this SWOP has spawned, and list of all SL node information \(UID, Status, Description\). For all other types of tasks, the status summary reports SWOP node status \(UID, Status, Description\).
 -   If there are failed PEERs, using its node UID, one can identify the container name/id from ‘LIST NODES’ command. With container name/id, user can debug the error with docker logs command.
+
+### How to assign task to all available SWOP peers?
+Use `ASSIGN TASK <task-name> TO <taskrunner name> WITH ALL PEERS` to trigger a task to run on *all available* SWOP peers listening on the specified Taskrunner. The syntax is used to run a given task on all available nodes at that point of time, without manually counting on how many nodes are available across the consortium.
+For more information on triggering this task from SLM-UI, see _Executing a task_ section in _HPE Swarm Learning
+Installation and Configuration Guide_. For more information on triggering this task from CLI mode, see _SWCI commands
+related to Taskrunner_.
+
+### How to target a task on a failed (task) SWOP peer?
+Use `ASSIGN TASK <task-name> TO <taskrunner name> TARGET <SWOP-UID>` to trigger a task to run on a particular SWOP. User can use `LIST NODES` command to identify the SWOP-ID of the desired SWOP Target.
+This can be useful to take corrective action by re-running a task that had failed earlier on a particular node.
+
+For more information on triggering this task from SLM-UI, see _Executing a task_ section in _HPE Swarm Learning
+Installation and Configuration Guide_. For more information on triggering this task from CLI mode, see _SWCI commands
+related to Taskrunner_.
 
 ## Swarm Learning Management UI (SLM-UI)
 
