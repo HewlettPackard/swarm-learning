@@ -1,4 +1,4 @@
-# Execute task {#GUID-3469F96B-6670-4E3B-B786-798CF4B4E205 .task}
+# Execute task
 
 User can use the **Execute Task** to initiate execution of various types of Swarm tasks on a task runner and see the progress of the execution of the task.
 
