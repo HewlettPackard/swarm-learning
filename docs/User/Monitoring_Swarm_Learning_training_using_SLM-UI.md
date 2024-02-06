@@ -22,9 +22,10 @@ for doing hyper-parameter tuning and choosing the best run.
 
 To know the hyper parameters used and compare the training metrics (like accuracy) and loss of different training runs of
 an SLM-UI project, user needs to annotate & provide the details of a particular experiment before starting it. User can do this
-under Project > Tasks > Execute task panel of the SLM-UI using the following fields.
+under Project > Tasks > Execute task panel of SLM-UI using the following fields.
 
 -   **Annotation/Description of the experiment** – This field allows user to enter the description of the experiment. User
 can provide verbose details and annotate a given experimental run with details of the hyper parameters used in this
 particular run.
--   **Select to save the experiment** – This field allows users to select the checkbox to save the experiment.
+-   **Select to save the experiment** – This field allows users to select the checkbox to save the experiment. If this option
+   is not chosen, then the details of this particular experiment is not saved in experiment tracking table
