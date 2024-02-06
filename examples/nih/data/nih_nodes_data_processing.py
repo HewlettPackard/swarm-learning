@@ -65,7 +65,7 @@ xray_data = pd.read_csv(databasedir + '/Data_Entry_2017.csv')
 num_obs = len(xray_data)
 print('Number of observations:',num_obs)
 # examine the raw data before performing pre-processing
-xray_data.head(5) # view first 5 rows
+print(xray_data.head(5)) # view first 5 rows
 #xray_data.sample(5) # view 5 randomly sampled rows
 
 
@@ -94,12 +94,12 @@ print('Number of unique labels:',num_unique_labels)
 # let's look at the label distribution to better plan our next step
 #count_per_unique_label = xray_data['Finding Labels'].value_counts() # get frequency counts per label
 #df_count_per_unique_label = count_per_unique_label.to_frame() # convert series to dataframe for plotting purposes
-df_count_per_unique_label = xray_data['Finding Labels'].value_counts().reset_index().rename(columns={'index': 'Finding Labels', 0: 'count'})
+df_count_per_unique_label = xray_data['Finding Labels'].value_counts().reset_index().rename(columns={'index': 'Finding Labels', 'Finding Labels': 'count'})
 
 print(df_count_per_unique_label)
 
 sns.barplot(x = 'Finding Labels' , y="count", data=df_count_per_unique_label[:20], color = "green"), plt.xticks(rotation = 90) # visualize results graphically
-
+plt.show()
 
 # define labels of our interest
 print(type(df_count_per_unique_label))
