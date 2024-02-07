@@ -3,7 +3,7 @@
 #### Product version: 2.2.0
 
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
-<img width="70%" height="70%" src="/docs/User/GUID-899B556F-D33F-42D1-8D0D-37F191715709-high.png">
+<img width="80%" height="70%" src="/docs/User/GUID-899B556F-D33F-42D1-8D0D-37F191715709-high.png">
 
 Swarm Learning framework is made up of various components known as nodes, such as Swarm Learning (SL) nodes, Swarm Network (SN) nodes, Swarm Learning Command Interface (SWCI) nodes, and Swarm Operator (SWOP) nodes. Each node of Swarm Learning is modularized and runs in a separate container. The **nodes represent different Swarm Learning _functionality_ and not physical server nodes**.
 
@@ -37,7 +37,7 @@ NOTE: The participating nodes must be able to access each other's ports.
 
 -   License Server installs and manages the license that is required to run the Swarm Learning framework. The licenses are managed by the AutoPass License Server \(APLS\) container. For more information, see [APLS User Guide](/docs/HPE%20AutoPass%20License%20Server%20User%20Guide.pdf).
 
-Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state.
+Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state. 
 
 ## User ML components
 
@@ -55,6 +55,9 @@ The ML node is responsible to train and iteratively update the model. For each M
 <blockquote>
 NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
 </blockquote>
+
+User can monitor the progress of the current training as shown in the following image. It shows all running Swarm nodes, loss, model metric (for example, accuracy) and overall training progress for each ML-SL pair node. On hovering over the mouse on progress bar, user can view the total number of epochs and the total number of completed epochs
+<img width="80%" height="70%" src="/docs/User/GUID-CB6F59C9-7CD9-4EE8-BA7C-3082F07B8491-high.png">
 
 ## Getting Started 
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
@@ -106,8 +109,7 @@ NOTE: **Accessing Hewlett Packard Enterprise Support** clause and **Concurrent s
   Refer to [Acronyms and Abbreviations](docs/Generic/acronyms.md) for more information.
 
 ## Getting in touch 
-  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  
-  or  
+  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  (Or)
   Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel.
   
 ## Contributing
