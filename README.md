@@ -56,7 +56,8 @@ The ML node is responsible to train and iteratively update the model. For each M
 NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend) or PyTorch. Using Keras for some of the nodes and PyTorch for the other nodes is not supported.
 </blockquote>
 
-User can monitor the progress of the current training as shown in the following image. It shows all running Swarm nodes, loss, model metric (for example, accuracy) and overall training progress for each ML-SL pair node. On hovering over the mouse on progress bar, user can view the total number of epochs and the total number of completed epochs
+User can monitor the progress of the current training as shown in the following image. It shows all running Swarm nodes, loss, model metric (for example, accuracy) and overall training progress for each ML-SL pair node. On hovering over the "progress bar", user can view the total number of epochs and the total number of completed epochs.
+
 <img width="80%" height="70%" src="/docs/User/GUID-CB6F59C9-7CD9-4EE8-BA7C-3082F07B8491-high.png">
 
 ## Getting Started 
