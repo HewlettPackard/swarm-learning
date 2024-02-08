@@ -37,11 +37,19 @@ fi
 
 # Create a workspace to run this example
 workingDir=$(pwd)/workspace/spire/cifar10
+#Clean up the work space folder if any
+if [ -d "$workingDir" ]; then rm -Rf $workingDir; fi
+
 mkdir -p ${workingDir}
 spireCifarDir=$(pwd)/examples/spire/cifar10
 spireDir=$(pwd)/examples/spire
 org_1_trust_domain="org1.swarm.learning"
 org_2_trust_domain="org2.swarm.learning"
+org1spirebundle="${workingDir}/spire-server/${org_1_trust_domain}.bundle"
+org2spirebundle="${workingDir}/spire-server/${org_2_trust_domain}.bundle"
+
+host1network="host-1-net"
+host2network="host-2-net"
 
 # Copy files into the worksapce
 cp -r ${spireCifarDir}/swci ${workingDir}/

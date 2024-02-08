@@ -49,6 +49,8 @@ then
     exit 1;
 fi
 
+# Check and create docker network for host 2
+docker network ls|grep ${host2network} > /dev/null || docker network create ${host2network}
 
 # Starts the spire server container
 startSpireServer()
@@ -132,6 +134,10 @@ docker exec spire-server bin/spire-server bundle set        \
     -id spiffe://${org_1_trust_domain}                        \
     -path /opt/spire/conf/server/${org_1_trust_domain}.bundle 
 
+# Remove the bundle files to avoid the old file usage for multiple runs.
+[ -f ${org1spirebundle} ] && rm $org1spirebundle
+[ -f ${org2spirebundle} ] && rm $org2spirebundle
+
 # Generate the join token for the spire agent.
 token_op=`docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_2_trust_domain}/agent`
 join_token_arr=(${token_op})
@@ -176,6 +182,7 @@ sleep 10
 sed -i "s+<HOST-IP>+${Host_2_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop2_profile.yaml
 sed -i "s+<WORKING-DIR>+${workingDir}+g" "${workingDir}"/swop/swop2_profile.yaml
+sed -i "s+<NETWORK>+${host2network}+g" "${workingDir}"/swop/swop2_profile.yaml
 
 # Create an entry into the spire-server via spire agent. For each component 
 # we have created seperate entry with unique selector and spiffe id. It is 
@@ -193,6 +200,7 @@ echo "############### Starting SN node ##################"
     -d                                                  \
     --name=sn-2                                         \
     --host-ip=${Host_2_IP}                              \
+    --network=${host2network}                           \
     --sn-api-port=30304                                 \
     --sn-p2p-port=30303                                 \
     --sentinel-ip=${Host_1_IP}                          \
@@ -250,6 +258,7 @@ echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \
     -d                                                  \
     --name=swop-2                                       \
+    --network=${host2network}                           \
     --usr-dir=${workingDir}/swop                        \
     --profile-file-name=swop2_profile.yaml              \
     --sn-ip=${Host_2_IP}                                \
