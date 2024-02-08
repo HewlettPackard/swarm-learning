@@ -134,9 +134,6 @@ docker exec spire-server bin/spire-server bundle set        \
     -id spiffe://${org_1_trust_domain}                        \
     -path /opt/spire/conf/server/${org_1_trust_domain}.bundle 
 
-# Remove the bundle files to avoid the old file usage for multiple runs.
-[ -f ${org1spirebundle} ] && rm $org1spirebundle
-[ -f ${org2spirebundle} ] && rm $org2spirebundle
 
 # Generate the join token for the spire agent.
 token_op=`docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_2_trust_domain}/agent`
@@ -194,6 +191,12 @@ docker exec spire-server /opt/spire/bin/spire-server entry create   \
     -selector "docker:env:swarm_node_type=sn"                       \
     -federatesWith "spiffe://${org_1_trust_domain}"
 sleep 10
+
+# Remove the bundle files to avoid the old file usage for multiple runs.
+[ -f ${org1spirebundle} ] && rm $org1spirebundle
+[ -f ${org2spirebundle} ] && rm $org2spirebundle
+
+
 # Start Swarm components.
 echo "############### Starting SN node ##################"
 "./scripts/bin/run-sn"                                  \
