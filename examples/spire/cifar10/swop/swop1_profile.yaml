@@ -22,11 +22,11 @@ apisrv:
         service: ~
 envvars: 
     - SL_LOG_LEVEL : INFO
-    - http_proxy : http://proxy-in.its.hpecorp.net:443
-    - https_proxy : http://proxy-in.its.hpecorp.net:443
+    - http_proxy : ~
+    - https_proxy : ~
     - no_proxy : ~
-    - HTTP_PROXY : http://proxy-in.its.hpecorp.net:443
-    - HTTPS_PROXY : http://proxy-in.its.hpecorp.net:443
+    - HTTP_PROXY : ~
+    - HTTPS_PROXY : ~
     - NO_PROXY : ~
 # Spire is used as identity provider in this example, and hence we use
 # spiffe socket path and pass on the path of the agent.sock file.  
