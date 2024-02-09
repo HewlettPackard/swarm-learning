@@ -200,3 +200,4 @@ If the default **HTTP Port** `80` or **HTTPS Port** `443` is used, SLM-UI instal
 **Resolution**
 
 While installing SLM-UI, user needs to provide different port numbers which are greater than 1024, for both **HTTP Port** and **HTTPS Port** as follows.
+![Troubleshooting_image1](GUID-0BB8581E-AEA9-4FCB-907D-D6FA50BDC183-high.png)
