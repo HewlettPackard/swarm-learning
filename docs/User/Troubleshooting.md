@@ -186,3 +186,17 @@ UI container runs on port 80 which is privileged port and not allowed by default
 **Resolution**
 
 User needs to choose different port during SLM-UI installation.
+
+## 13. Rootlessport cannot expose privileged port 80
+
+```
+rootlessport cannot expose privileged port 80
+```
+
+**Problem description**
+
+If the default **HTTP Port** `80` or **HTTPS Port** `443` is used, SLM-UI installation fails with this error in the Podman environment. 
+
+**Resolution**
+
+While installing SLM-UI, user needs to provide different port numbers which are greater than 1024, for both **HTTP Port** and **HTTPS Port** as follows.
