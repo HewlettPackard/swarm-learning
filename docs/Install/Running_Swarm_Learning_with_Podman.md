@@ -12,6 +12,5 @@
   - ML or User container running as non-root may fail due to permission issue while saving trained model file. User
 needs to precreate a directory with full permissions.
   - GPU based local training is not supported through Podman.
-  - SLM-UI is not supported with Podman.
 
 
