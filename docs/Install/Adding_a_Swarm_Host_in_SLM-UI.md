@@ -5,9 +5,10 @@
  
     **NOTE**:
     
-    a. User needs to repeat these steps for all the hosts on which the Swarm Learning needs to be installed.<br>
-    
-    b. The host needs to have a Docker container runtime. 
+    a. User needs to repeat these steps for all the hosts on which the Swarm Learning needs to be installed.<br>   
+
+    b. The host needs to have a Docker or Podman container runtime
+
     
     ![Hosts](GUID-27290862-3C17-4AFD-9B60-CB9166C656F0-high.png)
 
