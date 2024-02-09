@@ -5,7 +5,7 @@
 
 groupname: demo
 taskrunner: defaulttaskbb.taskdb.sml.hpe
-network: host-1-net
+network: <NETWORK>
 policyuri: ~
 resourcemgr:
     mgrtype: DOCKER
