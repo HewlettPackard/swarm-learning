@@ -49,6 +49,8 @@ then
     exit 1;
 fi
 
+# Check and create docker network for host 1
+docker network ls|grep ${host1network} > /dev/null || docker network create ${host1network}
 
 # Starts the spire server container
 startSpireServer()
@@ -133,6 +135,7 @@ docker exec spire-server bin/spire-server bundle set        \
     -id spiffe://${org_2_trust_domain}                        \
     -path /opt/spire/conf/server/${org_2_trust_domain}.bundle 
 
+
 # Generate the join token for the spire agent.
 token_op=`docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_1_trust_domain}/agent`
 join_token_arr=(${token_op})
@@ -175,6 +178,8 @@ sleep 30
 sed -i "s+<HOST-IP>+${Host_1_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
 sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
 sed -i "s+<WORKING-DIR>+${workingDir}+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<NETWORK>+${host1network}+g" "${workingDir}"/swop/swop1_profile.yaml
+
 sed -i "s+<HOST-IP>+${Host_1_IP}+g" "${workingDir}"/swci/swci-init
     
 
@@ -209,12 +214,17 @@ docker exec spire-server /opt/spire/bin/spire-server entry create   \
     -federatesWith "spiffe://${org_2_trust_domain}"
 sleep 5
 
+# Remove the bundle files to avoid the old file usage for multiple runs.
+[ -f ${org1spirebundle} ] && rm $org1spirebundle
+[ -f ${org2spirebundle} ] && rm $org2spirebundle
+
 # Start Swarm components.
 echo "############### Starting Sentinel SN ##################"
 "./scripts/bin/run-sn"                                  \
     -d                                                  \
     --name=sn-1                                         \
     --host-ip=${Host_1_IP}                              \
+    --network=${host1network}                           \
     --sn-api-port=30304                                 \
     --sn-p2p-port=30303                                 \
     --sentinel                                          \
@@ -259,6 +269,7 @@ echo "#################### Starting SWOP ####################"
 "./scripts/bin/run-swop"                                \
     -d                                                  \
     --name=swop-1                                       \
+    --network=${host1network}                           \
     --usr-dir=${workingDir}/swop                        \
     --profile-file-name=swop1_profile.yaml              \
     --sn-ip=${Host_1_IP}                                \
@@ -275,6 +286,7 @@ echo "#################### Starting SWCI ####################"
     --rm=false                                          \
     -dt                                                 \
     --name=swci-1                                       \
+    --network=${host1network}                           \
     --apls-ip=${APLS_IP}                                \
     --usr-dir=${workingDir}/swci                        \
     --init-script-name=swci-init                        \
