@@ -7,7 +7,7 @@ To upgrade to a latest version:
 
     This step is not applicable, if you are running any older version of Swarm Learning \(version < 2.0.0 \).
 
--   Add the host again with new Swarm version on the same install location that was used earlier. If user selects the same installation location, the system overwrites the earlier version artifacts. If user needs both older and newer versions of Swarm Learning on the same host, they need to set a new installation location. User must restart the training with new images if needed. For more information, see [Installing Swarm Learning using SLM-UI](Installing_Swarm_Learning_using_SLM-UI.md).
+-   Add the host again with new Swarm version on the same install location that was used earlier. If user selects the same installation location, the system overwrites the earlier version artifacts. If user needs both older and newer versions of Swarm Learning on the same host, they need to set a new installation location. User must restart the training with new images if needed. For more information, see [Installing Swarm Learning using SLM-UI](/docs/Install/Adding_a_Swarm_Host_in_SLM-UI.md).
 
 SLM-UI can handle multiple hosts each with their own version of Swarm and hence supporting a manual rolling upgrade, where users can upgrade one host at a time. However on a given host machine, if multiple versions are installed, only the last installed version is seen active. All nodes in a Swarm Learning running cluster must be running the same version of the product.
 
