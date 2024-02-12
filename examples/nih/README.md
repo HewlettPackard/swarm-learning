@@ -139,4 +139,4 @@ The cluster setup for this example uses one host, as shown in the figure below:
 
 ## References
 [1]	Kaggle NIH Chest X-rays : [NIH Chest X-rays](https://www.kaggle.com/datasets/nih-chest-xrays/data)  
-[2] [Kaggle kernel referenced in this exampe ](https://www.kaggle.com/code/adamjgoren/nih-chest-x-ray-multi-classification)
+[2] [Kaggle kernel referenced in this example ](https://www.kaggle.com/code/adamjgoren/nih-chest-x-ray-multi-classification)

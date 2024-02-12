@@ -21,5 +21,5 @@ User can use the **Execute Task** to initiate execution of various types of Swar
 4.  Click **Create** to execute the task.
 
 
-**Parent topic:**[Executing a task](GUID-5F64446D-CE0E-4465-A33D-F307BF266DAD.md)
+**Parent topic:**[Executing a task](/docs/Install/Executing_a_Task.md)
 
