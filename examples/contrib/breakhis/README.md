@@ -26,7 +26,7 @@ cd swarm-learning
 
 ```
 mkdir workspace
-cp -r examples/breakhis workspace/
+cp -r examples/contrib/breakhis workspace/
 cp -r examples/utils/gen-cert workspace/breakhis/
 ```
 
