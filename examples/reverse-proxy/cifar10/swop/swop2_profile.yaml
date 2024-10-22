@@ -5,7 +5,7 @@
 
 groupname: demo
 taskrunner: defaulttaskbb.taskdb.sml.hpe
-network: default
+network: <NETWORK-NAME>
 policyuri: ~
 resourcemgr:
     mgrtype: DOCKER
@@ -20,7 +20,14 @@ apisrv:
         host: ~
         port: ~
         service: ~
-envvars: ~
+envvars: 
+    - SL_LOG_LEVEL : INFO
+    - http_proxy : ~
+    - https_proxy : ~
+    - no_proxy : ~
+    - HTTP_PROXY : ~
+    - HTTPS_PROXY : ~
+    - NO_PROXY : ~
 dns: 
     - <Bind9-IP>
     - <Host-DNS-IP>
@@ -48,11 +55,15 @@ nodes:
                 subPath: null
         slhostname: sl-3.swarm
         slhostip: ~
-        slport: 40001
+        slport: ~
         slfsservice: fs.sl-3.swarm
         slenvvars: null
+        slnetworkopts:
+            - ip: <SL-IP-3>
         usrhostname: ml-3
         usrenvvars: null
+        usrnetworkopts:
+            - ip: <ML-IP-3>
         privatedata : ~
     - slnodedef:
         idx: 1
@@ -77,9 +88,13 @@ nodes:
                 subPath: null
         slhostname: sl-4.swarm
         slhostip: ~
-        slport: 40002
+        slport: ~
         slfsservice: fs.sl-4.swarm
         slenvvars: null
+        slnetworkopts:
+            - ip: <SL-IP-4>
         usrhostname: ml-4
         usrenvvars: null
+        usrnetworkopts:
+            - ip: <ML-IP-4>
         privatedata : ~

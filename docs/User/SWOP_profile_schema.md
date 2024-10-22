@@ -9,7 +9,7 @@ The source code of the profile schema [SWOP-profile-schema.yaml](/docs/SWOP-prof
 
 ```<a name="CODEBLOCK_NBD_FSY_CTB"/> 
 ######################################################################
-## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ######################################################################
 "$schema"   : "https://json-schema.org/draft/2020-12/schema"
 title       : "SWOP Profile definition"
@@ -276,6 +276,22 @@ properties  :
                               items:
                                   type: string
                                   uniqueItems: true
+                      # This attribute helps in starting SL container with pre-defined python docker network SDK option called "ipv4_address"
+                      # Added as part of reverse proxy multi-host scenario where instead of using hostIP with in nginx configuration we can
+                      # now use continer IP's for easier and simpler IP and port mapping.
+                      slnetworkopts   : 
+                          oneOf       : 
+                              - const   : ~
+                              - type    : array
+                                description : "List of K-V pairs passed directly to connect SL docker container to specific network.
+                                              This option is needed to start the SL container with a static IP. The IP address is 
+                                              passed using 'ip' key inside slnetworkopts. This will get converted to ipv4_address 
+                                              argument of the python docker sdk network connect method. This is same as passing '--ip' 
+                                              argument to the docker cli run command.
+                                              "
+                                items : 
+                                    type : object
+                                    uniqueItems : true
 
                       usrhostname :
                           oneOf : 
@@ -307,7 +323,22 @@ properties  :
                               items:
                                   type: string
                                   uniqueItems: true
-
+                      # This attribute helps in starting ML container with pre-defined python docker network SDK options called "ipv4_address"
+                      # Added as part of reverse proxy multi-host scenario where instead of using hostIP with in nginx configuration we can
+                      # now use continer IP's for easier and simpler IP and port mapping.
+                      usrnetworkopts   : 
+                          oneOf       : 
+                              - const   : ~
+                              - type    : array
+                                description : "List of K-V pairs passed directly to connect user docker container to specific network.
+                                              This option is needed to start the user container with a static IP. The IP address is 
+                                              passed using 'ip' key inside usrnetworkopts. This will get converted to ipv4_address 
+                                              argument of the python docker sdk network connect method. This is same as passing '--ip' 
+                                              argument to the docker cli run command.
+                                              "
+                                items : 
+                                    type : object
+                                    uniqueItems : true
                       usrcontaineropts   : 
                           oneOf       : 
                               - const   : ~
@@ -316,7 +347,6 @@ properties  :
                                                "List of K-V pairs passed directly to docker while starting USR container.
                                                These options are needed to use GPUs for user ML local training.
                                                These options are specific to GPU vendors. Refer options as applicable to your GPU vendor."
-
                                                1. Nvidia GPUs -   
                                                "Only 'gpus' key is supported. Refer below link to know how to specify the values. 
                                                https://docs.docker.com/config/containers/resource_constraints/#gpu "
@@ -324,7 +354,6 @@ properties  :
                                                2. AMD GPUs - 
                                                "Keys supported are 'device', 'ipc', 'shm-size', 'group-add',
                                                'cap-add', 'security-opt', 'privileged'.
-
                                                Refer below link to know the options for AMD GPU access.
                                                https://developer.amd.com/resources/rocm-learning-center/deep-learning/
                                                
@@ -334,7 +363,6 @@ properties  :
                                                --security-opt seccomp=unconfined -v $HOME/dockerx:/dockerx rocm/tensorflow:latest
                                                PyTorch ====>> sudo docker run -it -v $HOME:/data --privileged --rm --device=/dev/kfd 
                                                --device=/dev/dri --group-add video rocm/pytorch:rocm3.5_ubuntu16.04_py3.6_pytorch"
-
                                                
                                                Example for specifing values - 
                                                - device : ["/dev/kfd", "/dev/dri"] # (list of str) -> Expose host devices to the container, 

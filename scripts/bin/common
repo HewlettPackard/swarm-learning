@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ######################################################################
-## (C)Copyright 2021, 2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2024 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -78,10 +78,10 @@ trap "exit 1" SIGUSR1 SIGUSR2
 
 
 # Swarm product version.
-swarmVer="1.2.0"
+swarmVer="2.2.0"
 
 swarmDockerHub="hub.myenterpriselicense.hpe.com"
-swarmOrg="hpe_eval/swarm-learning"
+swarmOrg="hpe/swarm-learning"
 
 slRepoName="sl"
 snRepoName="sn"
@@ -93,11 +93,15 @@ snImage="${swarmDockerHub}/${swarmOrg}/${snRepoName}:${swarmVer}"
 swciImage="${swarmDockerHub}/${swarmOrg}/${swciRepoName}:${swarmVer}"
 swopImage="${swarmDockerHub}/${swarmOrg}/${swopRepoName}:${swarmVer}"
 
-# We need elevated privileges to run docker commands, if the current user is not
-# a member of the docker group. Given, the user has configured password-less
-# sudo.
-id -Gn 2> /dev/null | grep "\(\<docker\>\)\|\(\<root\>\)" > /dev/null 2>&1
-[[ ${?} -ne 0 ]] && sudo="sudo"
+# If podman is installed we don't need elevate privileges so sudo or docker group not required 
+# else we need elevated privileges to run docker commands, if the current user is not
+# a member of the docker group. 
+# Given, the user has configured password-less sudo
+
+if ! command -v podman &>/dev/null; then
+    id -Gn 2> /dev/null | grep "\(\<docker\>\)\|\(\<root\>\)" > /dev/null 2>&1
+    [[ ${?} -ne 0 ]] && sudo="sudo"
+fi
 
 
 # Order of process and usage functions to call.
@@ -1193,6 +1197,18 @@ dockerRun()
     [[ ${sidecarPrefix} == "ml-" ]] && \
         dockerOptsVar+=("--user=$(id -u):$(id -g)")
 
+
+    # This is the additional safety to check and error out when any unsupported 
+    # arguments are used in the ML container.
+    match="--ml"
+    # Loop through the items and error out if any argument that starts with the match string.
+    for i in "${!cmdVar[@]}"; do
+    if [[ "${cmdVar[$i]}" == "$match"* ]]; then
+        echo "Error: ${cmdVar[$i]} is an unsupported option."  
+        exit 1
+    fi
+    done
+
     declare -n containerIDVar=$(makeVarName "${sidecarPrefix}" containerID)
     containerIDVar=$(${sudo} docker container create    \
         "${dockerOptsVar[@]}"                           \
@@ -1214,6 +1230,7 @@ dockerRun()
         ${sudo} docker inspect -f '{{.Config.Image}}' ${containerIDVar}  >> ${CONTAINER_INFO_FILE}
         # .Image returns image id in format of sha256:<id>.
         ${sudo} docker inspect -f '{{.Image}}' ${containerIDVar}  >> ${CONTAINER_INFO_FILE}
+        chmod +r ${CONTAINER_INFO_FILE}  #so that non root user can also read it inside container e.g. in podman env
         # docker cp can copy to stopped container too
         ${sudo} docker cp ${CONTAINER_INFO_FILE} ${containerIDVar}:/tmp/container_info_file
         # Following are the sample contents of container_info_file file

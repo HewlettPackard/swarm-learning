@@ -9,7 +9,7 @@ The source code of the task schema [SWOP-task-schema.yaml](/docs/SWOP-task-schem
 
 ```<a name="CODEBLOCK_MTZ_3S1_DTB"/> 
 ######################################################################
-## (C)Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
 ######################################################################
 "$schema"   : "https://json-schema.org/draft/2020-12/schema"
 title       : "SWOP TASK definition"
@@ -99,12 +99,12 @@ properties  :
                     type        : string 
                     description : "Entrypoint used to execute Ex: python3, bash"
                     maxLength   : 160 
-                    minLength   : 1                    
+                    minLength   : 1   
                 WorkingDir      :     
                     type        : string 
                     description : "Absolute path with in the container to set as Working directory"
                     maxLength   : 160 
-                    minLength   : 2               
+                    minLength   : 2  
                 Envvars         : 
                     oneOf:
                         - const : ~
@@ -263,5 +263,3 @@ required    :
     - Outcome
     - Body
 additionalProperties : false
-```
-

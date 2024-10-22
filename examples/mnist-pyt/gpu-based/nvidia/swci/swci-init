@@ -1,13 +1,13 @@
 ######################################################################
-# (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ######################################################################
 
 # Assumption : SWOP is already running
 
 # SWCI context setup
 EXIT ON FAILURE
-wait for ip 172.1.1.1
-create context test-mnist with ip 172.1.1.1
+wait for ip sn1
+create context test-mnist with ip sn1
 switch context test-mnist
 EXIT ON FAILURE OFF
 

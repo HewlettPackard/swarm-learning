@@ -1,0 +1,294 @@
+#!/usr/bin/env bash
+
+######################################################################
+## (C)Copyright 2024 Hewlett Packard Enterprise Development LP
+######################################################################
+
+
+## runs 1-SN, 1-SL, 1-SWOP and 1-SWCI with 1-SpireServer and 1-SpireAgent
+
+
+# All examples assumes APLS is already running. User needs to pass this IP accordingly
+APLS_IP=$1
+[[ -z "$1" ]] && { echo "APLS IP is empty" ; exit 1; }
+echo "APLS IP: "${APLS_IP}
+
+Host_1_IP=$2
+[[ -z "$2" ]] && { echo "IP address of the Host 1 is empty" ; exit 1; }
+echo "HOST 1 IP: "${Host_1_IP}
+
+Host_2_IP=$3
+[[ -z "$3" ]] && { echo "IP address of the Host 2 is empty" ; exit 1; }
+echo "HOST 2 IP: "${Host_2_IP}
+
+
+# User logged in the another host. If not passed it will be default user. 
+[[ -n "${4}" ]] && Host_2_USER=${4} || Host_2_USER=""
+
+# Directory path of this repository on the another host. If not passed script assumes default installation directory of swarm. 
+[[ -n "${5}" ]] && Host_2_INSTALL_DIR=${5} || Host_2_INSTALL_DIR="/opt/hpe/swarm-learning"
+
+
+
+# This step will also ensure if in correct directory
+if [[ -f "$(pwd)/scripts/bin/common" ]]
+then
+    # Pulling swarm images version without using entire common file.
+    swarmVersion=$(grep -m1 swarmVer scripts/bin/common | cut -c 11- | cut -d '"' -f1)
+    echo "Swarm Version : ${swarmVersion}"
+else
+    echo "It is mandatory to run these scripts in the base(swarm-learning) directory of this repository. Please cd(change directory) to base directory."
+    exit 1; 
+fi
+
+#Run Pre-requisites
+source ./examples/spire/cifar10/run-prerequisites
+# Check the outcome of pre-requisite script and proceed
+if [[ $? -ne 0 ]]
+then
+    exit 1;
+fi
+
+# Check and create docker network for host 1
+docker network ls|grep ${host1network} > /dev/null || docker network create ${host1network}
+
+# Starts the spire server container
+startSpireServer()
+{
+    docker run                                                  \
+        -d                                                      \
+        -p 30307:8081                                           \
+        -p 8443:8443                                            \
+        --name spire-server                                     \
+        --network-alias spire-server                            \
+        -v ${workingDir}/spire-server:/opt/spire/conf/server    \
+        ${SpireServerImage}
+    return 0
+}
+
+# Before starting the spire server modify the server.conf file to the needs of host-1 (aka Org-1) 
+sed -i "s+<TRUST_DOMAIN>+${org_1_trust_domain}+g" "${workingDir}"/spire-server/server.conf
+sed -i "s+<OTHER_TRUST_DOMAIN>+${org_2_trust_domain}+g" "${workingDir}"/spire-server/server.conf
+sed -i "s+<OTHER_IP_ADDRESS>+${Host_2_IP}+g" "${workingDir}"/spire-server/server.conf
+
+echo "Starting Spire Server"
+startSpireServer
+# wait time to fully load the spire server
+sleep 10
+
+# Generate crt file for agent to connect securely. This will avoid the use of insecure bootstrap.
+if [[ ! -f "${workingDir}/spire-server/spire.crt" ]] 
+then
+    docker exec spire-server bin/spire-server bundle show > ${workingDir}/spire-agent/spire.crt 
+fi
+# Generate certificate bundle file to run spire in bootstrap federation. 
+# This bundle file will be shared to other host/hosts and vice versa.
+if [[ ! -f "${workingDir}/spire-server/${org_1_trust_domain}.bundle" ]] 
+then
+    docker exec spire-server bin/spire-server bundle show -format spiffe > ${workingDir}/spire-server/${org_1_trust_domain}.bundle 
+fi
+
+# Check if Certificate Bundle file exists on another host
+Host_2_Cert_Bundle_Path="${Host_2_INSTALL_DIR}"/workspace/spire/cifar10/spire-server/${org_2_trust_domain}.bundle
+
+# Wait and transfer certificate bundles between hosts. This is require make spire work in federation.
+Host2CertBundleExists="false"
+while [ "${Host2CertBundleExists}" = "false" ]
+do
+    echo "Waiting for the user to start 'run-on-host-2' script on host 2 machine"
+    sleep 5
+    # Checking if certificate is available on host-2
+    if [[ "${Host_2_USER}" = "" ]]
+    then
+        ssh ${Host_2_IP} [[ -f "${Host_2_Cert_Bundle_Path}" ]]
+    else
+        ssh ${Host_2_USER}@${Host_2_IP} [[ -f "${Host_2_Cert_Bundle_Path}" ]]
+    fi
+    # Checking if ssh command went through successfully
+    if [[ $? -eq 0 ]]
+    then
+        Host2CertBundleExists="true"
+    fi
+
+    echo "Host2CertBundleExists:"${Host2CertBundleExists}
+    # If certificate on the host-2 exists, then copy the file from host 2 to host 1 ca path 
+    if [ "$Host2CertBundleExists" = "true" ]
+    then
+        if [[ "${Host_2_USER}" = "" ]]
+        then
+            scp ${Host_2_IP}:${Host_2_Cert_Bundle_Path} "${workingDir}"/spire-server
+        else
+            scp ${Host_2_USER}@${Host_2_IP}:${Host_2_Cert_Bundle_Path} "${workingDir}"/spire-server
+        fi
+        # Checking if SCP command went through successfully
+        if [[ $? -eq 0 ]]
+        then
+            echo "Certificate bundle transfer completed."
+        fi
+    fi
+done
+
+
+# Run the bundle set command on spire server 1 for bootstrap federation 
+docker exec spire-server bin/spire-server bundle set        \
+    -format spiffe                                          \
+    -id spiffe://${org_2_trust_domain}                        \
+    -path /opt/spire/conf/server/${org_2_trust_domain}.bundle 
+
+
+# Generate the join token for the spire agent.
+token_op=`docker exec spire-server bin/spire-server token generate -spiffeID spiffe://${org_1_trust_domain}/agent`
+join_token_arr=(${token_op})
+if [[ "${join_token_arr[@]}" =~ 'Token:' ]]; then
+    join_token=${join_token_arr[1]}
+    echo ${join_token}
+else
+    echo "Exiting: Failed to generate token for spire-agent"
+    exit 1;
+fi
+
+# Before starting the spire agent modify the agent.conf file to the needs of host-1 (aka Org-1) 
+sed -i "s+<TRUST_DOMAIN>+${org_1_trust_domain}+g" "${workingDir}"/spire-agent/agent.conf
+sed -i "s+<SERVER_IP_ADDRESS>+${Host_1_IP}+g" "${workingDir}"/spire-agent/agent.conf
+sed -i "s+<JOIN_TOKEN>+${join_token}+g" "${workingDir}"/spire-agent/agent.conf
+
+
+# Starts the spire agent container
+startSpireAgent()
+{
+    docker run                                                          \
+        -d                                                              \
+        --name spire-agent                                              \
+        --network-alias spire-agent                                     \
+        -v /var/run/docker.sock:/var/run/docker.sock                    \
+        -v ${workingDir}/spire-agent:/opt/spire/conf/agent              \
+        --pid host                                                      \
+        ${SpireAgentImage}
+    return 0
+}
+
+echo "Starting Spire Agent"
+startSpireAgent
+# wait time to fully load the spire agent
+sleep 30
+
+
+# Modifies the swop profile in the workspaace to change the fields like <CURRENT-PATH>, <APLS-IP> and <DNS>
+# Also Modifies the <CURRENT-PATH> in spire_cifar10_task file
+sed -i "s+<HOST-IP>+${Host_1_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<APLS-IP>+${APLS_IP}+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<WORKING-DIR>+${workingDir}+g" "${workingDir}"/swop/swop1_profile.yaml
+sed -i "s+<NETWORK>+${host1network}+g" "${workingDir}"/swop/swop1_profile.yaml
+
+sed -i "s+<HOST-IP>+${Host_1_IP}+g" "${workingDir}"/swci/swci-init
+    
+
+# Create an entry into the spire-server via spire agent. For each component 
+# we have created seperate entry with unique selector and spiffe id. It is 
+# recommended to create an entry before the start of each container and 
+# additional sleep of 5 seconds added to get the entry to spire federation.
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/sn                     \
+    -selector "docker:env:swarm_node_type=sn"                       \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+sleep 5
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/swop                   \
+    -selector "docker:env:swarm_node_type=swop"                     \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+sleep 5
+# SL entry also added here because swop is responsible for the creation
+# of SL nodes.
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/sl                     \
+    -selector "docker:env:swarm_node_type=sl"                       \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+sleep 5
+docker exec spire-server /opt/spire/bin/spire-server entry create   \
+    -parentID spiffe://${org_1_trust_domain}/agent                  \
+    -spiffeID spiffe://${org_1_trust_domain}/swci                   \
+    -selector "docker:env:swarm_node_type=swci"                     \
+    -federatesWith "spiffe://${org_2_trust_domain}"
+sleep 5
+
+# Remove the bundle files to avoid the old file usage for multiple runs.
+[ -f ${org1spirebundle} ] && rm $org1spirebundle
+[ -f ${org2spirebundle} ] && rm $org2spirebundle
+
+# Start Swarm components.
+echo "############### Starting Sentinel SN ##################"
+"./scripts/bin/run-sn"                                  \
+    -d                                                  \
+    --name=sn-1                                         \
+    --host-ip=${Host_1_IP}                              \
+    --network=${host1network}                           \
+    --sn-api-port=30304                                 \
+    --sn-p2p-port=30303                                 \
+    --sentinel                                          \
+    --apls-ip=${APLS_IP}                                \
+    -e no_proxy=                                        \
+    -e swarm_node_type=sn                               \
+    --socket-path ${workingDir}/spire-agent/agent.sock           
+              
+[[ $? -ne 0 ]] && exit 1
+
+# wait for Sentinel node to start
+retries=1
+search_string="INFO : Starting SWARM-API-SERVER on port:"
+isUp=''
+while [[ ${isUp} != "OK" ]]
+do
+    if docker logs sn-1 | grep -q "$search_string"; then
+        isUp='OK'
+        echo "Search string found in logs"
+    fi
+    
+    if [[ ${retries} -gt 20 ]] 
+    then
+        echo "Exiting: Failed to start Sentinel node within the time limit of 10 minutes" 
+        exit 1;
+    fi 
+    if [[ ${isUp} != "OK" ]]
+    then
+        echo "Waiting for the Sentinel node to start ....."
+        retries=$((retries+1)) 
+        sleep 30 
+    fi
+done
+
+if [[ ${isUp} == "OK" ]]
+then
+    echo "Sentinel node is Started"
+fi
+
+
+echo "#################### Starting SWOP ####################"
+"./scripts/bin/run-swop"                                \
+    -d                                                  \
+    --name=swop-1                                       \
+    --network=${host1network}                           \
+    --usr-dir=${workingDir}/swop                        \
+    --profile-file-name=swop1_profile.yaml              \
+    --sn-ip=${Host_1_IP}                                \
+    --sn-api-port=30304                                 \
+    --apls-ip=${APLS_IP}                                \
+    -e http_proxy=                                      \
+    -e https_proxy=                                     \
+    -e SWOP_KEEP_CONTAINERS=1                           \
+    -e swarm_node_type=swop                             \
+    --socket-path ${workingDir}/spire-agent/agent.sock    
+
+echo "#################### Starting SWCI ####################"
+"./scripts/bin/run-swci"                                \
+    --rm=false                                          \
+    -dt                                                 \
+    --name=swci-1                                       \
+    --network=${host1network}                           \
+    --apls-ip=${APLS_IP}                                \
+    --usr-dir=${workingDir}/swci                        \
+    --init-script-name=swci-init                        \
+    -e swarm_node_type=swci                             \
+    --socket-path ${workingDir}/spire-agent/agent.sock

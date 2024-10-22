@@ -1,6 +1,6 @@
 # <a name="GUID-658BD7CB-5200-4597-8035-F3AF7F9EF365"/> Starting Sentinel node
 
-Use the `swarm-learning/bin/run-sn` script to start Sentinel and Swarm Network \(SN\) nodes. This script accepts the following parameters:
+Use the `swarm-learning/scripts/bin/run-sn` script to start Sentinel and Swarm Network \(SN\) nodes. This script accepts the following parameters:
 
 |Parameter name|Description|Default value|
 |--------------|-----------|-------------|
@@ -12,3 +12,4 @@ Use the `swarm-learning/bin/run-sn` script to start Sentinel and Swarm Network \
 |`--sn-api-service <fqdn>:<port number>`|Fully Qualified Domain Name and optional port for this Swarm Network node's API Service.| |
 |`--sn-p2p-port <port number>`|The host port for this Swarm Network node's P2P communications.|None|
 |`--sn-p2p-service <fqdn>:<port number>`|Fully Qualified Domain Name and optional port for this Swarm Network node's P2P Service.| |
+|`-v \<blockchain path on host machine\>:/platform/swarm/SMLNODE`|The host path where user wants to persist blockchain across SN restart.|By default, Blockchain data will not be preserved over SN restart.|

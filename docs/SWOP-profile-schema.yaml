@@ -1,6 +1,6 @@
 ---
 ######################################################################
-## (C)Copyright 2021,2022 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 ######################################################################
 "$schema"   : "https://json-schema.org/draft/2020-12/schema"
 title       : "SWOP Profile definition"
@@ -209,7 +209,10 @@ properties  :
                           oneOf:
                               - const: ~
                               - type: string
-                                description: "FQDN and optional port of the FS service for the SL Container"
+                                description: "FQDN and optional port of the FS service for the SL Container. If this optional 
+                                              port is passed along with the service then it gets publised on the host where 
+                                              corresponding container port being default 30305. 
+                                              Ex: If slfsservice is fs.sl1.swarm:30331 then publish happens as -p 30305:30331"
                                 # https://stackoverflow.com/a/32294443.
                                 maxLength: 253
                                 minLength: 2
@@ -267,6 +270,22 @@ properties  :
                               items:
                                   type: string
                                   uniqueItems: true
+                      # This attribute helps in starting SL container with pre-defined python docker network SDK option called "ipv4_address"
+                      # Added as part of reverse proxy multi-host scenario where instead of using hostIP with in nginx configuration we can
+                      # now use continer IP's for easier and simpler IP and port mapping.
+                      slnetworkopts   : 
+                          oneOf       : 
+                              - const   : ~
+                              - type    : array
+                                description : "List of K-V pairs passed directly to connect SL docker container to specific network.
+                                              This option is needed to start the SL container with a static IP. The IP address is 
+                                              passed using 'ip' key inside slnetworkopts. This will get converted to ipv4_address 
+                                              argument of the python docker sdk network connect method. This is same as passing '--ip' 
+                                              argument to the docker cli run command.
+                                              "
+                                items : 
+                                    type : object
+                                    uniqueItems : true
 
                       usrhostname :
                           oneOf : 
@@ -298,7 +317,22 @@ properties  :
                               items:
                                   type: string
                                   uniqueItems: true
-
+                      # This attribute helps in starting ML container with pre-defined python docker network SDK options called "ipv4_address"
+                      # Added as part of reverse proxy multi-host scenario where instead of using hostIP with in nginx configuration we can
+                      # now use continer IP's for easier and simpler IP and port mapping.
+                      usrnetworkopts   : 
+                          oneOf       : 
+                              - const   : ~
+                              - type    : array
+                                description : "List of K-V pairs passed directly to connect user docker container to specific network.
+                                              This option is needed to start the user container with a static IP. The IP address is 
+                                              passed using 'ip' key inside usrnetworkopts. This will get converted to ipv4_address 
+                                              argument of the python docker sdk network connect method. This is same as passing '--ip' 
+                                              argument to the docker cli run command.
+                                              "
+                                items : 
+                                    type : object
+                                    uniqueItems : true
                       usrcontaineropts   : 
                           oneOf       : 
                               - const   : ~
