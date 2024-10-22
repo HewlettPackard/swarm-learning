@@ -1,0 +1,5 @@
+keras
+pandas
+sklearn
+protobuf==3.15.6
+opencv-python
