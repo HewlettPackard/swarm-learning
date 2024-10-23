@@ -20,9 +20,9 @@ Swarm Learning framework must be installed and APLS must be running.
 For installation info refer [HPE Swarm Learning Documentation](https://github.com/HewlettPackard/swarm-learning)
 
 ## Preview 
-This project uses the Ocular Dataset and data splits have been done. More information can be found here " ". 
+This project uses the Ocular Dataset and data splits have been done. More information can be found [here](https://www.kaggle.com/datasets/andrewmvd/ocular-disease-recognition-odir5k). 
 The ML program, after conversion to Swarm Learning, is in `cataract-detection/model` and is called `cataract.py`. 
-It contains our model integrated with Swarm Learning Framework. More information can be found here " "
+It contains our model integrated with Swarm Learning Framework.
 
 This project shows the Swarm training of Keras based Machine Learning 
 model using two ML nodes. It also shows how ML environment can 
