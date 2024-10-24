@@ -64,8 +64,6 @@ y_train=train.iloc[:,1].values
 labelencode = LabelEncoder()
 y_train=labelencode.fit_transform(y_train)
 
-test.drop("Unnamed: 32",axis=1,inplace=True)
-
 X_test=test.iloc[:,2:].values
 y_test=test.iloc[:,1].values
 
