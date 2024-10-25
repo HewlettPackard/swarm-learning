@@ -105,9 +105,9 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 ```
 ./scripts/bin/run-sn -d --name=sn1 --host-ip=172.1.1.4 \
 -e http_proxy= -e https_proxy=  \
---sentinel --sn-api-port=30304 --key=demo/cataract-detection/cert/sn-1-key.pem \
---cert=demo/cataract-detection/cert/sn-1-cert.pem \
---capath=demo/cataract-detection/cert/ca/capath --apls-ip=172.1.1.4
+--sentinel --sn-api-port=30304 --key=workspace/cataract-detection/cert/sn-1-key.pem \
+--cert=workspace/cataract-detection/cert/sn-1-cert.pem \
+--capath=workspace/cataract-detection/cert/ca/capath --apls-ip=172.1.1.4
 ```
 
    Use the Docker logs command to monitor this Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:
@@ -122,13 +122,13 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 ./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.4 \
 -e http_proxy= -e https_proxy=  \
 --sn-ip=172.1.1.4 --sn-api-port=30304 --sl-fs-port=16000 \
---key=demo/cataract-detection/cert/sl-1-key.pem \
---cert=demo/cataract-detection/cert/sl-1-cert.pem \
---capath=demo/cataract-detection/cert/ca/capath --ml-it \
+--key=workspace/cataract-detection/cert/sl-1-key.pem \
+--cert=workspace/cataract-detection/cert/sl-1-cert.pem \
+--capath=workspace/cataract-detection/cert/ca/capath --ml-it \
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cataract.py \
---ml-v=demo/cataract-detection/model:/tmp/test/model \
---ml-v=demo/cataract-detection/app-data:/tmp/test/app-data \
+--ml-v=workspace/cataract-detection/model:/tmp/test/model \
+--ml-v=workspace/cataract-detection/app-data:/tmp/test/app-data \
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --apls-ip=172.1.1.4
@@ -140,13 +140,13 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 ./scripts/bin/run-sl --name=sl2 --host-ip=172.1.1.5 \
 -e http_proxy= -e https_proxy=  \
 --sn-ip=172.1.1.4 --sn-api-port=30304 \
---sl-fs-port=17000 --key=demo/cataract-detection/cert/sl-2-key.pem \
---cert=demo/cataract-detection/cert/sl-2-cert.pem \
---capath=demo/cataract-detection/cert/ca/capath \
+--sl-fs-port=17000 --key=workspace/cataract-detection/cert/sl-2-key.pem \
+--cert=workspace/cataract-detection/cert/sl-2-cert.pem \
+--capath=workspace/cataract-detection/cert/ca/capath \
 --ml-it --ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cataract.py \
---ml-v=demo/cataract-detection/model:/tmp/test/model \
---ml-v=demo/cataract-detection/app-data:/tmp/test/app-data \
+--ml-v=workspace/cataract-detection/model:/tmp/test/model \
+--ml-v=workspace/cataract-detection/app-data:/tmp/test/app-data \
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --apls-ip=172.1.1.4
@@ -165,15 +165,54 @@ SwarmCallback : INFO : Saved the trained model - model/saved_models/cataract.h5
 
 
 
- 
+# Dataset Description
+This project uses the Ocular Disease Intelligent Recognition (ODIR),	
+The dataset is intended to mimic a "real-life" collection of patient 
+data gathered by Shanggong Medical Technology Co., Ltd. from various
+ hospitals and healthcare facilities in China. The dataset contains retinal images of both eyes which 
+  classifies multiple disease conditions such as cataracts, Glaucoma,
+   Hypertension, Age-related Macular Degeneration, and Pathological Myopia. The link to npz files of the dataset, with different data splits, can be found in this link: https://drive.google.com/drive/folders/1qKCOFjaaYF9VNIkAFltLaaACmV7UuB2Y
 
+
+## Data Pre-Processing
+The dataset consists of pre-processed images. However, we need 
+to pre-process the images by resizing them accordingly for the 
+model that will be implemented (i.e., VGG19 uses 224x224x3 as 
+the input channel). To make the process of reading the images 
+faster, we have converted the images to NumPy arrays (.npz format).
+ Further, these NumPy arrays are split into training and testing
+  data in the ratio 80:20.
+
+## Data-Split 
+
+ To reflect a real-life scenario, we have considered different data-splits, where data 
+ across different organizations (hospitals/clinics) are 
+ unequally distributed containing biased data pertaining to a 
+ particular region, sex, ethnicity, or even type of organization.
+  Hence, we have segregated our dataset into three categories 
+  such as Gynac (GY) containing a dataset of all women from the 
+  age 18-60, General Physician (GP) containing a dataset of men 
+  and women up to the age 60 and Senior Citizens (SC) which 
+  contains a dataset of all men and women above the age of 60.
+  The maximum validation accuracy obtained for the
+centralized setup is 93.9, 93.3, and 97.7 for GP, GY, and SC
+nodes respectively
+
+  After training with two swarm learning nodes , the maximum validation accuracy obtained under the Swarm Learning setup is 95.48
+and 98.27 for GP-GY and GP-SC splits respectively
+
+#### The following summarizes our data splits
+
+##### 1) GP
+##### 2) GY
+##### 3) SC
 
 
 
 ## Authors
 
+- [@samyakmaurya](https://www.github.com/samyakmaurya)
 - [@janavi2001](https://www.github.com/janavi2001)
 - [@ThilakShekharShriyan](https://www.github.com/ThilakShekharShriyan)
-- [@samyakmaurya](https://www.github.com/samyakmaurya)
 - [@vaibzvb](https://github.com/vaibzvb)
 

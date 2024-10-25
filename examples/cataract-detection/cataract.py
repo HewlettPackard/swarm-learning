@@ -1,5 +1,6 @@
 import os
 import logging
+import numpy as np
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten
@@ -9,6 +10,17 @@ from swarmlearning.tf import SwarmCallback
 
 default_max_epochs = 5
 default_min_peers = 2
+
+def load_data(dataDir):
+
+    path = os.path.join(dataDir,'ocular1.npz')
+    loaded = np.load(path)
+    x_train = loaded['a']
+    x_test = loaded['b']
+    y_train = loaded['c']
+    y_test = loaded['d']
+
+    return (x_train,y_train) , (x_test , y_test)
 
 
 def main():
