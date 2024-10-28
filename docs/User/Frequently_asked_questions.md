@@ -279,6 +279,11 @@ SWOP profile supports mounts with private data. If the installation path or any 
 
 No. The program and parameters should be the same across all the Swarm Learning nodes.
 
+### How to resolve "ERROR: Invalid requirement: 'swarmlearning==client': Expected end or semicolon" error while building user container?
+Latest version of pip has become stricter, especially in handling package names and version specifiers, you can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'example/contrib/' examples for reference.
+
+By default, when user ML container is run through SWOP or using the `run-sl` script, the user ML container is run with current user's UID and GID of the host machine. If the current user on the host is non-root, the user container also runs as non-root.
+
 ## Swarm management
 
 ### What are the supported SWCI commands?

@@ -11,12 +11,28 @@ This project uses dataset from multiple sources :
 
 * https://www.kaggle.com/datasets/arthitaya/nail-dataset
 
-* https://www.kaggle.com/datasets/reubenindustrustech/nail-dataset
-
 * https://www.kaggle.com/datasets/nuttidalapthanachai/nails-new-test
 
-The data is split into *train* and *test*.
-The training data is further split into two parts for testing.
+Download the dataset and create app-data1 and app-data2 directories. Split the downloaded dataset into 2 parts for each node into app-data1 and app-data2. Further split node 1 and 2 data in app-data1 and app-data2 into train and test data.
+
+Note: Keep the directory structure of the downloaded dataset intact, as images are segregated as per their class.
+
+Directory structure should be like this:
+-examples
+    -contrib
+        -nail-disease
+            -app-data1
+                -train
+                    -class1
+                    -class2
+                    -class3...
+                -test
+                    -class1
+                    -class2
+                    -class3...
+            -app-data2
+                -train
+                -test
 
 The following image illustrates a cluster setup for this example:
 
