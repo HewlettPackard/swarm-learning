@@ -25,7 +25,7 @@ NOTE: HPE recommends that users must use their own certificates in actual produc
 </blockquote>
 
 ## How to resolve "ERROR: Invalid requirement: 'swarmlearning==client': Expected end or semicolon" error while building user container?
-Latest version of pip has become stricter, especially in handling package names and version specifiers, you can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'example/contrib/' examples for reference.
+Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'example/contrib/' examples for reference.
 
 ## Swarm Learning Examples
 

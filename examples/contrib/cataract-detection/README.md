@@ -4,17 +4,14 @@
 Cataract is one of the most common issues faced during old age 
 that in the worst case can lead to loss of sight. Detecting 
 cataract during its early stages can prevent several complications.
-Data in the health care industry is considered to be highly sensitive and is distributed in various hospitals. Hence this project, focuses on developing a machine learning framework using Swarm Learning to help in the early detection of cataracts by maintaining the privacy of the patients data while creating an accurate and a robust model. 
+Data in the healthcare industry is considered to be highly sensitive and is distributed in various hospitals. Hence this project, focuses on developing a machine learning framework using Swarm Learning to help in the early detection of cataracts by maintaining the privacy of the patients data while creating an accurate and a robust model. 
 
 
 ## References of this example:
 - Selected and presented in the 29th International Conference on Computational & Experimental Engineering and Sciences (ICCES2023)
 
- 
-
 ## High Level Overview
-<img width="245" alt="Screenshot 2023-01-11 221937" src="/docs/User/211866773-9c75636c-267a-4013-a1d9-54dc995e9a67.png">
-
+<img width="500" alt="Screenshot 2023-01-11 221937" src="/docs/User/211866773-9c75636c-267a-4013-a1d9-54dc995e9a67.png">
 
 ## Pre-requisites 
 Swarm Learning framework must be installed and APLS must be running.
@@ -38,6 +35,30 @@ faster, we have converted the images to NumPy arrays (.npz format).
 Further, these NumPy arrays are split into training and testing
 data in the ratio 80:20.
 
+## Data-Split 
+
+ To reflect a real-life scenario, we have considered different data-splits, where data 
+ across different organizations (hospitals/clinics) are 
+ unequally distributed containing biased data pertaining to a 
+ particular region, sex, ethnicity, or even type of organization.
+  Hence, we have segregated our dataset into three categories 
+  such as Gynac (GY) containing a dataset of all women from the 
+  age 18-60, General Physician (GP) containing a dataset of men 
+  and women up to the age 60 and Senior Citizens (SC) which 
+  contains a dataset of all men and women above the age of 60.
+  The maximum validation accuracy obtained for the
+centralized setup is 93.9, 93.3, and 97.7 for GP, GY, and SC
+nodes respectively
+
+  After training with two swarm learning nodes , the maximum validation accuracy obtained under the Swarm Learning setup is 95.48
+and 98.27 for GP-GY and GP-SC splits respectively
+
+#### The following summarizes our data splits
+
+##### 1) GP
+##### 2) GY
+##### 3) SC
+
 ## Preview 
 This project uses the Ocular Dataset and data splits have been done. More information can be found [here](https://www.kaggle.com/datasets/andrewmvd/ocular-disease-recognition-odir5k). 
 The ML program, after conversion to Swarm Learning, is in `cataract-detection/model` and is called `cataract.py`. 
@@ -50,8 +71,7 @@ can be launched without SWCI or SWOP nodes.
 Here `scripts/bin/run-sl` script is used to spawn each ML node 
 to run Cataract model as a `sidecar` container of each SL node.
 
-The following image illustrates a cluster setup:
-
+The High Level Overview image above illustrates a cluster setup:
 
 -   This example uses one SN node. SN1 is the name of the Docker container that runs on host 172.1.1.4.
 
@@ -182,4 +202,11 @@ SwarmCallback : INFO : Saved the trained model - model/saved_models/cataract.h5
    Final Swarm model is saved inside the model directory that is `workspace/cataract-detection/model/saved_models` directory on both the hosts. SL and ML nodes exit but it is not removed after the Swarm training.
 
 10. On both host-1 and host-2, To clean up, run the `scripts/bin/stop-swarm` script on all the systems to stop and remove the container nodes of the previous run. If required, backup the container logs and delete the workspace directory.
+
+## Authors
+
+- [@samyakmaurya](https://www.github.com/samyakmaurya)
+- [@janavi2001](https://www.github.com/janavi2001)
+- [@ThilakShekharShriyan](https://www.github.com/ThilakShekharShriyan)
+- [@vaibzvb](https://github.com/vaibzvb)
 
