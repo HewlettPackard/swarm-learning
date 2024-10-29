@@ -18,6 +18,7 @@ Download the dataset and create app-data1 and app-data2 directories. Split the d
 Note: Keep the directory structure of the downloaded dataset intact, as images are segregated as per their class.
 
 Directory structure should be like this:
+```
 -examples
     -contrib
         -nail-disease
@@ -33,6 +34,11 @@ Directory structure should be like this:
             -app-data2
                 -train
                 -test
+```
+
+## References for this example:
+- Published as a Chapter/Conference paper in Springer (https://link.springer.com/chapter/10.1007/978-981-99-3982-4_10)
+- Selected in 7th International Conference on ICT for Intelligent Systems(ICTIS-2023)
 
 The following image illustrates a cluster setup for this example:
 
