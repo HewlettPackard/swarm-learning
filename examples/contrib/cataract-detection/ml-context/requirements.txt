@@ -1,0 +1,5 @@
+keras
+pandas
+scikit-learn
+protobuf==3.15.6
+opencv-python

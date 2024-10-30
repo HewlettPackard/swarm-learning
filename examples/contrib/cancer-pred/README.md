@@ -38,7 +38,7 @@ cd swarm-learning
 
 ```
 mkdir workspace
-cp -r examples/cancer-pred workspace/
+cp -r examples/contrib/cancer-pred workspace/
 cp -r examples/utils/gen-cert workspace/cancer-pred/
 ```
 
@@ -103,11 +103,13 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
 --key=workspace/cancer-pred/cert/sl-1-key.pem \
 --cert=workspace/cancer-pred/cert/sl-1-cert.pem \
---capath=workspace/cancer-pred/cert/ca/capath --ml-it \
+--capath=workspace/cancer-pred/cert/ca/capath \
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cancer-pred.py \
 --ml-v=workspace/cancer-pred/model:/tmp/test/model \
+--ml-v=workspace/cancer-pred/data:/tmp/test/data \
 --ml-e MODEL_DIR=model \
+--ml-e DATA_DIR=data \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
 --apls-ip=172.1.1.1
@@ -121,10 +123,12 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --sl-fs-port=17000 --key=workspace/cancer-pred/cert/sl-2-key.pem \
 --cert=workspace/cancer-pred/cert/sl-2-cert.pem \
 --capath=workspace/cancer-pred/cert/ca/capath \
---ml-it --ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
+--ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/cancer-pred.py \
 --ml-v=workspace/cancer-pred/model:/tmp/test/model \
+--ml-v=workspace/cancer-pred/data:/tmp/test/data \
 --ml-e MODEL_DIR=model \
+--ml-e DATA_DIR=data \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
 --apls-ip=172.1.1.1

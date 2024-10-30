@@ -14,6 +14,10 @@ The following image illustrates a cluster setup for this example:
 -   SL1 and ML1 pair runs on host 172.1.1.1, whereas SL2 and ML2 pair runs on host 172.2.2.2.
 -   This example assumes that License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
+## References of this example:
+- Published as a Chapter/Conference Paper in Springer (https://link.springer.com/chapter/10.1007/978-3-031-36402-0_14)
+- Accepted in Multi-disciplinary Trends in Artificial Intelligence 16th International Conference, MIWAI 2023
+
 ## Running the breakhis example -
 
 1.  On both host-1 and host-2, navigate to `swarm-learning` folder \(that is, parent to examples directory\).
@@ -103,7 +107,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
 --key=workspace/breakhis/cert/sl-1-key.pem \
 --cert=workspace/breakhis/cert/sl-1-cert.pem \
---capath=workspace/breakhis/cert/ca/capath --ml-it \
+--capath=workspace/breakhis/cert/ca/capath \
 --ml-image=user-ml-env-tf2.7.0 --ml-name=ml1 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/breakhis.py \
 --ml-v=workspace/breakhis/model:/tmp/test/model \
@@ -121,7 +125,7 @@ swarm.blCnt : INFO : Starting SWARM-API-SERVER on port: 30304
 --sl-fs-port=17000 --key=workspace/breakhis/cert/sl-2-key.pem \
 --cert=workspace/breakhis/cert/sl-2-cert.pem \
 --capath=workspace/breakhis/cert/ca/capath \
---ml-it --ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
+--ml-image=user-ml-env-tf2.7.0 --ml-name=ml2 \
 --ml-w=/tmp/test --ml-entrypoint=python3 --ml-cmd=model/breakhis.py \
 --ml-v=workspace/breakhis/model:/tmp/test/model \
 --ml-e MODEL_DIR=model \
