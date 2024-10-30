@@ -11,7 +11,7 @@ Data in the healthcare industry is considered to be highly sensitive and is dist
 - Selected and presented in the 29th International Conference on Computational & Experimental Engineering and Sciences (ICCES2023)
 
 ## High Level Overview
-<img width="500" alt="Screenshot 2023-01-11 221937" src="/docs/User/211866773-9c75636c-267a-4013-a1d9-54dc995e9a67.png">
+<img width="500" alt="Screenshot 2023-01-11 221937" src="/docs/User/GUID-4D303DEC-8E71-43F4-BDCB-04B0C1AE79D8-high.png">
 
 ## Pre-requisites 
 Swarm Learning framework must be installed and APLS must be running.
@@ -61,7 +61,7 @@ and 98.27 for GP-GY and GP-SC splits respectively
 
 ## Preview 
 This project uses the Ocular Dataset and data splits have been done. More information can be found [here](https://www.kaggle.com/datasets/andrewmvd/ocular-disease-recognition-odir5k). 
-The ML program, after conversion to Swarm Learning, is in `cataract-detection/model` and is called `cataract.py`. 
+The ML program, after conversion to Swarm Learning, is in `cataract-detection/model` and is called `cataract.py`. It also uses pre-trained model(VGG19) to leverage the concept of transfer learning
 It contains our model integrated with Swarm Learning Framework.
 
 This project shows the Swarm training of Keras based Machine Learning 
@@ -73,13 +73,13 @@ to run Cataract model as a `sidecar` container of each SL node.
 
 The High Level Overview image above illustrates a cluster setup:
 
--   This example uses one SN node. SN1 is the name of the Docker container that runs on host 172.1.1.4.
+-   This example uses one SN node. SN1 is the name of the Docker container that runs on host 172.1.1.1.
 
 -   Two SL and ML nodes are manually spawned by running the `run-sl` script. Swarm training gets invoked once ML nodes are started. Name of the SL nodes that runs as container are SL1 and SL2. Name of the ML nodes that runs as container are ML1 and ML2.
 
--   SL1 and ML1 pair runs on host 172.1.1.4, whereas SL2 and ML2 pair runs on host 172.1.1.5.
+-   SL1 and ML1 pair runs on host 172.1.1.1, whereas SL2 and ML2 pair runs on host 172.1.1.2.
 
--   This example assumes that License Server already runs on host 172.1.1.4. All Swarm nodes connect to the License Server, on its default port 5814.
+-   This example assumes that License Server already runs on host 172.1.1.1. All Swarm nodes connect to the License Server, on its default port 5814.
 
 
 ## Running Cataract detection Model
@@ -118,14 +118,12 @@ cp -r examples/utils/gen-cert workspace/cataract-detection/
 
     ```
     scp host-2:<PATH>workspace/cataract-detection/cert/ca/capath/ca-2-cert.pem workspace/cataract-detection/cert/ca/capath
-    
     ```
 
     On host-2:
 
     ```
     scp host-1:<PATH>workspace/cataract-detection/cert/ca/capath/ca-1-cert.pem workspace/cataract-detection/cert/ca/capath
-    
     ```
 
 5.  On both host-1 and host-2, copy Swarm Learning wheel file inside build context and build Docker image for ML that contains environment to run Swarm training of user models.
@@ -142,11 +140,11 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 6.  On host-1, Run Swarm Network node \(sentinel node\)
 
 ```
-./scripts/bin/run-sn -d --name=sn1 --host-ip=172.1.1.4 \
+./scripts/bin/run-sn -d --name=sn1 --host-ip=172.1.1.1 \
 -e http_proxy= -e https_proxy=  \
 --sentinel --sn-api-port=30304 --key=workspace/cataract-detection/cert/sn-1-key.pem \
 --cert=workspace/cataract-detection/cert/sn-1-cert.pem \
---capath=workspace/cataract-detection/cert/ca/capath --apls-ip=172.1.1.4
+--capath=workspace/cataract-detection/cert/ca/capath --apls-ip=172.1.1.1
 ```
 
    Use the Docker logs command to monitor this Sentinel SN node and wait for the node to finish initializing. The Sentinel node is ready when these messages appear in the log output:
@@ -158,9 +156,9 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 7.  On host-1, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the ODIR dataset.
 
 ```
-./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.4 \
+./scripts/bin/run-sl --name=sl1 --host-ip=172.1.1.1 \
 -e http_proxy= -e https_proxy=  \
---sn-ip=172.1.1.4 --sn-api-port=30304 --sl-fs-port=16000 \
+--sn-ip=172.1.1.1 --sn-api-port=30304 --sl-fs-port=16000 \
 --key=workspace/cataract-detection/cert/sl-1-key.pem \
 --cert=workspace/cataract-detection/cert/sl-1-cert.pem \
 --capath=workspace/cataract-detection/cert/ca/capath --ml-it \
@@ -171,15 +169,15 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
---apls-ip=172.1.1.4
+--apls-ip=172.1.1.1
 ```
 
 8.  On host-2, run Swarm Learning node and Machine Learning node \(as a side-car\): Set the proxy server as appropriate, as the ML program needs to download the ODIR dataset
 
 ```
-./scripts/bin/run-sl --name=sl2 --host-ip=172.1.1.5 \
+./scripts/bin/run-sl --name=sl2 --host-ip=172.1.1.2 \
 -e http_proxy= -e https_proxy=  \
---sn-ip=172.1.1.4 --sn-api-port=30304 \
+--sn-ip=172.1.1.1 --sn-api-port=30304 \
 --sl-fs-port=17000 --key=workspace/cataract-detection/cert/sl-2-key.pem \
 --cert=workspace/cataract-detection/cert/sl-2-cert.pem \
 --capath=workspace/cataract-detection/cert/ca/capath \
@@ -190,7 +188,7 @@ docker build -t user-ml-env-tf2.7.0 --build-arg https_proxy=http://<your-proxy-s
 --ml-e DATA_DIR=app-data --ml-e MODEL_DIR=model \
 --ml-e MAX_EPOCHS=1 --ml-e MIN_PEERS=2 \
 --ml-e https_proxy=http://<your-proxy-server-ip>:<port-number> \
---apls-ip=172.1.1.4
+--apls-ip=172.1.1.1
 ```
 
 9.  On both host-1 and host-2, Two node of Swarm training are started. User can monitor the Docker logs of ML nodes \(ML1 and ML2 containers\) for Swarm training on both host-1 and host-2. Training ends with the following log message:
