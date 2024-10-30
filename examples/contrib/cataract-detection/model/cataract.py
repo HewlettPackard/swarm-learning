@@ -51,7 +51,11 @@ def main():
     model.compile(optimizer="adam", loss="binary_crossentropy",
                   metrics=["accuracy"])
 
-    swarmCallback = SwarmCallback(syncFrequency=128, minPeers=min_peers,useAdaptiveSync=False, adsValData=(x_test, y_test), adsValBatchSize=8)
+    swarmCallback = SwarmCallback(syncFrequency=128,
+                                  minPeers=min_peers,
+                                  useAdaptiveSync=False,
+                                  adsValData=(x_test, y_test),
+                                  adsValBatchSize=8)
     swarmCallback.logger.setLevel(logging.DEBUG)
 
 
