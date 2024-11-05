@@ -280,7 +280,7 @@ SWOP profile supports mounts with private data. If the installation path or any 
 No. The program and parameters should be the same across all the Swarm Learning nodes.
 
 ### How to resolve "ERROR: Invalid requirement: 'swarmlearning==client': Expected end or semicolon" error while building user container?
-Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'example/contrib/' examples for reference.
+Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'breakhis', 'cancer-pred', 'cataract-detection' or 'nail-disease' examples for reference.
 
 ## Swarm management
 

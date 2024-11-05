@@ -94,7 +94,7 @@ cd swarm-learning
 
 ```
 mkdir workspace
-cp -r examples/contrib/cataract-detection workspace/
+cp -r examples/cataract-detection workspace/
 cp -r examples/utils/gen-cert workspace/cataract-detection/
 ```
 

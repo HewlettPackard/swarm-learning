@@ -22,20 +22,19 @@ Note: Keep the directory structure of the downloaded dataset intact, as images a
 Directory structure should be like this:
 ```
 -examples
-    -contrib
-        -nail-disease
-            -app-data1
-                -train
-                    -class1
-                    -class2
-                    -class3...
-                -test
-                    -class1
-                    -class2
-                    -class3...
-            -app-data2
-                -train
-                -test
+    -nail-disease
+        -app-data1
+            -train
+                -class1
+                -class2
+                -class3...
+            -test
+                -class1
+                -class2
+                -class3...
+        -app-data2
+            -train
+            -test
 ```
 
 ## References for this example:
@@ -66,7 +65,7 @@ cd swarm-learning
 
 ```bash
 mkdir workspace
-cp -r examples/contrib/nail-disease workspace/
+cp -r examples/nail-disease workspace/
 cp -r examples/utils/gen-cert workspace/nail-disease/
 ```
 

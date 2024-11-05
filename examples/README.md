@@ -11,7 +11,12 @@ For details of running each example, see the below:
 -   [NIH](/examples/nih/README.md)
 -   [Reverse Proxy based examples](/examples/reverse-proxy/README.md)
 -   [Spire based example](/examples/spire/cifar10/README.md)
--   For community contributed examples, please refer to the README of the respective examples under `contrib/` directory.
+-   Following are the community contributed examples:
+    -   [BREAKHIS](/examples/breakhis/README.md)
+    -   [Cancer prediction](/examples/cancer-pred/README.md)
+    -   [Cataract detection](/examples/cataract-detection/README.md)
+    -   [Nail disease detection](/examples/nail-disease/README.md)
+
 
 ## Prerequisite for all examples
 1. Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](/docs/Install/HPE_Swarm_Learning_installation.md).
@@ -40,7 +45,7 @@ For details of running each example, see the below:
     </blockquote>
 
 ## How to resolve "ERROR: Invalid requirement: 'swarmlearning==client': Expected end or semicolon" error while building user container?
-Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'example/contrib/' examples for reference.
+Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'breakhis', 'cancer-pred', 'cataract-detection' or 'nail-disease' examples for reference.
 
 ## System setup for the examples
 
