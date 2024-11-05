@@ -13,7 +13,7 @@ This project uses dataset from multiple sources :
 
 * https://www.kaggle.com/datasets/nuttidalapthanachai/nails-new-test
 
-# https://www.kaggle.com/datasets/reubenindustrustech/nail-dataset
+* https://www.kaggle.com/datasets/reubenindustrustech/nail-dataset
 
 Download the dataset and create app-data1 and app-data2 directories. Split the downloaded dataset into 2 parts for each node into app-data1 and app-data2. Further split node 1 and 2 data in app-data1 and app-data2 into train and test data.
 
