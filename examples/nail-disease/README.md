@@ -13,7 +13,7 @@ This project uses dataset from multiple sources :
 
 * https://www.kaggle.com/datasets/nuttidalapthanachai/nails-new-test
 
-# https://www.kaggle.com/datasets/reubenindustrustech/nail-dataset
+* https://www.kaggle.com/datasets/reubenindustrustech/nail-dataset
 
 Download the dataset and create app-data1 and app-data2 directories. Split the downloaded dataset into 2 parts for each node into app-data1 and app-data2. Further split node 1 and 2 data in app-data1 and app-data2 into train and test data.
 
@@ -22,20 +22,19 @@ Note: Keep the directory structure of the downloaded dataset intact, as images a
 Directory structure should be like this:
 ```
 -examples
-    -contrib
-        -nail-disease
-            -app-data1
-                -train
-                    -class1
-                    -class2
-                    -class3...
-                -test
-                    -class1
-                    -class2
-                    -class3...
-            -app-data2
-                -train
-                -test
+    -nail-disease
+        -app-data1
+            -train
+                -class1
+                -class2
+                -class3...
+            -test
+                -class1
+                -class2
+                -class3...
+        -app-data2
+            -train
+            -test
 ```
 
 ## References for this example:
@@ -66,7 +65,7 @@ cd swarm-learning
 
 ```bash
 mkdir workspace
-cp -r examples/contrib/nail-disease workspace/
+cp -r examples/nail-disease workspace/
 cp -r examples/utils/gen-cert workspace/nail-disease/
 ```
 

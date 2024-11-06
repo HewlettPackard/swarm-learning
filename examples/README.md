@@ -1,35 +1,6 @@
-## Prerequisite for all examples
-1. Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](/docs/Install/HPE_Swarm_Learning_installation.md).
-
-2. Install the Swarm Learning product using the Web UI installer.  Refer [Web UI installation](/docs/Install/HPE_Swarm_Learning_installation.md)
-
-For more information on starting license server and installing the Swarm Learning, see [HPE Swarm Learning Installation and Configuration Guide](/docs/Install/HPE_Swarm_Learning_installation.md).
-
-
-In this section, examples use different models, data, ML platforms, and Swarm cluster configurations. All examples require valid X.509 certificates to be used by different Swarm Learning components.
-<blockquote>
-NOTE: Spire based example is automated and doesn't need any certificates to be generated. Spire agent and server containers will manage the certificates internally. 
-</blockquote>
-
-A certificate generation utility (`gen-cert`) is provided with each example to enable users to run the examples quickly, using self-signed certificates.
-``` {#CODEBLOCK_WLX_CZN_WWB}
-./swarm-learning/examples/utils/gen-cert -h
-Usage: gen-cert -e EXAMPLE-NAME -i HOST-INDEX
-        -e Name of the example e.g. mnist, mnist-pyt, cifar10 etc.
-        -i Host index like 1,2 etc.
-        -h Show help.
-```
-
-<blockquote>
-NOTE: HPE recommends that users must use their own certificates in actual production environment.
-</blockquote>
-
-## How to resolve "ERROR: Invalid requirement: 'swarmlearning==client': Expected end or semicolon" error while building user container?
-Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'example/contrib/' examples for reference.
-
 ## Swarm Learning Examples
 
-Several examples of using Swarm Learning are provided with the package. 
+Several examples of using Swarm Learning are provided. These examples use different models, datasets, ML platforms, and Swarm cluster configurations.
 
 For details of running each example, see the below:
 
@@ -40,9 +11,43 @@ For details of running each example, see the below:
 -   [NIH](/examples/nih/README.md)
 -   [Reverse Proxy based examples](/examples/reverse-proxy/README.md)
 -   [Spire based example](/examples/spire/cifar10/README.md)
+-   Following are the community contributed examples:
+    -   [BREAKHIS](/examples/breakhis/README.md)
+    -   [Cancer prediction](/examples/cancer-pred/README.md)
+    -   [Cataract detection](/examples/cataract-detection/README.md)
+    -   [Nail disease detection](/examples/nail-disease/README.md)
 
 
-### System setup for the examples
+## Prerequisite for all examples
+1. Start license server and install valid license before running any of the examples. Refer [Installing licenses and starting license server](/docs/Install/HPE_Swarm_Learning_installation.md).
+
+2. Install the Swarm Learning product using the Web UI installer.  Refer [Web UI installation](/docs/Install/HPE_Swarm_Learning_installation.md)
+
+    For more information on starting license server and installing the Swarm Learning, see [HPE Swarm Learning Installation and Configuration Guide](/docs/Install/HPE_Swarm_Learning_installation.md).
+
+3. All examples require valid X.509 certificates to be used by different Swarm Learning components.
+
+    A certificate generation utility (`gen-cert`) is provided with each example to enable users to run the examples quickly, using self-signed certificates.
+    ``` {#CODEBLOCK_WLX_CZN_WWB}
+    ./swarm-learning/examples/utils/gen-cert -h
+    Usage: gen-cert -e EXAMPLE-NAME -i HOST-INDEX
+            -e Name of the example e.g. mnist, mnist-pyt, cifar10 etc.
+            -i Host index like 1,2 etc.
+            -h Show help.
+    ```
+
+    <blockquote>
+        NOTE: Spire based example is automated and doesn't need any certificates to be generated. Spire agent and server containers will manage the certificates internally.
+    </blockquote>
+
+    <blockquote> 
+        NOTE: HPE recommends that users must use their own certificates in actual production environment.
+    </blockquote>
+
+## How to resolve "ERROR: Invalid requirement: 'swarmlearning==client': Expected end or semicolon" error while building user container?
+Latest version of pip has become stricter, especially in handling package names and version specifiers. You can resolve this error by downgrading pip to 24.0 in dockerfile or build task yaml file. You can check dockerfile of any of the 'breakhis', 'cancer-pred', 'cataract-detection' or 'nail-disease' examples for reference.
+
+## System setup for the examples
 
 1.  The instructions in these examples assume that Swarm Learning runs on 1 to 2 host systems.
 

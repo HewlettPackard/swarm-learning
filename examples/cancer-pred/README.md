@@ -38,7 +38,7 @@ cd swarm-learning
 
 ```
 mkdir workspace
-cp -r examples/contrib/cancer-pred workspace/
+cp -r examples/cancer-pred workspace/
 cp -r examples/utils/gen-cert workspace/cancer-pred/
 ```
 
