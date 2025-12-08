@@ -1,0 +1,21 @@
+######################################################################
+# (C)Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+######################################################################
+Name: run_hf_task
+TaskType: RUN_SWARM
+Author: HPESwarm
+Prereq: build_hf_user_image
+Outcome: run_hf_task
+Body:
+    Command: model/model.py
+    Entrypoint: python3
+    WorkingDir: /tmp/test
+    Envvars: ["MODEL_DIR": model, "MAX_EPOCHS": 5, "MIN_PEERS": 2]
+    PrivateContent: /tmp/test/
+    SharedContent:
+    -   Src: <PROJECT-MODEL>
+        Tgt: /tmp/test/model
+        MType: BIND
+    -   Src: "<PROJECT>/data"  # Your actual data path
+        Tgt: /tmp/test/data
+        MType: BIND
