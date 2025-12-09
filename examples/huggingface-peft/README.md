@@ -1,7 +1,7 @@
 Hugging Face PEFT
 =================
 
-This example runs a Hugging Face BERT movie reviews classification application with GPU based Parameter Efficient Fine-Tuning (PEFT) using LoRA (Low-Rank Adaptation) on the Swarm Learning platform. 
+This example demonstrates LLM fine-tuning in a federated scenario. It shows a BERT movie review classification application with GPU-based Parameter Efficient Fine-Tuning (PEFT) using LoRA (Low-Rank Adaptation) on the Swarm Learning platform. 
 
 The Machine Learning program, after conversion to Swarm Learning for the Hugging Face transformers platform with PEFT integration, is in `examples/huggingface-peft/model`. The Hugging Face transformers-based file with PEFT support is called `model.py`.
 

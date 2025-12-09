@@ -1,6 +1,6 @@
 Hugging Face 
 ============
-This example runs a Hugging Face BERT movie reviews classification application with GPU based local training on the Swarm Learning platform. 
+This example demonstrates LLM fine-tuning in a federated scenario. It shows a Hugging Face BERT movie reviews classification application with GPU based local training on the Swarm Learning platform. 
 
 The Machine Learning program, after conversion to Swarm Learning for the Hugging Face transformers platform, is in `examples/huggingface/model`. The Hugging Face transformers-based file is called `model.py`.
 
