@@ -5,7 +5,6 @@ workspace/
 
 # Large data files and models
 *.bin
-*.csv
 *.json
 *.txt
 
@@ -17,7 +16,6 @@ tokenizer.json
 vocab.txt
 
 # Data directories
-data/
 results/
 saved_models/
 experiments*/
