@@ -4,6 +4,8 @@ Several examples of using Swarm Learning are provided. These examples use differ
 
 For details of running each example, see the below:
 
+-   [LLM fine-tuning](examples/huggingface/README.md)
+-   [LLM fine-tuning with LoRA](examples/huggingface-peft/README.md)
 -   [MNIST](/examples/mnist/README.md)
 -   [MNIST-PYT](/examples/mnist-pyt/README.md)
 -   [CIFAR-10](/examples/cifar10/README.md)
