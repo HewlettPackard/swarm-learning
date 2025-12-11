@@ -1,6 +1,6 @@
 # <d></d> <img style="float: right;" src="docs/images/GettyImages-1148109728_EAA-graphic-A_112_0_72_RGB.jpg?raw=true"/> SWARM LEARNING
 
-#### Product version: 2.2.0
+#### Product version: 2.3.0
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
 
 Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state.   User can monitor the progress of the current training as shown in the below image. It shows all running Swarm nodes, loss, model metric (for example, accuracy) and overall training progress for each User ML node. On hovering over the "progress bar", one can see the number of completed epochs and the total number of epochs.
