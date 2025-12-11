@@ -49,8 +49,8 @@ def main():
     swSyncInterval = 16 # Original sync interval for comparison
 
     # Load and preprocess data
-    train_file = f"/tmp/test/data/N{node_id[-1]}.csv"
-    test_file = "/tmp/test/data/test_data.csv"
+    train_file = f"/tmp/test/N{node_id[-1]}.csv"
+    test_file = "/tmp/test/test_data.csv"
 
     print(f"[INFO] Loading data for node {node_id}")
     data_load_start = time.time()

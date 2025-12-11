@@ -54,12 +54,8 @@ nodes :
         slport : ~
         usrhostname : user1
         privatedata :
-            src: "<PROJECT>"
+            src: "<PROJECT>/data/data1"
             mType : BIND
-            datamount:
-                - src: "<PROJECT>/data/N1.csv"
-                  tgt: "/tmp/test/data/N1.csv"
-                  mType: BIND
         slenvvars : null
         usrenvvars : [SCRATCH_DIR : "user1", NODE_ID: "n1"]
         usrcontaineropts : 
@@ -91,12 +87,8 @@ nodes :
         slport : ~
         usrhostname : user2
         privatedata :
-            src: "<PROJECT>"
+            src: "<PROJECT>/data/data2"
             mType : BIND
-            datamount:
-                - src: "<PROJECT>/data/N2.csv"
-                  tgt: "/tmp/test/data/N2.csv"
-                  mType: BIND
         slenvvars : null
         usrenvvars : [SCRATCH_DIR : "user2", NODE_ID: "n2"]
         usrcontaineropts : 
@@ -128,12 +120,8 @@ nodes :
         slport : ~
         usrhostname : user3
         privatedata :
-            src: "<PROJECT>"
+            src: "<PROJECT>/data/data3"
             mType : BIND
-            datamount:
-                - src: "<PROJECT>/data/N3.csv"
-                  tgt: "/tmp/test/data/N3.csv"
-                  mType: BIND
         slenvvars : null
         usrenvvars : [SCRATCH_DIR : "user3", NODE_ID: "n3"]
         usrcontaineropts : 
