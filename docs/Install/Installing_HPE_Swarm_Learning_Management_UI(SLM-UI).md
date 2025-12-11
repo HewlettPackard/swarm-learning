@@ -1,7 +1,7 @@
 # Installing HPE Swarm Learning Management UI \(SLM-UI\)
 
-## Manual installation: 
-If you choose to manually install Swarm learning, then 
+## Manual installation for 2.3.0 version: 
+We support **only manual** installation for 2.3.0 version. You need to:
 1. Either Clone or download this git repo on **each host machine** where you want to install Swarm learning.
 
 2. If your downloading, then navigate to the main page of the repository. To the right of the list of files, click Releases and select 2.3.0 version. Scroll down to the "Assets" section of the release, click Source code (tar.gz). Copy and extract the tar.gz **on each host machine**
@@ -22,7 +22,7 @@ If you choose to manually install Swarm learning, then
        docker pull hello-world
 You can skip rest of the installation steps mentioned below.
 
-## Automatic installation: 
+## Automatic installation for 2.2.0 version: 
 Installing Swarm Learning is a two-step process using the GUI.
 
 1.  Using SLM-UI Installer GUI, you can install the SLM-UI on one linux host.
@@ -42,4 +42,6 @@ Installing Swarm Learning is a two-step process using the GUI.
 
         -   Download the Swarm Learning SLM-UI installer for your platform, Mac, Windows, or Linux.
           
-        -   Don't download the tar file containing docs and scripts. This is a older version of the tar. Instead, you need to download this git repo: Navigate to the main page of this repository. To the right of the list of files, click Releases and select 2.3.0 version. Scroll down to the "Assets" section of the release, click Source code (tar.gz)
+        -   The tar file containing docs and scripts.
+          
+        -   The signature file for the above tar file.
