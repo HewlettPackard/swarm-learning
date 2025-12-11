@@ -16,6 +16,3 @@ Body:
     -   Src: <PROJECT>/model
         Tgt: /tmp/test/model
         MType: BIND
-    -   Src: "<PROJECT>/data"  # Your actual data path
-        Tgt: /tmp/test/data
-        MType: BIND
