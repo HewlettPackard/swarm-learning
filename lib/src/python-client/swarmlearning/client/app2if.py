@@ -1,5 +1,5 @@
 #######################################################################
-## (C)Copyright 2023 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-2025 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -28,10 +28,11 @@ import traceback
 
 # Our imports.
 from swarmlearning.com.bridge import Bridge, MessageBody
+import pickle
 
 import swarmlearning.com.swifrpc_pb2 as spb
 import swarmlearning.com.util as slutil
-
+from datetime import datetime
 
 class APP2IF:
     def __init__(
@@ -173,17 +174,29 @@ class APP2IF:
             [f"[{seq}-{self.__sequenceCounters[seq]}]" for seq in sequenceNames]
         )
 
-        paramWeights = slutil.toWeights(params)
+        ## paramWeights = slutil.toWeights(params)
+        ## OPTIMIZED: Using pickle.HIGHEST_PROTOCOL for faster serialization. Should be same 
+        ## pickle version between ML and SL, otherwise communication between them wouldn't work.
+        ## For python 3.8 and 3.9, HIGHEST_PROTOCOL happens to be pickle version 5.
+        ## No compression used - CPU becomes a bottleneck and we hit timeouts.
+        ## Buffer size set to 4MB for optimal throughput
+        BUFFER_SIZE = 4 * 1024 * 1024  # 4MB buffer reduces no of syscalls
+        
+        print(f"\n Writing trained weights to file:{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        with open("/tmp/hpe-swarm/trained_weights.pkl", "wb", buffering=BUFFER_SIZE) as f:
+            pickle.dump(params, f, protocol=pickle.HIGHEST_PROTOCOL)
         syncReq = spb.SyncRequest(
             sessionID=self.__sessionID
+            # See if we can do better here. Currently, we need the field names
+            # in a fixed order.
           , syncSeqNum=self.__sequenceCounters[sequenceNames[0]]
           , nodeWeightage=nodeWeightage
           , numberOfNodes=numberOfNodes
-          , inputParams=paramWeights
+          , fileName = "trained_weights.pkl"
         )
 
         _, resp = self.__sendRecv(requestType, syncReq)
-
+        print(f"\n Recieved response from SL {resp}:{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         # Handling loss request
         while isinstance(resp, spb.LossRequest):
             lossReq = resp
@@ -288,7 +301,16 @@ class APP2IF:
                 )
             )
 
-        mergedParams = slutil.fromWeights(lossReq.mergedParams)
+        ## mergedParams = slutil.fromWeights(lossReq.mergedParams)
+        
+        ## OPTIMIZED: Fast read with large buffer, no compression as compression
+        ## involves CPU cycles and our experiments showed it slows down.
+        ## Read-only mode, no unnecessary truncate() call
+        file_path = Path(f"/tmp/hpe-swarm/{lossReq.fileName}")
+        BUFFER_SIZE = 4 * 1024 * 1024  # 4MB buffer        
+        with open(file_path, "rb", buffering=BUFFER_SIZE) as f:
+            mergedParams = pickle.load(f)
+        
         loss, metrics, epochsdone, totalepochs  = self.__callbackLossFunc(mergedParams)
         
         # self.__log(f"{counter} Loss = {loss}")

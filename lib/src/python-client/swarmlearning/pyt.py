@@ -135,6 +135,11 @@ class SwarmCallback(SwarmCallbackBase):
                                         metricFunction="Accuracy",
                                         metricFunctionArgs=mFArgsDict
                                      ...)
+        : param hfMode: Huggingface model type, either "full" or "peft"
+                        For example, to use full model, pass hfMode="full"
+                        For example, to use peft model, pass hfMode="peft"
+                        This is expected to be used only in Huggingface Transformers use case.
+                        For other use cases, this parameter is set to None and ignored.
 
         '''
         SwarmCallbackBase.__init__(self, syncFrequency, minPeers, trainingContract, kwargs)        
@@ -204,6 +209,13 @@ class SwarmCallback(SwarmCallbackBase):
         else:
             self.__setMLContext(pytorchModel=self.model)
 
+        # For TF and Keras, hfMode is not applicable, so set it to None
+        self.hfMode = None
+        if 'hfMode' in params:
+            self.logger.info("hfMode is set to None, as this is PyTorch platform")
+            
+
+
 
     def _getValidationDataForAdaptiveSync(self, valData, valBatchSize):
         '''
@@ -265,6 +277,7 @@ class SwarmCallback(SwarmCallbackBase):
         :param inDict: The flat model weights' dictionary to be loaded in the model
         :return: Nothing is returned, the saved model is updated in-place
         '''
+        # HPESL-141 # SL : PYT: fails to handle dim-0 (scalar , layers) 
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
         # Partially loading a model or loading a partial model are common scenarios 
         # when transfer learning or training a new complex model. 
@@ -327,14 +340,10 @@ class SwarmCallback(SwarmCallbackBase):
             # keyword arguments during the call
             metricFunctionObj = metricFunctionClass(**self.metricFunctionArgs)
 
-
             testLoader = self.valData
             useCuda = torch.cuda.is_available()
             device = torch.device("cuda" if useCuda else "cpu")  
-            # Update the model, mertic and loss also to device specific object
-            metricFunctionObj = metricFunctionObj.to(device)
-            lossFunctionObj = lossFunctionObj.to(device)
-            model = model.to(device)
+            
             model.eval()
             
             with torch.no_grad():

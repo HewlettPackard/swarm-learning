@@ -1,5 +1,5 @@
 #######################################################################
-## (C)Copyright 2023 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-25 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -36,9 +36,13 @@ MessageBody = Union[
   , spb.LossResponse
 ]
 
+# Cython does not support import of annotations from __future__. So, we are left
+# with this hack for type annotation.
 BridgeLaneDirection = TypeVar("Bridge.LaneDirection")
 
 
+# TODO: add a logger. This is slightly complicated by the fact we have different
+# logging methods on the two sides.
 class Bridge:
     class LaneDirection(IntEnum):
         NorthBound = 1
@@ -49,6 +53,7 @@ class Bridge:
 
         self.__setAPIVersion()
         
+        # HPESL-634 -> /tmp/hpe-swarm/...request.pipe: [Errno 13] Permission denied
         # createPipes is set to True for SL container.
         # WARNING: If it is set to True from ML container,
         #          then ML call to mkfifo might fail as ML runs with limited privileges.
@@ -57,15 +62,15 @@ class Bridge:
         self._lanes = {}
         self._openLanes = {}
         self.__makeBridgeLanes()
+        self.__makeWeightFiles()
 
         # These values must be non-zero. Zero values get optimized out, giving
         # us a serialized size that is smaller than what we want.
+        # TODO: find a way to disable this optimization.
         dummyHeader = spb.Header(apiVersion=self._apiVer, msgType=1, msgSize=1)
         self._serializedHeaderSize = len(
             dummyHeader.SerializeToString(deterministic=True)
         )
-
-        # self.__logIt(f"HEADER SIZE = {self._serializedHeaderSize}")
 
         return
 
@@ -108,15 +113,13 @@ class Bridge:
     def _send(
         self, sendLane: BridgeLaneDirection, msgType: int, request: MessageBody
     ) -> None:
+        
         body = request.SerializeToString(deterministic=True)
         header = spb.Header(
             apiVersion=self._apiVer, msgType=msgType, msgSize=len(body)
+            # apiVersion=self._apiVer, msgType=msgType, msgSize=len(request), numOfChunks=num_chunks
         )
-        # message = spb.Message(header=header, body=body)
-
-        # chunk the message into 2GB blocks.
         lane = self._openLanes[sendLane]
-
         # Send the header and body separately until we understand the protobuf
         # serialization format a little better and figure how to send the whole
         # message but, receive and extract only the header.
@@ -124,7 +127,6 @@ class Bridge:
         lane.write(body)
         # lane.write(message.SerializeToString(deterministic=True))
         lane.flush()
-
         return
 
     def _recv(
@@ -164,7 +166,6 @@ class Bridge:
 
         serializedBody = self._read(recvLane, header.msgSize)
         body.ParseFromString(serializedBody)
-
         return header.msgType, body
 
     def _read(self, recvLane: BridgeLaneDirection, nBytes: int) -> bytes:
@@ -189,6 +190,34 @@ class Bridge:
         openLane(self.LaneDirection.NorthBound, northBoundMode)
         openLane(self.LaneDirection.SouthBound, southBoundMode)
 
+        return
+
+    def __makeWeightFiles(self) -> None:
+        def getPath() -> str:
+            filePath = "/tmp/hpe-swarm"
+            return Path(filePath).resolve().as_posix()
+
+        def createFiles(filePath: str, fileName: str) -> None:
+            file = Path(filePath) / fileName
+            try:
+                if(self._createPipes):
+                    file.touch(mode=0o777, exist_ok=False)
+                    self.__logIt(f"{file}: file created")
+                else:
+                    self.__logIt(f"{file}: waiting for weight files to be created")
+                    time.sleep(1)
+            except FileExistsError:
+                self.__logIt(f"{file}: File exists")
+            except BaseException as be:
+                self.__logIt(f"{file}: {be}")
+
+            if not file.is_file():
+                raise RuntimeError(f"{file}: cannot create file")
+            
+        currMask = os.umask(0)
+        createFiles(filePath=getPath(), fileName="trained_weights.pkl")
+        createFiles(filePath=getPath(), fileName="merged_weights.pkl")
+        os.umask(currMask)
         return
 
     def __makeBridgeLanes(self) -> None:
