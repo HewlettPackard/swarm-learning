@@ -38,7 +38,7 @@ NOTE: The participating nodes must be able to access each other's ports.
 
 
 ## User ML component
-User can transform/modify any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see any of the [examples](/examples/README.md) included with the Swarm Learning package.
+User can transform/modify any Keras or PyTorch or HuggingFace Trainer class based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see any of the [examples](/examples/README.md) included with the Swarm Learning package.
 
 The transformed user Machine Learning \(user ML node\) program can be built as a Docker container or can be run on the host.
 
@@ -50,19 +50,20 @@ NOTE: HPE recommends users to build an ML Docker container for easier and automa
 The ML node is responsible to train and iteratively update the model. For each ML node, there is a corresponding SL node in the Swarm Learning framework, which performs the Swarm training. Each pair of ML and SL nodes must run on the same host. This process continues until the SL nodes train the model to the desired state.
 
 <blockquote>
-NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend) or PyTorch. Using Keras for some and PyTorch for the other nodes is not supported.
+NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend), PyTorch, or HuggingFace Trainer class. Using Keras for some and PyTorch for the other nodes is not supported.
 </blockquote>
 
 ## Quick Start 
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
   2. [Upgrading from earlier versions](/docs/Install/Versioning_and_upgrade.md)
   3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the SLM-UI installer 
-  4. Execute a simple predefined example - [MNIST example](/examples/mnist/README.md)
-  5. [Running MNIST example using SLM-UI](/docs/User/Running_MNIST_example_using_SLM-UI.md)
-  6. [Monitoring & Tracking Swarm Learning training using SLM-UI](/docs/User/Monitoring_Swarm_Learning_training_using_SLM-UI.md)
-  7. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
-  8. [Troubleshooting](/docs/User/Troubleshooting.md)
-  9. [Release Notes](/docs/HPE_Swarm_learning_2.2.0_Release_Notes.pdf)
+  4. Execute a simple example - [MNIST example](/examples/mnist/README.md)
+  5. Execute a mini LLM fine-tuning example - [HuggingFace Trainer LoRA](/examples/huggingface-peft/README.md)
+  6. [Running MNIST example using SLM-UI](/docs/User/Running_MNIST_example_using_SLM-UI.md)
+  7. [Monitoring & Tracking Swarm Learning training using SLM-UI](/docs/User/Monitoring_Swarm_Learning_training_using_SLM-UI.md)
+  8. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  9. [Troubleshooting](/docs/User/Troubleshooting.md)
+ 10. [Release Notes](/docs/HPE_Swarm_learning_2.2.0_Release_Notes.pdf)
 
 <blockquote>
  
