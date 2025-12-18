@@ -105,8 +105,7 @@ NOTE: The examples and scripts that are bundled with the Swarm UI installer **ma
   Refer to [Acronyms and Abbreviations](docs/Generic/acronyms.md) for more information.
 
 ## Getting in touch 
-  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  (Or)
-  Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel.
+  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.
   
 ## Contributing
   Refer to [Contributing](docs/Generic/CONTRIBUTING.md) for more information.
