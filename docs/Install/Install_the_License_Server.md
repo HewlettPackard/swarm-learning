@@ -26,7 +26,7 @@
     3.  Pull the image with a tag.
 
         ```
-        docker pull hub.myenterpriselicense.hpe.com/hpe_eval/autopass/apls:9.14
+        docker pull hub.myenterpriselicense.hpe.com/hpe_eval/autopass/apls:9.15
         ```
 
     4.  Configure Data persistence.
