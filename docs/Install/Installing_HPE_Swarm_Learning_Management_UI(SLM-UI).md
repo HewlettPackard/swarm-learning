@@ -1,5 +1,8 @@
 # Installing HPE Swarm Learning Management UI \(SLM-UI\)
 
+### Pre-requisite: 
+APLS license server is installed and Swarm licenses are installed as detailed in the [License server installation steps](Install_the_License_Server.md)
+
 ## Manual installation for 2.3.0 version: 
 We support **only manual** installation for 2.3.0 version. You need to:
 1. Either Clone or download this git repo on **each host machine** where you want to install Swarm learning.
