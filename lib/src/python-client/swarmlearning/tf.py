@@ -101,6 +101,12 @@ class SwarmCallback(Callback, SwarmCallbackBase):
         :param totalEpochs: Total epochs used in local training. 
                             This is needed to display training progress or ETA of training.
                             WARNING: "With out this, training progress display might have some limitations."
+        :param hfMode: Huggingface model type, either "full" or "peft"
+                       For example, to use full model, pass hfMode="full"
+                       For example, to use peft model, pass hfMode="peft"
+                       This is expected to be used only in Huggingface Transformers use case.
+                       For other use cases, this parameter is set to None and ignored.
+
         '''
         Callback.__init__(self)
         SwarmCallbackBase.__init__(self, syncFrequency, minPeers, trainingContract, kwargs)        
@@ -169,6 +175,11 @@ class SwarmCallback(Callback, SwarmCallbackBase):
                 self._logAndRaiseError("tf and sess params are must for Tensorflow platform")
             else:
                 self.__setMLContext(tfobj=self.tf, tfsess=self.sess)
+        # For TF and Keras, hfMode is not applicable, so set it to None
+        self.hfMode = None
+        if 'hfMode' in params:
+            self.logger.info("hfMode is set to None, as this is TF/Keras platform")
+            
 
 
     def _getValidationDataForAdaptiveSync(self, valData, valBatchSize):
@@ -209,8 +220,7 @@ class SwarmCallback(Callback, SwarmCallbackBase):
                 paramsDict[v.name] = sess.run(v)
                 self.weightNames.append(v.name)
         return paramsDict
-
-
+    
     def _loadModelWeightsFromDict(self, paramsDict):
         '''
         TF and Keras specific implementation of abstract method
@@ -291,6 +301,7 @@ class SwarmCallback(Callback, SwarmCallbackBase):
                 valLoss = scores[0]
                 totalMetrics = scores[1]
         elif self.mlPlatform == SLPlatforms.TF:
+            # TODO: To be implemented later
             valLoss = 0
             totalMetrics = 0
         return valLoss, totalMetrics

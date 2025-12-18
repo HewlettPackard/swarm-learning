@@ -51,7 +51,7 @@ Qualified with Keras 2.9.0 \(TensorFlow 2 backend\) and PyTorch 1.5 based Machin
 
 <blockquote>
 
-  NOTE: Python version must be between 3.6 to 3.9.
+  NOTE: Python version must be between 3.8 to 3.9.
 
 </blockquote>
 

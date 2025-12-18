@@ -2,3 +2,41 @@
 .*swp
 **/__pycache__
 workspace/
+
+# Large data files and models
+*.bin
+*.json
+*.txt
+
+# Model files and checkpoints
+pytorch_model.bin
+model.safetensors
+config.json
+tokenizer.json
+vocab.txt
+
+# Data directories
+results/
+saved_models/
+experiments*/
+logs/
+
+# Python virtual environments
+venv/
+env/
+swarm_env/
+
+# Wheel files
+*.whl
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

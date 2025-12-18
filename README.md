@@ -1,6 +1,6 @@
 # <d></d> <img style="float: right;" src="docs/images/GettyImages-1148109728_EAA-graphic-A_112_0_72_RGB.jpg?raw=true"/> SWARM LEARNING
 
-#### Product version: 2.2.0
+#### Product version: 2.3.0
 Swarm Learning is a decentralized, privacy-preserving Machine Learning framework. This framework utilizes the computing power at, or near, the distributed data sources to run the Machine Learning algorithms that train the models. It uses the security of a blockchain platform to share learnings with peers in a safe and secure manner. In Swarm Learning, training of the model occurs at the edge, where data is most recent, and where prompt, data-driven decisions are mostly necessary. In this completely decentralized architecture, only the insights learned are shared with the collaborating ML peers, not the raw data. This tremendously enhances data security and privacy.
 
 Swarm Learning nodes works in collaboration with other Swarm Learning nodes in the network. It regularly shares its learnings with the other nodes and incorporates their insights. This process continues until the Swarm Learning nodes train the model to desired state.   User can monitor the progress of the current training as shown in the below image. It shows all running Swarm nodes, loss, model metric (for example, accuracy) and overall training progress for each User ML node. On hovering over the "progress bar", one can see the number of completed epochs and the total number of epochs.
@@ -38,7 +38,7 @@ NOTE: The participating nodes must be able to access each other's ports.
 
 
 ## User ML component
-User can transform/modify any Keras or PyTorch based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see any of the [examples](/examples/README.md) included with the Swarm Learning package.
+User can transform/modify any Keras or PyTorch or HuggingFace Trainer class based ML program that is written using Python3 into a Swarm Learning ML program by [making a few simple changes](./docs/User/How_to_Swarm_enable_an_ML_algorithm.md) to the model training code by including the `SwarmCallback` API. For more information, see any of the [examples](/examples/README.md) included with the Swarm Learning package.
 
 The transformed user Machine Learning \(user ML node\) program can be built as a Docker container or can be run on the host.
 
@@ -50,19 +50,20 @@ NOTE: HPE recommends users to build an ML Docker container for easier and automa
 The ML node is responsible to train and iteratively update the model. For each ML node, there is a corresponding SL node in the Swarm Learning framework, which performs the Swarm training. Each pair of ML and SL nodes must run on the same host. This process continues until the SL nodes train the model to the desired state.
 
 <blockquote>
-NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend) or PyTorch. Using Keras for some and PyTorch for the other nodes is not supported.
+NOTE: All the ML nodes must use the same ML platform either Keras (based on TensorFlow 2 backend), PyTorch, or HuggingFace Trainer class. Using Keras for some and PyTorch for the other nodes is not supported.
 </blockquote>
 
 ## Quick Start 
   1. [Prerequisites](/docs/Install/Prerequisites.md) for Swarm Learning
   2. [Upgrading from earlier versions](/docs/Install/Versioning_and_upgrade.md)
   3. [Download and setup Swarm Learning](/docs/Install/HPE_Swarm_Learning_installation.md) using the SLM-UI installer 
-  4. Execute a simple predefined example - [MNIST example](/examples/mnist/README.md)
-  5. [Running MNIST example using SLM-UI](/docs/User/Running_MNIST_example_using_SLM-UI.md)
-  6. [Monitoring & Tracking Swarm Learning training using SLM-UI](/docs/User/Monitoring_Swarm_Learning_training_using_SLM-UI.md)
-  7. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
-  8. [Troubleshooting](/docs/User/Troubleshooting.md)
-  9. [Release Notes](/docs/HPE_Swarm_learning_2.2.0_Release_Notes.pdf)
+  4. Execute a simple example - [MNIST example](/examples/mnist/README.md)
+  5. Execute a mini LLM fine-tuning example - [HuggingFace Trainer LoRA](/examples/huggingface-peft/README.md)
+  6. [Running MNIST example using SLM-UI](/docs/User/Running_MNIST_example_using_SLM-UI.md)
+  7. [Monitoring & Tracking Swarm Learning training using SLM-UI](/docs/User/Monitoring_Swarm_Learning_training_using_SLM-UI.md)
+  8. [Frequently Asked Questions](/docs/User/Frequently_asked_questions.md)
+  9. [Troubleshooting](/docs/User/Troubleshooting.md)
+ 10. [Release Notes](/docs/HPE_Swarm_learning_2.2.0_Release_Notes.pdf)
 
 <blockquote>
  
@@ -104,8 +105,7 @@ NOTE: The examples and scripts that are bundled with the Swarm UI installer **ma
   Refer to [Acronyms and Abbreviations](docs/Generic/acronyms.md) for more information.
 
 ## Getting in touch 
-  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.  (Or)
-  Join the [HPE Developer Slack Workspace](https://slack.hpedev.io/) and start a discussion in our [#hpe-swarm-learning](https://hpedev.slack.com/archives/C04A5DK9TUK) channel.
+  Feedback and questions are appreciated. You can use the issue tracker to report bugs on GitHub.
   
 ## Contributing
   Refer to [Contributing](docs/Generic/CONTRIBUTING.md) for more information.

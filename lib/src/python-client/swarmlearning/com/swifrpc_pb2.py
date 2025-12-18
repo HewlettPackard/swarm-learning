@@ -1,5 +1,5 @@
 #######################################################################
-## (C)Copyright 2023 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-25 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -36,7 +36,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\200\265\030\002\210\265\030\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1fswarmlearning/com/swifrpc.proto\x1a google/protobuf/descriptor.proto\"4\n\nAPIVersion\x12\x12\n\napiVersion\x18\x01 \x01(\x07\x12\x12\n\nminVersion\x18\x02 \x01(\x07\"5\n\x07NDArray\x12\r\n\x05\x64type\x18\x01 \x01(\t\x12\r\n\x05shape\x18\x02 \x03(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"k\n\x07Weights\x12&\n\x07weights\x18\x01 \x03(\x0b\x32\x15.Weights.WeightsEntry\x1a\x38\n\x0cWeightsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x17\n\x05value\x18\x02 \x01(\x0b\x32\x08.NDArray:\x02\x38\x01\"K\n\x06Header\x12\x1f\n\napiVersion\x18\x01 \x01(\x0b\x32\x0b.APIVersion\x12\x0f\n\x07msgType\x18\x02 \x01(\x07\x12\x0f\n\x07msgSize\x18\x03 \x01(\x07\"\xc9\x01\n\x0eSessionRequest\x12\x14\n\x0csyncInterval\x18\x01 \x01(\x05\x12\x10\n\x08minPeers\x18\x02 \x01(\x05\x12\x10\n\x08maxPeers\x18\x03 \x01(\x05\x12\x17\n\x0fuseAdaptiveSync\x18\x04 \x01(\x08\x12\x1e\n\x16\x63heckinModelOnTrainEnd\x18\x05 \x01(\t\x12\x15\n\rnodeWeightage\x18\x06 \x01(\x05\x12\x18\n\x10trainingContract\x18\x07 \x01(\t\x12\x13\n\x0bmergeMethod\x18\x08 \x01(\t\"\x81\x01\n\x0bSyncRequest\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x15\n\rnodeWeightage\x18\x03 \x01(\x05\x12\x15\n\rnumberOfNodes\x18\x04 \x01(\x05\x12\x1d\n\x0binputParams\x18\x05 \x01(\x0b\x32\x08.Weights\"h\n\x0bLossRequest\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x12\n\nlossSeqNum\x18\x03 \x01(\x05\x12\x1e\n\x0cmergedParams\x18\x04 \x01(\x0b\x32\x08.Weights\"\x84\x01\n\x06Status\x12 \n\x04\x63ode\x18\x01 \x01(\x0e\x32\x12.Status.StatusCode\x12\x0b\n\x03msg\x18\x02 \x01(\t\"K\n\nStatusCode\x12\x0c\n\x08StatusOK\x10\x00\x12\r\n\tErrorInSL\x10\x01\x12\x0f\n\x0b\x45rrorInUser\x10\x02\x12\x0f\n\x0b\x45rrorOthers\x10\x03\"=\n\x0fSessionResponse\x12\x17\n\x06status\x18\x01 \x01(\x0b\x32\x07.Status\x12\x11\n\tsessionID\x18\x02 \x01(\t\"~\n\x0cSyncResponse\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x17\n\x06status\x18\x03 \x01(\x0b\x32\x07.Status\x12\x18\n\x10nextSyncInterval\x18\x04 \x01(\x05\x12\x14\n\x0ctrainingOver\x18\x05 \x01(\x08\"\xaa\x01\n\x0cLossResponse\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x12\n\nlossSeqNum\x18\x03 \x01(\x05\x12\x17\n\x06status\x18\x04 \x01(\x0b\x32\x07.Status\x12\x0c\n\x04loss\x18\x05 \x01(\x02\x12\x0f\n\x07metrics\x18\x06 \x01(\x02\x12\x12\n\nepochsdone\x18\x07 \x01(\x05\x12\x13\n\x0btotalepochs\x18\x08 \x01(\x05\"@\n\x12KillSessionRequest\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x17\n\x06reason\x18\x02 \x01(\x0b\x32\x07.Status*M\n\rAPIVersionTag\x12\x14\n\x10\x41PI_VERSION_BASE\x10\x00\x12\x12\n\x0e\x41PI_VERSION_V1\x10\x01\x12\x12\n\x0e\x41PI_VERSION_V2\x10\x02*\xca\x02\n\x0bMessageType\x12\x10\n\x0cMsgTypeFirst\x10\x00\x12\x11\n\rMsgTypeStatus\x10\x01\x12\x1d\n\x19MsgTypeOpenSessionRequest\x10\x02\x12\x1e\n\x1aMsgTypeOpenSessionResponse\x10\x03\x12\x1e\n\x1aMsgTypeCloseSessionRequest\x10\x04\x12\x1f\n\x1bMsgTypeCloseSessionResponse\x10\x05\x12\x16\n\x12MsgTypeSyncRequest\x10\x06\x12\x17\n\x13MsgTypeSyncResponse\x10\x07\x12\x19\n\x15MsgTypeGetLossRequest\x10\x08\x12\x1a\n\x16MsgTypeGetLossResponse\x10\t\x12\x1d\n\x19MsgTypeKillSessionRequest\x10\n\x12\x0f\n\x0bMsgTypeLast\x10\x0b:E\n\napiVersion\x12\x1c.google.protobuf.FileOptions\x18\xd0\x86\x03 \x01(\x0e\x32\x0e.APIVersionTag\x88\x01\x01:E\n\nminVersion\x12\x1c.google.protobuf.FileOptions\x18\xd1\x86\x03 \x01(\x0e\x32\x0e.APIVersionTag\x88\x01\x01\x42\x08\x80\xb5\x18\x02\x88\xb5\x18\x01\x62\x06proto3'
+  serialized_pb=b'\n\x1fswarmlearning/com/swifrpc.proto\x1a google/protobuf/descriptor.proto\"4\n\nAPIVersion\x12\x12\n\napiVersion\x18\x01 \x01(\x07\x12\x12\n\nminVersion\x18\x02 \x01(\x07\"5\n\x07NDArray\x12\r\n\x05\x64type\x18\x01 \x01(\t\x12\r\n\x05shape\x18\x02 \x03(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"k\n\x07Weights\x12&\n\x07weights\x18\x01 \x03(\x0b\x32\x15.Weights.WeightsEntry\x1a\x38\n\x0cWeightsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x17\n\x05value\x18\x02 \x01(\x0b\x32\x08.NDArray:\x02\x38\x01\"K\n\x06Header\x12\x1f\n\napiVersion\x18\x01 \x01(\x0b\x32\x0b.APIVersion\x12\x0f\n\x07msgType\x18\x02 \x01(\x07\x12\x0f\n\x07msgSize\x18\x03 \x01(\x07\"\xc9\x01\n\x0eSessionRequest\x12\x14\n\x0csyncInterval\x18\x01 \x01(\x05\x12\x10\n\x08minPeers\x18\x02 \x01(\x05\x12\x10\n\x08maxPeers\x18\x03 \x01(\x05\x12\x17\n\x0fuseAdaptiveSync\x18\x04 \x01(\x08\x12\x1e\n\x16\x63heckinModelOnTrainEnd\x18\x05 \x01(\t\x12\x15\n\rnodeWeightage\x18\x06 \x01(\x05\x12\x18\n\x10trainingContract\x18\x07 \x01(\t\x12\x13\n\x0bmergeMethod\x18\x08 \x01(\t\"t\n\x0bSyncRequest\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x15\n\rnodeWeightage\x18\x03 \x01(\x05\x12\x15\n\rnumberOfNodes\x18\x04 \x01(\x05\x12\x10\n\x08\x66ileName\x18\x05 \x01(\t\"Z\n\x0bLossRequest\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x12\n\nlossSeqNum\x18\x03 \x01(\x05\x12\x10\n\x08\x66ileName\x18\x04 \x01(\t\"\x84\x01\n\x06Status\x12 \n\x04\x63ode\x18\x01 \x01(\x0e\x32\x12.Status.StatusCode\x12\x0b\n\x03msg\x18\x02 \x01(\t\"K\n\nStatusCode\x12\x0c\n\x08StatusOK\x10\x00\x12\r\n\tErrorInSL\x10\x01\x12\x0f\n\x0b\x45rrorInUser\x10\x02\x12\x0f\n\x0b\x45rrorOthers\x10\x03\"=\n\x0fSessionResponse\x12\x17\n\x06status\x18\x01 \x01(\x0b\x32\x07.Status\x12\x11\n\tsessionID\x18\x02 \x01(\t\"~\n\x0cSyncResponse\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x17\n\x06status\x18\x03 \x01(\x0b\x32\x07.Status\x12\x18\n\x10nextSyncInterval\x18\x04 \x01(\x05\x12\x14\n\x0ctrainingOver\x18\x05 \x01(\x08\"\xaa\x01\n\x0cLossResponse\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x12\n\nsyncSeqNum\x18\x02 \x01(\x05\x12\x12\n\nlossSeqNum\x18\x03 \x01(\x05\x12\x17\n\x06status\x18\x04 \x01(\x0b\x32\x07.Status\x12\x0c\n\x04loss\x18\x05 \x01(\x02\x12\x0f\n\x07metrics\x18\x06 \x01(\x02\x12\x12\n\nepochsdone\x18\x07 \x01(\x05\x12\x13\n\x0btotalepochs\x18\x08 \x01(\x05\"@\n\x12KillSessionRequest\x12\x11\n\tsessionID\x18\x01 \x01(\t\x12\x17\n\x06reason\x18\x02 \x01(\x0b\x32\x07.Status*M\n\rAPIVersionTag\x12\x14\n\x10\x41PI_VERSION_BASE\x10\x00\x12\x12\n\x0e\x41PI_VERSION_V1\x10\x01\x12\x12\n\x0e\x41PI_VERSION_V2\x10\x02*\xca\x02\n\x0bMessageType\x12\x10\n\x0cMsgTypeFirst\x10\x00\x12\x11\n\rMsgTypeStatus\x10\x01\x12\x1d\n\x19MsgTypeOpenSessionRequest\x10\x02\x12\x1e\n\x1aMsgTypeOpenSessionResponse\x10\x03\x12\x1e\n\x1aMsgTypeCloseSessionRequest\x10\x04\x12\x1f\n\x1bMsgTypeCloseSessionResponse\x10\x05\x12\x16\n\x12MsgTypeSyncRequest\x10\x06\x12\x17\n\x13MsgTypeSyncResponse\x10\x07\x12\x19\n\x15MsgTypeGetLossRequest\x10\x08\x12\x1a\n\x16MsgTypeGetLossResponse\x10\t\x12\x1d\n\x19MsgTypeKillSessionRequest\x10\n\x12\x0f\n\x0bMsgTypeLast\x10\x0b:E\n\napiVersion\x12\x1c.google.protobuf.FileOptions\x18\xd0\x86\x03 \x01(\x0e\x32\x0e.APIVersionTag\x88\x01\x01:E\n\nminVersion\x12\x1c.google.protobuf.FileOptions\x18\xd1\x86\x03 \x01(\x0e\x32\x0e.APIVersionTag\x88\x01\x01\x42\x08\x80\xb5\x18\x02\x88\xb5\x18\x01\x62\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_descriptor__pb2.DESCRIPTOR,])
 
@@ -65,8 +65,8 @@ _APIVERSIONTAG = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1371,
-  serialized_end=1448,
+  serialized_start=1343,
+  serialized_end=1420,
 )
 _sym_db.RegisterEnumDescriptor(_APIVERSIONTAG)
 
@@ -141,8 +141,8 @@ _MESSAGETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1451,
-  serialized_end=1781,
+  serialized_start=1423,
+  serialized_end=1753,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGETYPE)
 
@@ -210,8 +210,8 @@ _STATUS_STATUSCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=864,
-  serialized_end=939,
+  serialized_start=836,
+  serialized_end=911,
 )
 _sym_db.RegisterEnumDescriptor(_STATUS_STATUSCODE)
 
@@ -535,9 +535,9 @@ _SYNCREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='inputParams', full_name='SyncRequest.inputParams', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='fileName', full_name='SyncRequest.fileName', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -553,8 +553,8 @@ _SYNCREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=569,
-  serialized_end=698,
+  serialized_start=568,
+  serialized_end=684,
 )
 
 
@@ -588,9 +588,9 @@ _LOSSREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='mergedParams', full_name='LossRequest.mergedParams', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='fileName', full_name='LossRequest.fileName', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -606,8 +606,8 @@ _LOSSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=700,
-  serialized_end=804,
+  serialized_start=686,
+  serialized_end=776,
 )
 
 
@@ -646,8 +646,8 @@ _STATUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=807,
-  serialized_end=939,
+  serialized_start=779,
+  serialized_end=911,
 )
 
 
@@ -685,8 +685,8 @@ _SESSIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=941,
-  serialized_end=1002,
+  serialized_start=913,
+  serialized_end=974,
 )
 
 
@@ -745,8 +745,8 @@ _SYNCRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1004,
-  serialized_end=1130,
+  serialized_start=976,
+  serialized_end=1102,
 )
 
 
@@ -826,8 +826,8 @@ _LOSSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1133,
-  serialized_end=1303,
+  serialized_start=1105,
+  serialized_end=1275,
 )
 
 
@@ -865,16 +865,14 @@ _KILLSESSIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1305,
-  serialized_end=1369,
+  serialized_start=1277,
+  serialized_end=1341,
 )
 
 _WEIGHTS_WEIGHTSENTRY.fields_by_name['value'].message_type = _NDARRAY
 _WEIGHTS_WEIGHTSENTRY.containing_type = _WEIGHTS
 _WEIGHTS.fields_by_name['weights'].message_type = _WEIGHTS_WEIGHTSENTRY
 _HEADER.fields_by_name['apiVersion'].message_type = _APIVERSION
-_SYNCREQUEST.fields_by_name['inputParams'].message_type = _WEIGHTS
-_LOSSREQUEST.fields_by_name['mergedParams'].message_type = _WEIGHTS
 _STATUS.fields_by_name['code'].enum_type = _STATUS_STATUSCODE
 _STATUS_STATUSCODE.containing_type = _STATUS
 _SESSIONRESPONSE.fields_by_name['status'].message_type = _STATUS

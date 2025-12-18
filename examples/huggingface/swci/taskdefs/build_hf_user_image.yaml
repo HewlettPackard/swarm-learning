@@ -1,0 +1,81 @@
+######################################################################
+# (C)Copyright 2025 Hewlett Packard Enterprise Development LP
+######################################################################
+Name: build_hf_user_image
+TaskType: MAKE_USER_CONTAINER
+Author: HPESwarm
+Prereq: ROOTTASK
+Outcome: user-image-pyt1.5
+Body:
+    BuildContext: sl-cli-lib
+    BuildType: INLINE
+    BuildSteps:
+    - FROM cnstark/pytorch:1.13.1-py3.9.16-cuda11.7.1-devel-ubuntu20.04
+    - ' '
+    - ENV http_proxy="http://proxy-in.its.hpecorp.net:8080" \
+    - '    https_proxy="http://proxy-in.its.hpecorp.net:8080" \'
+    - '    HTTP_PROXY="http://proxy-in.its.hpecorp.net:8080" \'
+    - '    HTTPS_PROXY="http://proxy-in.its.hpecorp.net:8080"'
+    - ' '
+    - ENV CUDA_HOME="/usr/local/cuda" \
+    - '    LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}" \'
+    - '    PATH="/usr/local/cuda/bin:${PATH}" \'
+    - '    BNB_CUDA_VERSION=117'
+    - ' '
+    - RUN apt-get update && apt-get install -y \
+    - '    curl git build-essential wget \'
+    - '    ninja-build'
+    - ' '
+    - RUN wget https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-linux-x86_64.sh && \
+    - '    chmod +x cmake-3.26.0-linux-x86_64.sh && \'
+    - '    ./cmake-3.26.0-linux-x86_64.sh --skip-license --prefix=/usr/local && \'
+    - '    rm cmake-3.26.0-linux-x86_64.sh'
+    - ' '
+    - RUN pip install --upgrade pip && \
+    - '    curl --proto ''=https'' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \'
+    - '    . $HOME/.cargo/env'
+    - ' '
+    - RUN pip uninstall -y torch torchvision torchaudio || true && \
+    - '    pip install --no-cache-dir torch==2.0.1+cu117 torchvision==0.15.2+cu117 torchaudio==2.0.2 \'
+    - '        --index-url https://download.pytorch.org/whl/cu117'
+    - ' '
+    - RUN pip install --upgrade pip protobuf==3.15.6 && \
+    - '    pip install \'
+    - '        python-dateutil==2.8.2 \'
+    - '        pytz==2022.1 \'
+    - '        numpy==1.21.6 \'
+    - '        pandas==1.3.5 \'
+    - '        scipy==1.7.3 \'
+    - '        joblib==1.1.0 \'
+    - '        threadpoolctl==3.1.0 \'
+    - '        scikit-learn==1.0.2 \'
+    - '        packaging \'
+    - '        torchmetrics==0.7.3 \'
+    - '        matplotlib \'
+    - '        seaborn \'
+    - '        opencv-python \'
+    - '        transformers==4.39.0 \'
+    - '        huggingface-hub \'
+    - '        accelerate==0.28.0 \'
+    - '        peft==0.10.0 \'
+    - '        pyarrow==12.0.0 \'
+    - '        datasets==2.14.0 \'
+    - '        evaluate==0.4.0 \'
+    - '        bitsandbytes==0.42.0'
+    - ' '
+    - RUN pip install --upgrade "aiohttp<3.9.0" "aiosignal<1.3.0"
+    - ' '
+    - RUN mkdir -p /opt/transformers_cache && chmod 777 /opt/transformers_cache
+    - ENV TRANSFORMERS_CACHE=/opt/transformers_cache
+    - RUN mkdir -p /cache && chmod -R 777 /cache
+    - ENV HF_HOME=/cache
+    - ' '
+    - '# Temporarily downgrade pip to 23.3.2 to avoid compatibility issues during installation'
+    - RUN pip install pip==23.3.2
+    - ' '
+    - RUN mkdir -p /tmp/hpe-swarmcli-pkg
+    - COPY swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+    - RUN pip install /tmp/hpe-swarmcli-pkg/swarmlearning-client-py3-none-manylinux_2_24_x86_64.whl
+    - ' '
+    - '# Upgrade pip to latest version after all packages are successfully installed'
+    - RUN pip install --upgrade pip

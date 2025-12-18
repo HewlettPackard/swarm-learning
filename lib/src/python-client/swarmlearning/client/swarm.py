@@ -1,5 +1,5 @@
 #######################################################################
-## (C)Copyright 2023 Hewlett Packard Enterprise Development LP
+## (C)Copyright 2021-25 Hewlett Packard Enterprise Development LP
 ## Licensed under the Apache License, Version 2.0 (the "License"); you may
 ## not use this file except in compliance with the License. You may obtain
 ## a copy of the License at
@@ -49,11 +49,22 @@ class SLPlatforms(IntEnum):
     TF = 1
     KERAS = 2
     PYTORCH = 3
+    HF_TRANSFORMER = 4
+    
 # Merge Methods supported in SL framework
 class SLMergeMethod(IntEnum):
     mean = 1
     coordmedian = 2
     geomedian = 3
+    
+# HFMode is used to identify the type of Hugging Face model
+# that is being used in the Swarm Learning framework.
+# It can be either a full model or a PEFT (Parameter-Efficient Fine-Tuning)
+# model. The full model is the complete model, while the PEFT model
+# is a fine-tuned version of the model that uses fewer parameters.
+class HFMode(IntEnum):
+    full = 1
+    peft = 2
 
 MAX_PEERS = 0
 
@@ -355,6 +366,10 @@ class SwarmCallbackBase(ABC):
         stream_handler.flush = sys.stdout.flush
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
+        # Add file handler
+        ### Commenting the code to write file log ###
+        # Will uncomment only when we decide where to 
+        # create the log file in user container
         '''
         logFile = 'swarm_callback.log'
         os.remove(logFile) if os.path.exists(logFile) else None
@@ -436,7 +451,7 @@ class SwarmCallbackBase(ABC):
                     "For adaptive sync, valid adsValData is mandatory and " +
                     "a positive adsValBatchSize if applicable"
                     )
-        # Need to unpack valData for loss and metrics computation.         
+        # Need unpack valData for loss and metrics computation.         
         ( valGen, validationSteps, valX, valY, valSampleWeight ) \
         = self._getValidationDataForAdaptiveSync(valData, valBatchSize)
         

@@ -1,12 +1,13 @@
 # <a name="GUID-CCE936EF-FB0D-4BF1-B002-3CB9125C55B9"/> Installing the License Server
 
-1.  After purchasing Swarm Learning from HPE, you will receive an email with a download link **Access Your Products**.
+1.  After purchasing Swarm Learning from HPE, you will receive an email with a download link **Access Your Products**. If you are using the free community version,
+    then you can skip this and directly click the MY HPE SOFTWARE CENTER(MSC) link given below.
 
 2.  From the email, click **Access Your Products**. You are redirected to [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login).
 
 3.  If you have the HPE Passport account, enter the credentials and **Sign In**. If you do not have it, create the HPE Passport Account and **Sign In**.
 
-    After signing in, you should see the Software Notification Message Receipt page listing the products.
+    After signing in, you should see the Software Notification Message Receipt page listing the products. If you are using the free community version, then in the MSC page, click Software->Search -> Product Info -> "Swarm Learning" (as search term). In the search results, choose "HPE Swarm Learning Community edition" ver 2.2.0 > Action (drop down) -> Product Details -> Installation -> Pre install APLS and download APLS software & documentation ZIP file. For quick reference, APLS container based steps are mentioned below.
 
 4.  Download APLS container and run it using the following procedures.
 
@@ -25,7 +26,7 @@
     3.  Pull the image with a tag.
 
         ```
-        docker pull hub.myenterpriselicense.hpe.com/hpe_eval/autopass/apls:9.14
+        docker pull hub.myenterpriselicense.hpe.com/hpe_eval/autopass/apls:9.15
         ```
 
     4.  Configure Data persistence.
@@ -76,9 +77,9 @@
    
    ![Lock code](GUID-A37C5798-B8B7-4B93-B786-A2682797AB37-high.png)
 
-7.  Go to the Software Notification Message Receipt page and click **Access Your Products**.
+7.  Go to the Software Notification Message Receipt page and click **Access Your Products**. 
 
-    You will be navigated to the [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) home page. After signing in with your HPE Passport credentials, you will see the **Activate** page.
+    You will be navigated to the [MY HPE SOFTWARE CENTER](https://myenterpriselicense.hpe.com/cwp-ui/auth/login) home page. After signing in with your HPE Passport credentials, you will see the **Activate** page.   If you are using the free community version, then in the MSC page, click Software->Search -> Product Info -> "Swarm Learning" (as search term). In the search results, choose "HPE Swarm Learning Community edition" ver 2.2.0 > Action (drop down) -> Get License
 
 8.  Activate the license:
 
