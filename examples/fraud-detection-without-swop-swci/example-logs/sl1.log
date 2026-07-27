@@ -1,0 +1,219 @@
+######################################################################
+##                    HPE SWARM LEARNING SL NODE                    ##
+######################################################################
+## © Copyright 2019-2023 Hewlett Packard Enterprise Development LP  ##
+######################################################################
+2026-07-15 07:35:56,107 : swarm.startSL : INFO : Creating Autopass License Provider
+2026-07-15 07:35:56,727 : swarm.startSL : INFO : Creating license server
+2026-07-15 07:35:56,728 : swarm.startSL : INFO : Setting license servers
+2026-07-15 07:35:56,820 : swarm.startSL : INFO : Acquiring floating license 1100000378:1
+2026-07-15 07:35:57,304 : swarm.startSL : INFO : Opening pipes to communicate with user container ...
+2026-07-15T07:35:57.304817 /tmp/channel/request.channel: pipe created
+2026-07-15T07:35:57.304952 /tmp/channel/response.channel: pipe created
+2026-07-15T07:35:57.305203 /tmp/hpe-swarm/trained_weights.pkl: File exists
+2026-07-15T07:35:57.305313 /tmp/hpe-swarm/merged_weights.pkl: File exists
+2026-07-15 07:36:00,307 : swarm.initSL : INFO : Setting up SL Container :  START
+2026-07-15 07:36:00,329 : swarm.initSL : INFO : Instantiating file services for SL Container 172.18.0.1:16000
+localIp for fs service = 172.18.0.4
+2026-07-15 07:36:00,345 : swarm.initSL : INFO : Successfully completed the initialization of SL container ...
+2026-07-15 07:36:00,345 : swarm.initSL : INFO : Swarm callback API is called in SL container. Logger created.
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : ***Swarm Callback Params: Inside SwarmCallbackSL at server side***
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : sync_interval: 128
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : min_peers: 2
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : val_batch_size: 0
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : use_adaptive_sync: False
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : checkin_model_on_train_end: CheckinModel.snapshot
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : node_weightage: 1
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : merge_method: SLMergeMethod.mean
+2026-07-15 07:36:00,346 : swarm.initSL : INFO : ***************************
+2026-07-15 07:36:06,457 : swarm.initSL : INFO : Registration with Node DB is successful
+2026-07-15 07:36:06,459 : swarm.initSL : INFO : SMLETHNode: Started I-am-Alive thread
+2026-07-15 07:36:06,459 : swarm.initSL : INFO : Creating object for context: defaultbb.cqdb.sml.hpe
+2026-07-15 07:36:06,527 : swarm.initSL : INFO : ============================================================
+2026-07-15 07:36:06,527 : swarm.initSL : INFO :               Starting Swarm Learning Training              
+2026-07-15 07:36:06,527 : swarm.initSL : INFO : ============================================================
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO : ***Swarm Network Configuration***
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO : Context:defaultbb.cqdb.sml.hpe
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO :     syncInterval      : 128
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO :     min_peers         : 2
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO :     blackboard_set_by : 172.18.0.1
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO :     adaptive_sync     : False
+2026-07-15 07:36:09,609 : swarm.smlCBB : INFO : ***************************
+2026-07-15 07:36:09,671 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:36:12,713 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:0:Checkin Done
+2026-07-15 07:36:12,713 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:0:CHECKIN:DONE
+2026-07-15 07:36:12,733 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:0:Waiting for checkin completion criteria to be met
+2026-07-15 07:36:15,746 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:0:MARKCHECKINSCOMPLETE done
+2026-07-15 07:36:23,068 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:0:CHECKOUT:DONE
+2026-07-15 07:36:23,076 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:0:Waiting for checkout completion criteria to be met
+2026-07-15 07:36:26,100 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:0:START
+2026-07-15 07:36:26,100 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:0:updated current Sync id : 1
+2026-07-15 07:36:26,100 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:0:SYNC:DONE
+2026-07-15 07:36:26,108 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:0:DONE
+2026-07-15 07:36:26,500 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:36:29,542 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:1:Checkin Done
+2026-07-15 07:36:29,542 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:1:CHECKIN:DONE
+2026-07-15 07:36:29,560 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:1:Waiting for checkin completion criteria to be met
+2026-07-15 07:36:36,742 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:1:CHECKOUT:DONE
+2026-07-15 07:36:36,749 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:1:START
+2026-07-15 07:36:37,769 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:1:updated current Sync id : 2
+2026-07-15 07:36:37,769 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:1:SYNC:DONE
+2026-07-15 07:36:37,778 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:1:DONE
+2026-07-15 07:36:37,850 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:36:40,891 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:2:Checkin Done
+2026-07-15 07:36:40,891 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:2:CHECKIN:DONE
+2026-07-15 07:36:40,909 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:2:Waiting for checkin completion criteria to be met
+2026-07-15 07:36:45,446 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:2:MARKCHECKINSCOMPLETE done
+2026-07-15 07:36:52,585 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:2:CHECKOUT:DONE
+2026-07-15 07:36:52,593 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:2:Waiting for checkout completion criteria to be met
+2026-07-15 07:36:55,616 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:2:START
+2026-07-15 07:36:55,616 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:2:updated current Sync id : 3
+2026-07-15 07:36:55,616 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:2:SYNC:DONE
+2026-07-15 07:36:55,624 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:2:DONE
+2026-07-15 07:36:55,692 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:36:58,730 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:3:Checkin Done
+2026-07-15 07:36:58,731 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:3:CHECKIN:DONE
+2026-07-15 07:36:58,749 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:3:Waiting for checkin completion criteria to be met
+2026-07-15 07:37:06,400 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:3:CHECKOUT:DONE
+2026-07-15 07:37:06,407 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:3:START
+2026-07-15 07:37:07,934 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:3:updated current Sync id : 4
+2026-07-15 07:37:07,934 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:3:SYNC:DONE
+2026-07-15 07:37:07,940 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:3:DONE
+2026-07-15 07:37:08,013 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:37:11,049 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:4:Checkin Done
+2026-07-15 07:37:11,049 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:4:CHECKIN:DONE
+2026-07-15 07:37:11,067 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:4:Waiting for checkin completion criteria to be met
+2026-07-15 07:37:15,096 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:4:MARKCHECKINSCOMPLETE done
+2026-07-15 07:37:22,291 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:4:CHECKOUT:DONE
+2026-07-15 07:37:22,297 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:4:Waiting for checkout completion criteria to be met
+2026-07-15 07:37:25,319 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:4:START
+2026-07-15 07:37:25,319 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:4:updated current Sync id : 5
+2026-07-15 07:37:25,319 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:4:SYNC:DONE
+2026-07-15 07:37:25,327 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:4:DONE
+2026-07-15 07:37:25,397 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:37:28,438 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:5:Checkin Done
+2026-07-15 07:37:28,439 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:5:CHECKIN:DONE
+2026-07-15 07:37:28,456 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:5:Waiting for checkin completion criteria to be met
+2026-07-15 07:37:35,641 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:5:CHECKOUT:DONE
+2026-07-15 07:37:35,647 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:5:START
+2026-07-15 07:37:39,220 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:5:updated current Sync id : 6
+2026-07-15 07:37:39,221 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:5:SYNC:DONE
+2026-07-15 07:37:39,228 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:5:DONE
+2026-07-15 07:37:39,298 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:37:42,337 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:6:Checkin Done
+2026-07-15 07:37:42,337 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:6:CHECKIN:DONE
+2026-07-15 07:37:42,356 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:6:Waiting for checkin completion criteria to be met
+2026-07-15 07:37:45,877 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:6:MARKCHECKINSCOMPLETE done
+2026-07-15 07:37:53,057 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:6:CHECKOUT:DONE
+2026-07-15 07:37:53,065 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:6:Waiting for checkout completion criteria to be met
+2026-07-15 07:37:56,087 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:6:START
+2026-07-15 07:37:56,087 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:6:updated current Sync id : 7
+2026-07-15 07:37:56,087 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:6:SYNC:DONE
+2026-07-15 07:37:56,095 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:6:DONE
+2026-07-15 07:37:56,179 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:37:59,217 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:7:Checkin Done
+2026-07-15 07:37:59,218 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:7:CHECKIN:DONE
+2026-07-15 07:37:59,235 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:7:Waiting for checkin completion criteria to be met
+2026-07-15 07:38:07,395 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:7:CHECKOUT:DONE
+2026-07-15 07:38:07,401 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:7:START
+2026-07-15 07:38:08,932 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:7:updated current Sync id : 8
+2026-07-15 07:38:08,932 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:7:SYNC:DONE
+2026-07-15 07:38:08,938 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:7:DONE
+2026-07-15 07:38:09,010 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:38:12,052 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:8:Checkin Done
+2026-07-15 07:38:12,052 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:8:CHECKIN:DONE
+2026-07-15 07:38:12,070 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:8:Waiting for checkin completion criteria to be met
+2026-07-15 07:38:15,590 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:8:MARKCHECKINSCOMPLETE done
+2026-07-15 07:38:22,764 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:8:CHECKOUT:DONE
+2026-07-15 07:38:22,772 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:8:Waiting for checkout completion criteria to be met
+2026-07-15 07:38:25,793 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:8:START
+2026-07-15 07:38:25,793 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:8:updated current Sync id : 9
+2026-07-15 07:38:25,793 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:8:SYNC:DONE
+2026-07-15 07:38:25,801 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:8:DONE
+2026-07-15 07:38:25,869 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:38:28,903 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:9:Checkin Done
+2026-07-15 07:38:28,903 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:9:CHECKIN:DONE
+2026-07-15 07:38:28,920 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:9:Waiting for checkin completion criteria to be met
+2026-07-15 07:38:36,609 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:9:CHECKOUT:DONE
+2026-07-15 07:38:36,615 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:9:START
+2026-07-15 07:38:40,188 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:9:updated current Sync id : 10
+2026-07-15 07:38:40,188 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:9:SYNC:DONE
+2026-07-15 07:38:40,196 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:9:DONE
+2026-07-15 07:38:40,266 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:38:43,306 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:10:Checkin Done
+2026-07-15 07:38:43,306 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:10:CHECKIN:DONE
+2026-07-15 07:38:43,324 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:10:Waiting for checkin completion criteria to be met
+2026-07-15 07:38:46,338 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:10:MARKCHECKINSCOMPLETE done
+2026-07-15 07:38:53,521 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:10:CHECKOUT:DONE
+2026-07-15 07:38:53,528 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:10:Waiting for checkout completion criteria to be met
+2026-07-15 07:38:56,550 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:10:START
+2026-07-15 07:38:56,550 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:10:updated current Sync id : 11
+2026-07-15 07:38:56,550 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:10:SYNC:DONE
+2026-07-15 07:38:56,557 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:10:DONE
+2026-07-15 07:38:56,628 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:38:59,668 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:11:Checkin Done
+2026-07-15 07:38:59,668 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:11:CHECKIN:DONE
+2026-07-15 07:38:59,687 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:11:Waiting for checkin completion criteria to be met
+2026-07-15 07:39:07,848 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:11:CHECKOUT:DONE
+2026-07-15 07:39:07,855 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:11:START
+2026-07-15 07:39:10,912 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:11:updated current Sync id : 12
+2026-07-15 07:39:10,912 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:11:SYNC:DONE
+2026-07-15 07:39:10,920 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:11:DONE
+2026-07-15 07:39:10,992 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:39:14,030 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:12:Checkin Done
+2026-07-15 07:39:14,030 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:12:CHECKIN:DONE
+2026-07-15 07:39:14,048 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:12:Waiting for checkin completion criteria to be met
+2026-07-15 07:39:17,062 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:12:MARKCHECKINSCOMPLETE done
+2026-07-15 07:39:24,239 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:12:CHECKOUT:DONE
+2026-07-15 07:39:24,247 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:12:Waiting for checkout completion criteria to be met
+2026-07-15 07:39:27,265 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:12:START
+2026-07-15 07:39:27,266 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:12:updated current Sync id : 13
+2026-07-15 07:39:27,266 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:12:SYNC:DONE
+2026-07-15 07:39:27,272 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:12:DONE
+2026-07-15 07:39:27,359 : swarm.initSL : INFO : Merging in SL container ...
+2026-07-15 07:39:30,398 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:13:Checkin Done
+2026-07-15 07:39:30,398 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:13:CHECKIN:DONE
+2026-07-15 07:39:30,417 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:13:Waiting for checkin completion criteria to be met
+2026-07-15 07:39:39,081 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:13:CHECKOUT:DONE
+2026-07-15 07:39:39,087 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:13:START
+2026-07-15 07:39:42,149 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:13:updated current Sync id : 14
+2026-07-15 07:39:42,150 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:13:SYNC:DONE
+2026-07-15 07:39:42,155 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:13:DONE
+2026-07-15 07:39:42,211 : swarm.initSL : INFO : Finished local training rounds. Train end is called in SL container
+2026-07-15 07:39:42,211 : swarm.initSL : INFO : Minimum required peers are still training. Continue syncing in SL ...
+2026-07-15 07:39:45,249 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:14:Checkin Done
+2026-07-15 07:39:45,249 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:14:CHECKIN:DONE
+2026-07-15 07:39:45,268 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:14:Waiting for checkin completion criteria to be met
+2026-07-15 07:39:48,282 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:14:MARKCHECKINSCOMPLETE done
+2026-07-15 07:39:55,463 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:14:CHECKOUT:DONE
+2026-07-15 07:39:55,471 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:14:Waiting for checkout completion criteria to be met
+2026-07-15 07:39:58,492 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:14:START
+2026-07-15 07:39:58,492 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:14:updated current Sync id : 15
+2026-07-15 07:39:58,492 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:14:SYNC:DONE
+2026-07-15 07:39:58,499 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:14:DONE
+2026-07-15 07:39:58,500 : swarm.initSL : INFO : Minimum required peers are still training. Continue syncing in SL ...
+2026-07-15 07:40:01,534 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:15:Checkin Done
+2026-07-15 07:40:01,534 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:15:CHECKIN:DONE
+2026-07-15 07:40:01,552 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:15:Waiting for checkin completion criteria to be met
+2026-07-15 07:40:08,186 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:15:CHECKOUT:DONE
+2026-07-15 07:40:08,192 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:15:START
+2026-07-15 07:40:11,761 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:15:updated current Sync id : 16
+2026-07-15 07:40:11,761 : swarm.smlCBB : INFO : SMLBB:RV:FOLLOWER:defaultbb.cqdb.sml.hpe:15:SYNC:DONE
+2026-07-15 07:40:11,767 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:15:DONE
+2026-07-15 07:40:11,767 : swarm.initSL : INFO : Minimum required peers are still training. Continue syncing in SL ...
+2026-07-15 07:40:14,802 : swarm.smlCBB : INFO : SMLBB:CHKIN:defaultbb.cqdb.sml.hpe:16:Checkin Done
+2026-07-15 07:40:14,802 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:16:CHECKIN:DONE
+2026-07-15 07:40:14,821 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:16:Waiting for checkin completion criteria to be met
+2026-07-15 07:40:17,837 : swarm.smlCBB : INFO : SMLBB:MCHKINDONE:defaultbb.cqdb.sml.hpe:16:MARKCHECKINSCOMPLETE done
+2026-07-15 07:40:25,022 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:16:CHECKOUT:DONE
+2026-07-15 07:40:25,029 : swarm.smlCBB : INFO : SMLBB:MCHKOUTD:defaultbb.cqdb.sml.hpe:16:Waiting for checkout completion criteria to be met
+2026-07-15 07:40:28,051 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:16:START
+2026-07-15 07:40:28,051 : swarm.smlCBB : INFO : SMLBB:WAITFORSYNC:defaultbb.cqdb.sml.hpe:16:updated current Sync id : 17
+2026-07-15 07:40:28,051 : swarm.smlCBB : INFO : SMLBB:RV:ADMIN:defaultbb.cqdb.sml.hpe:16:SYNC:DONE
+2026-07-15 07:40:28,059 : swarm.smlCBB : INFO : SMLBB:RV:defaultbb.cqdb.sml.hpe:16:DONE
+2026-07-15 07:40:28,059 : swarm.initSL : INFO : ============================================================
+2026-07-15 07:40:28,059 : swarm.initSL : INFO :            All peers and Swarm training finished!           
+2026-07-15 07:40:28,059 : swarm.initSL : INFO : ============================================================
+Swarm training process completed. Exiting SL
+2026-07-15 07:40:28,059 : swarm.startSL : INFO : User model training is completed. Closing all pipes and stopping SL container
+2026-07-15 07:40:28,059 : swarm.startSL : WARNING : [93mReleasing license[0m
